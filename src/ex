@@ -1,0 +1,380 @@
+function welcome1(from) {
+  
+  db.query(
+    "SELECT working_start_time_1 as start1, working_end_time_1 as end1, working_start_time_2 as start2, working_end_time_2 as end2, working_start_day as start_day, working_end_day as end_day FROM settings",
+    (err, result) => {
+      console.log(result)
+      axios({
+        method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+        url : "https://graph.facebook.com/v12.0/" +
+          phone_number_id +
+          "/messages?access_token=" +
+          token,
+        data: {
+          messaging_product: "whatsapp",
+          to: from,
+          text: {
+            body:
+              "*Welcome to Spring Garden!*\n\nDr. Thomas works from " +
+              result[0].start1 +
+              " to " +
+              result[0].end1 +
+              " and " +
+              result[0].start2 +
+              " to " +
+              result[0].end2 +
+              " from " +
+              result[0].start_day +
+              " to " +
+              result[0].end_day,
+          },
+        },
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  );
+}
+
+function holiday(from, db) {
+  let date = "03-06-2022";
+  db.query(
+    "SELECT working_start_time_1 as time FROM settings",
+    (err, result) => {
+      axios({
+        method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+        url:
+          "https://graph.facebook.com/v12.0/" +
+          phone_number_id +
+          "/messages?access_token=" +
+          token,
+        data: {
+          messaging_product: "whatsapp",
+          to: from,
+          text: {
+            body:
+              "Sorry, the Doctor is not available today. The doctor is next available on " +
+              date +
+              " at " +
+              result[0].time +
+              ".\n\nThank you for contacting SGMC",
+          },
+        },
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+  );
+}
+
+function token_full(from, db) {
+  let date = "03-06-2022";
+  db.query("SELECT token_start, token_end  FROM settings", (err, result) => {
+    axios({
+      method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+      url:
+        "https://graph.facebook.com/v12.0/" +
+        phone_number_id +
+        "/messages?access_token=" +
+        token,
+      data: {
+        messaging_product: "whatsapp",
+        to: from,
+        text: {
+          body:
+            "*Sorry!*\n\nNo tokens available for today. Kindly check back on " +
+            date +
+            " between " +
+            result[0].token_start +
+            " & " +
+            result[0].token_end +
+            ". Thank you",
+        },
+      },
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+}
+
+function booking_closed(from, db) {
+  db.query("SELECT token_start, token_end  FROM settings", (err, result) => {
+    axios({
+      method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+      url:
+        "https://graph.facebook.com/v12.0/" +
+        phone_number_id +
+        "/messages?access_token=" +
+        token,
+      data: {
+        messaging_product: "whatsapp",
+        to: from,
+        text: {
+          body:
+            "*Sorry! Token booking is closed!*\n\nPlease try between " +
+            result[0].token_start +
+            " & " +
+            result[0].token_end +
+            ". Thank you",
+        },
+      },
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+}
+
+function prompt_for_trigger(from, db) {
+  db.query("SELECT token_start FROM settings", (err, result) => {
+    axios({
+      method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+      url:
+        "https://graph.facebook.com/v12.0/" +
+        phone_number_id +
+        "/messages?access_token=" +
+        token,
+      data: {
+        messaging_product: "whatsapp",
+        to: from,
+        text: {
+          body:
+            "Send 'token' to book a token for today. Token booking for the day opens at " +
+            result[0].token_start +
+            ".",
+        },
+      },
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+}
+
+function patient_list(from,db) {
+  
+    db.query("SELECT name FROM patient WHERE phone=?", (err, from, result) => {
+    axios({
+      method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+      url:
+        "https://graph.facebook.com/v12.0/" +
+        phone_number_id +
+        "/messages?access_token=" +
+        token,
+      data: {
+        messaging_product: "whatsapp",
+        to: from,
+        text: {
+          body:"Welcome to SGMC. YOu have chosen to take a token for Dr Thomas M. George.\n\n*Choose Patient*\n\n" +
+      result +
+      "\n\n\nPatient not in list? Send *0* to add a new patient",
+        },
+      },
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+  
+}
+
+function new_patient(from) {
+  axios({
+    method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+    url:
+      "https://graph.facebook.com/v12.0/" +
+      phone_number_id +
+      "/messages?access_token=" +
+      token,
+    data: {
+      messaging_product: "whatsapp",
+      to: from,
+      text: {
+        body: "Enter your full name",
+      },
+    },
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function file_number(from) {
+  axios({
+    method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+    url:
+      "https://graph.facebook.com/v12.0/" +
+      phone_number_id +
+      "/messages?access_token=" +
+      token,
+    data: {
+      messaging_product: "whatsapp",
+      to: from,
+      text: {
+        body: "Enter your file number. If you dont know it or dont have a file number send 'N'",
+      },
+    },
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function slot(from) {
+  const interactive = {
+    type: "button",
+    header: {
+      type: "text",
+      text: "Select slot",
+    },
+    body: {
+      text: "When would you prefer to meet the doctor?",
+    },
+    action: {
+      buttons: [
+        {
+          type: "reply",
+          reply: {
+            id: "morning",
+            title: "Before 1 PM",
+          },
+        },
+        {
+          type: "reply",
+          reply: {
+            id: "afternoon",
+            title: "After 1 PM",
+          },
+        },
+      ],
+    },
+  };
+  
+   axios({
+    method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+    url:
+      "https://graph.facebook.com/v12.0/" +
+      phone_number_id +
+      "/messages?access_token=" +
+      token,
+    data: {
+      messaging_product: "whatsapp",
+      to: from,
+      type : "interactive",
+      interactive : interactive,
+    },
+    headers: { "Content-Type": "application/json" },
+  });
+  
+}
+
+function reason(from) {
+    axios({
+    method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+    url:
+      "https://graph.facebook.com/v12.0/" +
+      phone_number_id +
+      "/messages?access_token=" +
+      token,
+    data: {
+      messaging_product: "whatsapp",
+      to: from,
+      text: {
+        body: "Choose your reason for booking a token\n\n1. Review\n2. First time patient\n3. Other",
+      },
+    },
+    headers: { "Content-Type": "application/json" },
+  });
+}
+
+function generate_token(from,db) {
+    db.query("SELECT tokenNumber FROM tokens WHERE tokenID=1", (err, from, result) => {
+    axios({
+      method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+      url:
+        "https://graph.facebook.com/v12.0/" +
+        phone_number_id +
+        "/messages?access_token=" +
+        token,
+      data: {
+        messaging_product: "whatsapp",
+        to: from,
+        text: {
+          body:"Your token number for today is: " +
+      result[0].tokenNumber +
+      "\nYou will be notified 1 hour before your estimated consultation time\nSend 'status' to know the status of your token\n Thank you for choosing SGMC.",
+  },
+      },
+      headers: { "Content-Type": "application/json" },
+    });
+  });
+}
+
++
+              rows[0].start1 +
+              " to " +
+              rows[0].end1 +
+              " and " +
+              rows[0].start2 +
+              " to " +
+              rows[0].end2 +
+              " from " +
+              rows[0].start_day +
+              " to " +
+              rows[0].end_day
+
+
+
+
+
+
+
+
+
+
+
+
+              const axios = require("axios").default;
+              const db = require("./dbConnection");
+              const token = process.env.WHATSAPP_TOKEN;
+              const phone_number_id = process.env.PHONE_NUMBER_ID;
+              
+              
+              function welcome(from) {
+              
+                const queryString = `SELECT working_start_time_1 as start1, working_end_time_1 as end1, working_start_time_2 as start2, working_end_time_2 as end2, working_start_day as start_day, working_end_day as end_day FROM settings`
+                console.log(queryString);
+                db.query(queryString, (err, rows, fields) => {
+                  if (err) {
+                    const error= {
+                      error : err.sqlMessage
+                    }
+                    console.log("failed  to delete:" + err)
+                    //res.json(error)
+                  } else {
+                    axios({
+                      method: "POST", // Required, HTTP method, a string, e.g. POST, GET
+                      url : "https://graph.facebook.com/v12.0/" +
+                        phone_number_id +
+                        "/messages?access_token=" +
+                        token,
+                      data: {
+                        messaging_product: "whatsapp",
+                        to: from,
+                        text: {
+                          body:
+                            "*Welcome to Spring Garden!*\n\nDr. Thomas works from " +
+                            rows[0].start1 +
+                            " to " +
+                            rows[0].end1 +
+                            " and " +
+                            rows[0].start2 +
+                            " to " +
+                            rows[0].end2 +
+                            " from " +
+                            rows[0].start_day +
+                            " to " +
+                            rows[0].end_day
+                        },
+                      },
+                      headers: { "Content-Type": "application/json" },
+                    });
+                  }
+                  
+                })
+              }
+              
+              
+              
+              module.exports = {
+                welcome
+               
+              };
+              
