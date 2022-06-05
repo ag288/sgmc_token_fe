@@ -27,8 +27,9 @@ export const ButtonPopover = ({ item, current, setCurrent }) => {
     const close = () => setIsOpen(false)
 
     function call() {
-        setCurrent(item.tokenNumber)
-        localStorage.setItem("current", item.tokenNumber)
+        setCurrent(`${item.slot}-${item.tokenNumber}`)
+        localStorage.setItem("current", `${item.slot}-${item.tokenNumber}`)
+        //localStorage.setItem("slot", item.slot)
         close()
     }
 
@@ -50,19 +51,19 @@ export const ButtonPopover = ({ item, current, setCurrent }) => {
     return (
         <Popover trigger="click" placement="left" isOpen={isOpen} onClose={close} >
             <PopoverTrigger>
-                <IconButton isDisabled={item.status=="completed"} bg="transparent" icon={<SettingsIcon />} style={{ cursor: "pointer" }} onClick={open}>
-                </IconButton>  
+                <IconButton isDisabled={item.status == "completed"} bg="transparent" icon={<SettingsIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                </IconButton>
             </PopoverTrigger >
-    <PopoverContent>
-        <PopoverArrow />
-        <PopoverBody>
-            <HStack spacing={"auto"}>
-                <Button mx="1%" colorScheme={"blue"} onClick={call} >Call</Button>
-                <Button mx="1%" colorScheme={"blue"} onClick={cancel} variant="outline" >Cancel</Button>
-                <Button mx="1%" colorScheme={"blue"} onClick={completed} >Completed</Button>
-            </HStack>
-        </PopoverBody>
-    </PopoverContent>
+            <PopoverContent>
+                <PopoverArrow />
+                <PopoverBody>
+                    <HStack spacing={"auto"}>
+                        <Button mx="1%" colorScheme={"blue"} onClick={call} >Call</Button>
+                        <Button mx="1%" colorScheme={"blue"} onClick={cancel} variant="outline" >Cancel</Button>
+                        <Button mx="1%" colorScheme={"blue"} onClick={completed} >Completed</Button>
+                    </HStack>
+                </PopoverBody>
+            </PopoverContent>
         </Popover >
     )
 

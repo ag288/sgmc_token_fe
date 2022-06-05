@@ -28,29 +28,29 @@ import { MorningList } from './MorningList';
 export const PatientList = () => {
 
   const [current, setCurrent] = useState(localStorage.getItem("current"))
-  
+
 
   useEffect(() => {
 
- 
+
 
   }, []);
 
 
-  
+
 
   return (
-      <>
-      
-          <Flex
-              minH={'100vh'}
-              bg={"gray.100"}>
-              <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'full'}>
-              <CurrentPatient current={current} setCurrent={setCurrent}/>
-             <MorningList current={current} setCurrent={setCurrent}/>
-             <AfternoonList current={current} setCurrent={setCurrent}/>
-              </Stack>
-          </Flex>
-      </>
+    <>
+
+      <Flex
+        minH={'100vh'}
+        bg={"gray.100"}>
+        <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'full'}>
+          <CurrentPatient current={current} setCurrent={setCurrent} />
+          <MorningList current={current} setCurrent={setCurrent} />
+          <AfternoonList current={current} setCurrent={setCurrent} />
+        </Stack>
+      </Flex>
+    </>
   )
 }

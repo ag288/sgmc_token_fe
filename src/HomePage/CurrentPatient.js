@@ -8,7 +8,9 @@ export const CurrentPatient = ({ current, setCurrent }) => {
 
     useEffect(() => {
         console.log(current)
-        api.token.fetchCurrent({ current }).then((res) => {
+        const tokenNumber=current?.split("-")[1]
+        const slot = current?.split("-")[0]
+        api.token.fetchCurrent({ tokenNumber, slot}).then((res) => {
             const response = JSON.parse(res.data).result
             setCurr(response[0])
             console.log(response[0])
@@ -17,8 +19,15 @@ export const CurrentPatient = ({ current, setCurrent }) => {
     }, [current]);
 
     function next() {
-        setCurrent(current + 1)
-        localStorage.setItem("current", current + 1)
+
+        api.token.setAsCompleted({ item: curr }).then((res) => {
+           
+            const tokenNumber=current.split("-")[1]
+            setCurrent(parseInt(tokenNumber) + 1)
+            localStorage.setItem("current", `${curr.slot}-${parseInt(tokenNumber) + 1}`)
+            //localStorage.setItem("slot", curr.slot)
+            window.location.reload()
+        })
     }
 
     return (
@@ -40,11 +49,11 @@ export const CurrentPatient = ({ current, setCurrent }) => {
                         textAlign="center"
                         paddingTop={"5%"}
                     >
-                        <Heading color={"green"}>{curr?.tokenNumber}</Heading>
+                        <Heading color={"green"}>{`${curr?.slot}-${curr?.tokenNumber}`}</Heading>
                     </Box>
                     <VStack>
                         <Text fontWeight={"bold"} fontSize={"x-large"}>{curr?.name}</Text>
-                        <Text fontWeight={"bold"} fontSize={"large"}>{curr?.reason}</Text>
+                        <Text fontWeight={"bold"} fontSize={"large"}>{curr?.type}</Text>
                     </VStack>
                     <VStack width="30%">
                         <Text fontWeight={"bold"} >Time in:</Text>

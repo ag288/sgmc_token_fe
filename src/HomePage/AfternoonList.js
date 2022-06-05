@@ -93,13 +93,13 @@ export const AfternoonList = ({ current, setCurrent }) => {
                             </Thead>
                             <Tbody>
                                 {filterList(aftlist).map((item) =>
-                                    <Tr bg={item.tokenNumber == current ? "green.100" :
+                                    <Tr bg={item.tokenNumber == current?.split("-")[1] && item.slot == current?.split("-")[0] ? "green.100" :
                                         (item.status == "completed" ? "gray.200" : "white")}>
                                         <Td><ButtonPopover current={current} setCurrent={setCurrent} item={item} /></Td>
-                                        <Td >{item.tokenNumber}</Td>
+                                        <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                         <Td>{item.name}</Td>
                                         <Td>{item.fileNumber}</Td>
-                                        <Td>{item.reason}</Td>
+                                        <Td>{item.type}</Td>
                                         <Td>hi</Td>
                                         <Td></Td>
                                     </Tr>
