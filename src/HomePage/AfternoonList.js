@@ -26,19 +26,23 @@ import { ButtonPopover } from './Popover';
 
 // List of staff profiles pending approval
 
-export const AfternoonList = ({ current, setCurrent }) => {
+export const AfternoonList = ({ aftlist, current, setCurrent }) => {
 
-    const [hideAfternoon, setHideAfternoon] = useState(new Date() > new Date("14:00") ? false : true)
+    const morningEnd = new Date(new Date().setHours(14, 0, 0));
+    const [hideAfternoon, setHideAfternoon] = useState(
+        new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getTime() > morningEnd.getTime() ?
+            false : true)
     const [showCompleted, setShowCompleted] = useState(false)
-    const [aftlist, setAftList] = useState([])
+    //  const [aftlist, setAftList] = useState([])
 
 
     useEffect(() => {
 
-        api.token.fetchAfternoonList().then((res) => {
-            const response = JSON.parse(res.data).result
-            setAftList(response)
-        })
+        // api.token.fetchAfternoonList().then((res) => {
+        //     const response = JSON.parse(res.data).result
+        //     setAftList(response)
+        //     console.log(response)
+        // })
 
     }, []);
 
@@ -93,15 +97,21 @@ export const AfternoonList = ({ current, setCurrent }) => {
                             </Thead>
                             <Tbody>
                                 {filterList(aftlist).map((item) =>
-                                    <Tr bg={item.tokenNumber == current?.split("-")[1] && item.slot == current?.split("-")[0] ? "green.100" :
+                                    <Tr bg={item.tokenNumber == current?.tokenNumber && item.slot == current?.slot ? "green.100" :
                                         (item.status == "completed" ? "gray.200" : "white")}>
                                         <Td><ButtonPopover current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                         <Td>{item.name}</Td>
                                         <Td>{item.fileNumber}</Td>
                                         <Td>{item.type}</Td>
-                                        <Td>hi</Td>
-                                        <Td></Td>
+                                        <Td>{ item.timeIn? new Date('1970-01-01T' + item.timeIn + 'Z')
+                                        .toLocaleTimeString('en-US',
+                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }): ""}
+                                    </Td>
+                                    <Td>{ item.timeOut? new Date('1970-01-01T' + item.timeOut + 'Z')
+                                        .toLocaleTimeString('en-US',
+                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }): ""}
+                                    </Td>
                                     </Tr>
                                 )
                                 }

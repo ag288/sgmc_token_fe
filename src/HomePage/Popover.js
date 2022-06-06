@@ -26,11 +26,22 @@ export const ButtonPopover = ({ item, current, setCurrent }) => {
     const open = () => setIsOpen(!isOpen)
     const close = () => setIsOpen(false)
 
+    function arrived() {
+        api.token.setAsArrived({ item }).then((res) => {
+            const response = JSON.parse(res.data)
+            window.location.reload()
+        })
+    }
+
     function call() {
-        setCurrent(`${item.slot}-${item.tokenNumber}`)
-        localStorage.setItem("current", `${item.slot}-${item.tokenNumber}`)
+        api.token.callNewToken({current,item}).then((res)=>{
+           // setCurrent(item)
+           window.location.reload()
+        })
+       
+       // localStorage.setItem("current", `${item.slot}-${item.tokenNumber}`)
         //localStorage.setItem("slot", item.slot)
-        close()
+        //close()
     }
 
     function cancel() {
@@ -58,9 +69,10 @@ export const ButtonPopover = ({ item, current, setCurrent }) => {
                 <PopoverArrow />
                 <PopoverBody>
                     <HStack spacing={"auto"}>
-                        <Button mx="1%" colorScheme={"blue"} onClick={call} >Call</Button>
-                        <Button mx="1%" colorScheme={"blue"} onClick={cancel} variant="outline" >Cancel</Button>
-                        <Button mx="1%" colorScheme={"blue"} onClick={completed} >Completed</Button>
+                    <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button>
+                        <Button mx="1%" colorScheme={"green"} onClick={call} >Call</Button>
+                        <Button mx="1%" colorScheme={"red"} onClick={cancel} >Cancel</Button>
+                       
                     </HStack>
                 </PopoverBody>
             </PopoverContent>
