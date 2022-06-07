@@ -56,6 +56,9 @@ export const AfternoonList = ({ aftlist, current, setCurrent }) => {
                 else if (item.status == "completed" && !showCompleted) {
                     return false
                 }
+                else if(item.status=="current"){
+                    return false
+                }
                 else return true
             }
         })
@@ -85,10 +88,8 @@ export const AfternoonList = ({ aftlist, current, setCurrent }) => {
                             <Thead>
                                 <Tr>
                                     <Th></Th>
-                                    <Th>
-                                        Token No.
-                                    </Th>
-                                    <Th> Name               </Th>
+                                    <Th>Token No.</Th>
+                                    <Th>Name</Th>
                                     <Th>File No.</Th>
                                     <Th>Type</Th>
                                     <Th>In</Th>
@@ -97,8 +98,7 @@ export const AfternoonList = ({ aftlist, current, setCurrent }) => {
                             </Thead>
                             <Tbody>
                                 {filterList(aftlist).map((item) =>
-                                    <Tr bg={item.tokenNumber == current?.tokenNumber && item.slot == current?.slot ? "green.100" :
-                                        (item.status == "completed" ? "gray.200" : "white")}>
+                                    <Tr  bg={item.status == "completed" ? "gray.200" : "white"}>
                                         <Td><ButtonPopover current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                         <Td>{item.name}</Td>

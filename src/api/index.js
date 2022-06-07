@@ -1,5 +1,6 @@
 
 import axios from "axios";
+import settingsApi from "./settings";
 import tokenApi from "./token"
 export const fetch = axios.create({
     baseURL: "https://prism-ablaze-moss.glitch.me", // Replace with Env-Specific URL
@@ -27,6 +28,7 @@ export const rawFetch = (url) =>
 
 const api = {
     token: tokenApi(fetch, "/token"),
+    settings: settingsApi(fetch, "/settings")
 };
 
 export default api;

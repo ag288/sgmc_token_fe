@@ -1,4 +1,4 @@
-import { SettingsIcon } from "@chakra-ui/icons";
+import { HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
 import { Box, Flex, Heading, Stack, Image, Text, HStack, Center, VStack, Button } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import api from "../api";
@@ -72,10 +72,9 @@ export const CurrentPatient = ({ current, setCurrent }) => {
                 <VStack>
                     <Heading color="green" width="full" textAlign={"center"} size="lg">
                     Please call the next token</Heading>
-                    <Text>Click on <SettingsIcon/> next to the token and press <Button as="Box" size="sm" colorScheme={"blue"}>Call</Button></Text>
+                    <Text>Click on <HamburgerIcon/> next to the token and press <Button as="Box" size="sm" colorScheme={"blue"}>Call</Button></Text>
                     </VStack>}
             </Box>
-            <Button marginTop={"2%"} size={"lg"} onClick={next} colorScheme={"green"}>NEXT</Button>
         </VStack>
     )
 }

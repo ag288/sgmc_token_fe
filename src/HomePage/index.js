@@ -1,3 +1,4 @@
+import { HamburgerIcon, SettingsIcon } from '@chakra-ui/icons';
 import {
   Table,
   Thead,
@@ -15,7 +16,8 @@ import {
   IconButton,
   Text,
   Heading,
-  Checkbox
+  Checkbox,
+  Button
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../api';
@@ -34,25 +36,25 @@ export const PatientList = () => {
 
   useEffect(() => {
 
-    let flag=false
+    let flag = false
     api.token.fetchMorningList().then((res) => {
       const response = JSON.parse(res.data).result
-     for(var i=0;i<response.length;i++)
-     if(response[i].status=="current"){
-      setCurrent(response[i])
-         }
+      for (var i = 0; i < response.length; i++)
+        if (response[i].status == "current") {
+          setCurrent(response[i])
+        }
       setMornList(response)
-     // setCurrent(response[0].tokenNumber)
-  })
+      // setCurrent(response[0].tokenNumber)
+    })
 
-  api.token.fetchAfternoonList().then((res) => {
-    const response = JSON.parse(res.data).result
-   for(var i=0;i<response.length;i++)
-   if(response[i].status=="current"){
-    setCurrent(response[i])
-       }
-    setAftList(response)
-})
+    api.token.fetchAfternoonList().then((res) => {
+      const response = JSON.parse(res.data).result
+      for (var i = 0; i < response.length; i++)
+        if (response[i].status == "current") {
+          setCurrent(response[i])
+        }
+      setAftList(response)
+    })
 
   }, []);
 

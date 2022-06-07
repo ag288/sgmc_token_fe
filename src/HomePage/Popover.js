@@ -14,7 +14,7 @@ import {
     Tr,
     Td,
 } from '@chakra-ui/react';
-import { CheckIcon, SettingsIcon } from '@chakra-ui/icons';
+import { CheckIcon, HamburgerIcon, SettingsIcon } from '@chakra-ui/icons';
 import api from '../api';
 
 // confirm deletion of staff profile
@@ -34,12 +34,23 @@ export const ButtonPopover = ({ item, current, setCurrent }) => {
     }
 
     function call() {
-        api.token.callNewToken({current,item}).then((res)=>{
-           // setCurrent(item)
-           window.location.reload()
-        })
-       
-       // localStorage.setItem("current", `${item.slot}-${item.tokenNumber}`)
+        let file = "", call = false
+        if (item.fileNumber == null || item.fileNumber == "" || item.fileNumber == "N" || item.fileNumber == "n") {
+            file = prompt("You are going to call " + item.name + "\nPlease enter the patient's file number")
+            console.log(file)
+        }
+        else {
+            call = window.confirm("You are going to call " + item.name)
+        }
+        if (file != null || call) {
+            if (!item.fileNumber)
+                item.fileNumber = file
+            api.token.callNewToken({ current, item }).then((res) => {
+                // setCurrent(item)
+                window.location.reload()
+            })
+        }
+        // localStorage.setItem("current", `${item.slot}-${item.tokenNumber}`)
         //localStorage.setItem("slot", item.slot)
         //close()
     }
@@ -62,17 +73,17 @@ export const ButtonPopover = ({ item, current, setCurrent }) => {
     return (
         <Popover trigger="click" placement="left" isOpen={isOpen} onClose={close} >
             <PopoverTrigger>
-                <IconButton isDisabled={item.status == "completed"} bg="transparent" icon={<SettingsIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                <IconButton isDisabled={item.status == "completed"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                 </IconButton>
             </PopoverTrigger >
             <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody>
                     <HStack spacing={"auto"}>
-                    <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button>
+                        {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
                         <Button mx="1%" colorScheme={"green"} onClick={call} >Call</Button>
                         <Button mx="1%" colorScheme={"red"} onClick={cancel} >Cancel</Button>
-                       
+
                     </HStack>
                 </PopoverBody>
             </PopoverContent>
