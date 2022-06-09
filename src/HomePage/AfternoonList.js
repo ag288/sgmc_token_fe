@@ -56,9 +56,6 @@ export const AfternoonList = ({ aftlist, current, setCurrent }) => {
                 else if (item.status == "completed" && !showCompleted) {
                     return false
                 }
-                else if(item.status=="current"){
-                    return false
-                }
                 else return true
             }
         })
@@ -97,21 +94,21 @@ export const AfternoonList = ({ aftlist, current, setCurrent }) => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filterList(aftlist).map((item) =>
-                                    <Tr  bg={item.status == "completed" ? "gray.200" : "white"}>
+                                {filterList(aftlist).map((item,index) =>
+                                    <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
                                         <Td><ButtonPopover current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                         <Td>{item.name}</Td>
                                         <Td>{item.fileNumber}</Td>
                                         <Td>{item.type}</Td>
-                                        <Td>{ item.timeIn? new Date('1970-01-01T' + item.timeIn + 'Z')
-                                        .toLocaleTimeString('en-US',
-                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }): ""}
-                                    </Td>
-                                    <Td>{ item.timeOut? new Date('1970-01-01T' + item.timeOut + 'Z')
-                                        .toLocaleTimeString('en-US',
-                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }): ""}
-                                    </Td>
+                                        <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
+                                            .toLocaleTimeString('en-US',
+                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                        </Td>
+                                        <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
+                                            .toLocaleTimeString('en-US',
+                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                        </Td>
                                     </Tr>
                                 )
                                 }

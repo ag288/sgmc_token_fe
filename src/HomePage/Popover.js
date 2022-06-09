@@ -73,7 +73,7 @@ export const ButtonPopover = ({ item, current, setCurrent }) => {
     return (
         <Popover trigger="click" placement="left" isOpen={isOpen} onClose={close} >
             <PopoverTrigger>
-                <IconButton isDisabled={item.status == "completed"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                <IconButton isDisabled={item.status == "completed" || item.status == "current"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                 </IconButton>
             </PopoverTrigger >
             <PopoverContent>

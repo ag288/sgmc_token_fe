@@ -29,5 +29,8 @@ export default function tokenApi(fetch, baseUrl) {
         callNextToken(data) {
             return fetch.post(`${baseUrl}/next`,{data})
         },
+        editFileNumber(data) {
+            return fetch.post(`${baseUrl}/edit-file`,{data})
+        },
     }
 }

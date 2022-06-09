@@ -1,5 +1,6 @@
 
 import axios from "axios";
+import bookApi from "./book";
 import settingsApi from "./settings";
 import tokenApi from "./token"
 export const fetch = axios.create({
@@ -28,7 +29,8 @@ export const rawFetch = (url) =>
 
 const api = {
     token: tokenApi(fetch, "/token"),
-    settings: settingsApi(fetch, "/settings")
+    settings: settingsApi(fetch, "/settings"),
+    book: bookApi(fetch, "/book")
 };
 
 export default api;

@@ -6,6 +6,9 @@ export default function settingsApi(fetch, baseUrl) {
         fetchSettings() {
             return fetch(`${baseUrl}/fetch`)
         },
+        fetchReasons() {
+            return fetch(`${baseUrl}/reasons`)
+        },
         updateSettings(data) {
             return fetch.post(`${baseUrl}/update`, { data })
         },
@@ -17,6 +20,12 @@ export default function settingsApi(fetch, baseUrl) {
         },
         deleteHolidays(data) {
             return fetch.post(`${baseUrl}/delete-holidays`,{data})
+        },
+        checkAvailability() {
+            return fetch(`${baseUrl}/check`)
+        },
+        decideSlots() {
+            return fetch(`${baseUrl}/slot`)
         },
     }
 }

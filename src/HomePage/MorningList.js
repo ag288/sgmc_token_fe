@@ -1,3 +1,4 @@
+import { CheckIcon, EditIcon } from '@chakra-ui/icons';
 import {
     Table,
     Thead,
@@ -16,7 +17,11 @@ import {
     Text,
     Heading,
     Checkbox,
-    filter
+    filter,
+    EditablePreview,
+    Editable,
+    EditableInput,
+    Input
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../api';
@@ -33,13 +38,6 @@ export const MorningList = ({ mornlist, current, setCurrent }) => {
 
     useEffect(() => {
 
-        // api.token.fetchMorningList().then((res) => {
-        //     const response = JSON.parse(res.data).result
-        //     console.log(response)
-        //     setMornList(response)
-        //    // setCurrent(response[0].tokenNumber)
-        // })
-
     }, []);
 
     function handleChange() {
@@ -55,12 +53,15 @@ export const MorningList = ({ mornlist, current, setCurrent }) => {
                 else if (item.status == "completed" && !showCompleted) {
                     return false
                 }
-                else if (item.status == "current") {
-                    return false
-                }
                 else return true
             }
         })
+    }
+
+    function editFileNumber(file, id) {
+       api.token.editFileNumber({file,id}).then((res)=>{
+           const response = JSON.parse(res.data).result
+       })
     }
 
     return (
@@ -91,12 +92,15 @@ export const MorningList = ({ mornlist, current, setCurrent }) => {
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {filterList(mornlist).map((item) =>
-                                <Tr bg={item.status == "completed" ? "gray.200" : "white"}>
+                            {filterList(mornlist).map((item, index) =>
+                                <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
                                     <Td><ButtonPopover current={current} setCurrent={setCurrent} item={item} /></Td>
                                     <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                     <Td>{item.name}</Td>
-                                    <Td>{item.fileNumber}</Td>
+                                    <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
+                                        <EditablePreview />
+                                        <EditableInput />
+                                    </Editable></Td>
                                     <Td>{item.type}</Td>
                                     <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                                         .toLocaleTimeString('en-US',
