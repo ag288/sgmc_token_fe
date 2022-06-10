@@ -14,6 +14,7 @@ import {
     Tr,
     Td,
     Spinner,
+    useToast,
 } from '@chakra-ui/react';
 import { CheckIcon, HamburgerIcon, SettingsIcon } from '@chakra-ui/icons';
 import api from '../api';
@@ -26,6 +27,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const [isOpen, setIsOpen] = useState(false)
     const open = () => setIsOpen(!isOpen)
     const close = () => setIsOpen(false)
+    const toast = useToast()
 
     function arrived() {
         api.token.setAsArrived({ item }).then((res) => {
@@ -63,7 +65,22 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
         api.token.cancelToken({ item }).then((res) => {
             const response = JSON.parse(res.data)
             setIsLoading(false)
+            toast({
+                title: 'Cancelled token successfully',
+                status: 'success',
+                duration: 3000,
+                isClosable: false,
+                position: "top"
+            })
             window.location.reload()
+        }).catch((err) => {
+            toast({
+                title: 'Something went wrong',
+                status: 'error',
+                duration: 3000,
+                isClosable: false,
+                position: "top"
+            })
         })
 
     }
