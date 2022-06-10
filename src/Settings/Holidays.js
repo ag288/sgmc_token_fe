@@ -71,6 +71,8 @@ export const Holidays = () => {
 
 
     function deleteHoliday(day) {
+        console.log("hi")
+        console.log(holidays.filter(item => item.date != day))
         setHolidays(holidays.filter(item => item.date != day))
         api.settings.deleteHolidays({ date: day.date }).then((res) => {
 
