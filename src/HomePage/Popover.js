@@ -76,8 +76,8 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     }
 
     return (
-        <Popover trigger="click" placement="left" isOpen={isOpen} onClose={close} preventOverflow={true}
-            flip={true} >
+        <Popover trigger="click" placement="bottom-end" isOpen={isOpen} onClose={close} preventOverflow={true}
+            flip={true}  >
             <PopoverTrigger>
                 <IconButton isDisabled={item.status == "completed" || item.status == "current"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                 </IconButton>
