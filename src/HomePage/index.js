@@ -63,7 +63,7 @@ export const PatientList = () => {
         bg={"gray.100"}>
         <Box>
           <Menu m="2%" closeOnBlur={true}>
-            <MenuButton as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
+            <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
             <MenuList color={"black"}>
               <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
               <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>

@@ -32,23 +32,26 @@ import {
     Radio,
     Select,
     InputGroup,
-    InputLeftAddon
+    InputLeftAddon,
+    PinInputField,
+    Link,
+    PinInput
 } from '@chakra-ui/react'
+import firebase from '../utils/firebase'
 import { useNavigate } from 'react-router-dom'
 import { FcHome } from 'react-icons/fc'
 import { useEffect, useState } from 'react'
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import api from '../api';
 
 export const TokenGeneration = () => {
     let navigate = useNavigate()
+    const [otp, setOtp] = useState("")
     const [settings, setSettings] = useState("")
+    const [state, setState] = useState(false)
     const [patients, setPatients] = useState([])
     const [token, setToken] = useState({
-        id: "",
-        new_name: "",
-        name: "",
-        phone: "",
-        fileNumber: ""
+        phone: ""
     })
 
     useEffect(() => {
@@ -58,59 +61,75 @@ export const TokenGeneration = () => {
             setSettings(response)
         })
 
+        const auth = getAuth();
+        window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
+            'size': 'invisible',
+            'callback': (response) => {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+                OnSignInSubmit();
+            }
+        }, auth);
+
     }, [])
 
-    function handleBlur(e) {
-        console.log(e.target.value)
-        api.book.fetchPatients(`91${e.target.value}`).then((res) => {
-            const response = JSON.parse(res.data).result
-            setPatients(response)
-        })
-    }
-
-    function handleNameChange(e) {
-        console.log(e.target.selectedIndex)
-        if (e.target.value != "Add new") {
-            setToken(prev => ({ ...prev, "fileNumber": patients[e.target.selectedIndex- 1].fileNumber }))
-            setToken(prev => ({ ...prev, "id": patients[e.target.selectedIndex - 1].patientID }))
-        }
-        setToken(prev => ({ ...prev, "name": e.target.value }))
-    }
-
-    function handleNewNameChange(e) {
-        setToken(prev => ({ ...prev, "new_name": e.target.value }))
-
-    }
-
-    function handleFileChange(e) {
-        setToken(prev => ({ ...prev, "fileNumber": e.target.value }))
-
-    }
 
     function handlePhoneChange(e) {
         setToken(prev => ({ ...prev, "phone": e.target.value }))
 
     }
 
-    function handleSubmit() {
-        console.log(token)
-        if(token.fileNumber!="" && token.phone!=""){
-        if (token.new_name == "") {
-            navigate("/pagetwo", { state: { token } })
+    const OtpSubmit = (e) => {
+
+        e.preventDefault();
+
+        let code = otp;
+        console.log(code)
+        window.confirmationResult.confirm(code).then((result) => {
+            navigate("/patient-details", { state: { token } })
+            alert("Verified successfully!")
+
+        })
+            .catch((error) => {
+                // User couldn't sign in (bad verification code?)
+                alert(`Verification failed : ${error}`)
+                navigate("/book")
+
+            });
+    };
+
+
+    const OnSignInSubmit = (e) => {
+        setState(true)
+        e.preventDefault()
+        if (token.phone == " " || !(token.phone.length == 10)) {
+            alert("Please enter a valid phone number")
         }
+
         else {
-            api.book.createPatient({ token }).then((res) => {
-                const response = JSON.parse(res.data).result
-                console.log(response)
-                setToken(prev => ({ ...prev, "id": response }))
-                navigate("/pagetwo", { state: { token, id: response } })
-            })
+            // myContext.setState(true)
+            const phoneNumber = '+91' + token.phone;
+
+            console.log(window.recaptchaVerifier)
+            const appVerifier = window.recaptchaVerifier;
+            const auth = getAuth();
+            signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((confirmationResult) => {
+                // SMS sent. Prompt user to type the code from the message, then sign the
+                // user in with confirmationResult.confirm(code).
+
+                window.confirmationResult = confirmationResult;
+                // window.recaptchaVerifier.clear()
+                console.log(confirmationResult)
+                // ...
+            }).catch((error) => {
+                console.log(error)
+                //window.recaptchaVerifier.clear()
+                // Error; SMS not sent
+                // ...
+            });
+
         }
-    }
-    else {
-        alert("Please fill in all the values")
-    }
-    }
+    };
+
 
     return (
         <>
@@ -130,46 +149,55 @@ export const TokenGeneration = () => {
                             boxShadow={'lg'}
                             width="full"
                             p={8}>
-                            <Stack spacing={4}>
-                                <FormControl id="phone" isRequired >
-                                    <FormLabel>Phone number</FormLabel>
-                                    <InputGroup>
-                                        <InputLeftAddon children='91'></InputLeftAddon>
-                                        <Input value={token.phone} onChange={handlePhoneChange} onBlur={handleBlur} type="number" />
-                                    </InputGroup>
-                                </FormControl>
-                                <FormControl id="name" isRequired >
-                                    <FormLabel>Name</FormLabel>
-                                    <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
-                                        {patients.map((patient) => <option>{`${patient.name}`}</option>)}
-                                        <option>Add new</option>
-                                    </Select>
-                                </FormControl>
-                                {
-                                    token.name == "Add new" ? <FormControl id="name" isRequired >
-                                        <FormLabel>Enter the name</FormLabel>
-                                        <Input value={token.new_name} onChange={handleNewNameChange}>
-                                        </Input>
-                                    </FormControl> : null}
-                                <FormControl id="file">
-                                    <FormLabel >File Number</FormLabel>
-                                    <Input type="number" value={token.fileNumber} onChange={handleFileChange} />
-                                </FormControl>
-
-                            </Stack>
-                            <Button
-                                onClick={handleSubmit}
-                                mt={4}
-                                bg={'blue.400'}
-                                color={'white'}
-                                _hover={{
-                                    bg: 'blue.500',
-                                }}>
-                                Next
-                            </Button>
+                            {state ? <Stack spacing={0}>
+                                <HStack marginBottom={5}>
+                                    <PinInput otp >
+                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                    </PinInput>
+                                </HStack>
+                                {/* <Timer time="40" /> */}
+                                <Link align="right" fontSize={14} color={'blue.400'}>Resend OTP</Link>
+                                <Button
+                                    type='submit'
+                                    id="verify-otp"
+                                    onClick={OtpSubmit}
+                                    bg={'blue.400'}
+                                    color={'white'}
+                                    _hover={{
+                                        bg: 'blue.500',
+                                    }}>
+                                    Verify
+                                </Button>
+                            </Stack> :
+                                <>
+                                    <FormControl id="phone" isRequired >
+                                        <FormLabel>Phone number</FormLabel>
+                                        <InputGroup>
+                                            <InputLeftAddon children='91'></InputLeftAddon>
+                                            <Input value={token.phone} onChange={handlePhoneChange} type="number" />
+                                        </InputGroup>
+                                    </FormControl>
+                                    <Button
+                                        onClick={OnSignInSubmit}
+                                        mt={4}
+                                        bg={'blue.400'}
+                                        color={'white'}
+                                        _hover={{
+                                            bg: 'blue.500',
+                                        }}>
+                                        Send OTP
+                                    </Button>
+                                </>
+                            }
                         </Box>
                     </Stack>
                 }
+                <Box id="sign-in-button"></Box>
             </Flex>
         </>
     )
