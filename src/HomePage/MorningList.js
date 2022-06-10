@@ -31,7 +31,7 @@ import { ButtonPopover } from './Popover';
 
 // List of staff profiles pending approval
 
-export const MorningList = ({ mornlist, current, setCurrent }) => {
+export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurrent }) => {
 
     //const [mornlist, setMornList] = useState([])
     const [showCompleted, setShowCompleted] = useState(false)
@@ -94,7 +94,7 @@ export const MorningList = ({ mornlist, current, setCurrent }) => {
                         <Tbody>
                             {filterList(mornlist).map((item, index) =>
                                 <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
-                                    <Td><ButtonPopover current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                     <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                     <Td>{item.name}</Td>
                                     <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>

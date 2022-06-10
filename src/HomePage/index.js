@@ -7,6 +7,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Spinner,
   Stack,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
@@ -25,6 +26,7 @@ export const PatientList = () => {
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
   const [state, setState] = useState(0)
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
 
@@ -67,11 +69,23 @@ export const PatientList = () => {
             </MenuList>
           </Menu>
         </Box>
-        <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'full'}>
-          <CurrentPatient current={current} setCurrent={setCurrent} />
-          <MorningList mornlist={mornlist} current={current} setCurrent={setCurrent} />
-          <AfternoonList aftlist={aftlist} current={current} setCurrent={setCurrent} />
-        </Stack>
+
+        {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
+          thickness='4px'
+          speed='0.65s'
+          emptyColor='gray.200'
+          color='blue.500'
+          size="xl"
+          ml={"40%"}
+          mt="20%"
+        /> </Box> :
+          <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'full'}>
+            <CurrentPatient current={current} setCurrent={setCurrent} />
+            <MorningList loading={isLoading} setIsLoading={setIsLoading} mornlist={mornlist} current={current} setCurrent={setCurrent} />
+            <AfternoonList loading={isLoading} setIsLoading={setIsLoading} aftlist={aftlist} current={current} setCurrent={setCurrent} />
+          </Stack>
+        }
+
       </Flex>
     </>
   )

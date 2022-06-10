@@ -26,7 +26,7 @@ import { ButtonPopover } from './Popover';
 
 // List of staff profiles pending approval
 
-export const AfternoonList = ({ aftlist, current, setCurrent }) => {
+export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCurrent }) => {
 
     const morningEnd = new Date(new Date().setHours(14, 0, 0));
     const [hideAfternoon, setHideAfternoon] = useState(
@@ -94,9 +94,9 @@ export const AfternoonList = ({ aftlist, current, setCurrent }) => {
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filterList(aftlist).map((item,index) =>
+                                {filterList(aftlist).map((item, index) =>
                                     <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
-                                        <Td><ButtonPopover current={current} setCurrent={setCurrent} item={item} /></Td>
+                                        <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                         <Td>{item.name}</Td>
                                         <Td>{item.fileNumber}</Td>
