@@ -61,18 +61,8 @@ export const PatientList = () => {
 
       <Flex
         minH={'100vh'}
-        width={{ sm: 'fit-content', md: 'full' }}
+        width='fit-content'
         bg={"gray.100"}>
-        <Box>
-          <Menu m="2%" closeOnBlur={true}>
-            <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
-            <MenuList color={"black"}>
-              <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
-              <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
-              <MenuItem onClick={() => user.setUser(null)} >Logout</MenuItem>
-            </MenuList>
-          </Menu>
-        </Box>
 
         {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
           thickness='4px'
@@ -83,7 +73,18 @@ export const PatientList = () => {
           ml={"40%"}
           mt="20%"
         /> </Box> :
-          <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'full'}>
+          <Stack mx={'auto'} spacing="2%" py={3} px={3} width={'full'}>
+            <Box>
+              <Menu m="2%" closeOnBlur={true}>
+                <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
+                <MenuList color={"black"}>
+                  <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
+                  <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
+                  <MenuItem onClick={() => user.setUser(null)} >Logout</MenuItem>
+                </MenuList>
+              </Menu>
+            </Box>
+
             <CurrentPatient current={current} setCurrent={setCurrent} />
             <MorningList loading={isLoading} setIsLoading={setIsLoading} mornlist={mornlist} current={current} setCurrent={setCurrent} />
             <AfternoonList loading={isLoading} setIsLoading={setIsLoading} aftlist={aftlist} current={current} setCurrent={setCurrent} />
