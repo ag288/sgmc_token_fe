@@ -26,6 +26,7 @@ import {
 import { useState, useEffect } from 'react'
 import api from '../api';
 import { CurrentPatient } from './CurrentPatient';
+import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 
 
@@ -78,17 +79,18 @@ export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurr
                 p={8}
                 width='full'>
                 <TableContainer>
-                    <Table variant='striped' colorScheme='grey'>
+                    <Table size="sm" variant='striped' colorScheme='grey'>
                         <Thead>
                             <Tr>
                                 <Th></Th>
                                 <Th>Token No.
                                 </Th>
                                 <Th>Name</Th>
-                                <Th>File No.</Th>
+                                <Th></Th>
+                                {/* <Th>File No.</Th>
                                 <Th>Type</Th>
                                 <Th>In</Th>
-                                <Th>Out</Th>
+                                <Th>Out</Th> */}
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -97,7 +99,8 @@ export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurr
                                     <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                     <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                     <Td>{item.name}</Td>
-                                    <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
+                                    <Td><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    {/* <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
                                         <EditablePreview />
                                         <EditableInput />
                                     </Editable></Td>
@@ -109,7 +112,7 @@ export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurr
                                     <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
                                         .toLocaleTimeString('en-US',
                                             { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                    </Td>
+                                    </Td> */}
                                 </Tr>
                             )
                             }

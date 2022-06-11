@@ -62,6 +62,7 @@ export const PatientList = () => {
       <Flex
         minH={'100vh'}
         width='fit-content'
+        height="fit-content"
         bg={"gray.100"}>
 
         {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
