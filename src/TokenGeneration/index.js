@@ -39,7 +39,7 @@ import {
 } from '@chakra-ui/react'
 import firebase from '../utils/firebase'
 import { useNavigate } from 'react-router-dom'
-import { FcHome } from 'react-icons/fc'
+import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import api from '../api';
@@ -136,67 +136,70 @@ export const TokenGeneration = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                <Button m="1%" leftIcon={<FcHome />} colorScheme={"blue"} onClick={() => navigate('/home')}>Home</Button>
-
-                {settings != "" ?
-                    <Heading size="md">{settings}</Heading>
-                    :
-                    <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                        <Heading fontSize={'2xl'}>Book a Token</Heading>
-                        <Box
-                            rounded={'lg'}
-                            bg={'white'}
-                            boxShadow={'lg'}
-                            width="full"
-                            p={8}>
-                            {state ? <Stack spacing={0}>
-                                <HStack marginBottom={5}>
-                                    <PinInput otp >
-                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
-                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
-                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
-                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
-                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
-                                        <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
-                                    </PinInput>
-                                </HStack>
-                                {/* <Timer time="40" /> */}
-                                <Link align="right" fontSize={14} color={'blue.400'}>Resend OTP</Link>
-                                <Button
-                                    type='submit'
-                                    id="verify-otp"
-                                    onClick={OtpSubmit}
-                                    bg={'blue.400'}
-                                    color={'white'}
-                                    _hover={{
-                                        bg: 'blue.500',
-                                    }}>
-                                    Verify
-                                </Button>
-                            </Stack> :
-                                <>
-                                    <FormControl id="phone" isRequired >
-                                        <FormLabel>Phone number</FormLabel>
-                                        <InputGroup>
-                                            <InputLeftAddon children='91'></InputLeftAddon>
-                                            <Input value={token.phone} onChange={handlePhoneChange} type="number" />
-                                        </InputGroup>
-                                    </FormControl>
+                     <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+                   
+                <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
+                    {settings != "" ?
+                        <Heading size="md">{settings}</Heading>
+                        :
+                        <>
+                            <Heading fontSize={'2xl'}>Book a Token</Heading>
+                            <Box
+                                rounded={'lg'}
+                                bg={'white'}
+                                boxShadow={'lg'}
+                                width="full"
+                                p={8}>
+                                {state ? <Stack spacing={0}>
+                                    <HStack marginBottom={5}>
+                                        <PinInput otp >
+                                            <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                            <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                            <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                            <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                            <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                            <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
+                                        </PinInput>
+                                    </HStack>
+                                    {/* <Timer time="40" /> */}
+                                    <Link align="right" fontSize={14} color={'blue.400'}>Resend OTP</Link>
                                     <Button
-                                        onClick={OnSignInSubmit}
-                                        mt={4}
+                                        type='submit'
+                                        id="verify-otp"
+                                        onClick={OtpSubmit}
                                         bg={'blue.400'}
                                         color={'white'}
                                         _hover={{
                                             bg: 'blue.500',
                                         }}>
-                                        Send OTP
+                                        Verify
                                     </Button>
-                                </>
-                            }
-                        </Box>
-                    </Stack>
-                }
+                                </Stack> :
+                                    <>
+                                        <FormControl id="phone" isRequired >
+                                            <FormLabel>Phone number</FormLabel>
+                                            <InputGroup>
+                                                <InputLeftAddon children='91'></InputLeftAddon>
+                                                <Input value={token.phone} onChange={handlePhoneChange} type="number" />
+                                            </InputGroup>
+                                        </FormControl>
+                                        <Button
+                                            onClick={OnSignInSubmit}
+                                            mt={4}
+                                            bg={'blue.400'}
+                                            color={'white'}
+                                            _hover={{
+                                                bg: 'blue.500',
+                                            }}>
+                                            Send OTP
+                                        </Button>
+                                    </>
+                                }
+                            </Box>
+                        </>
+
+                    }
+                </Stack>
                 <Box id="sign-in-button"></Box>
             </Flex>
         </>

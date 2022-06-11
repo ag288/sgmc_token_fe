@@ -128,8 +128,8 @@ export const GeneralSettings = () => {
                 width='full'>
                 <Heading size="lg">Settings</Heading>
                 <VStack width="full">
-                    <VStack width="full" alignItems={"baseline"} m={2}>
-                        <Text mt="2%" fontWeight={"bold"}>Working hours - Morning</Text>
+                    <VStack width="full" alignItems={"baseline"} p={4}>
+                        <Text fontWeight={"bold"}>Working hours - Morning</Text>
                         <HStack >
                             <Input type="time" id={"1"} onChange={handleChange} value={settings.working_start_time_1}></Input>
                             <Text>to</Text>
