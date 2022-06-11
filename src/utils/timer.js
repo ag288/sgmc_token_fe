@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useContext } from 'react';
 import {
   Text
 } from '@chakra-ui/react';
-import { OtpContext } from '../components/Otp';
 
 // countdown timer component  (for otp)
 
