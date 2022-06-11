@@ -23,7 +23,8 @@ export const CurrentPatient = ({ current, setCurrent }) => {
             <Box
                 borderWidth="1px"
                 borderRadius="lg"
-                w={{ sm: '100%', md: '35rem' }}
+                width={"100%"}
+               // w={{ sm: '100%', md: '35rem' }}
                 height={{ sm: '476px', md: '9rem' }}
                 direction={{ base: 'column', md: 'row' }}
                 bg={'white'}

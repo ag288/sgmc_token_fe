@@ -62,7 +62,7 @@ export const PatientList = () => {
 
       <Flex
         minH={'100vh'}
-        width='fit-content'
+        width='100%'
         height="full"
         overflow={"scroll"}
         bg={"gray.100"}>

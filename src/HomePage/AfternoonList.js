@@ -21,6 +21,7 @@ import {
 import { useState, useEffect } from 'react'
 import api from '../api';
 import { CurrentPatient } from './CurrentPatient';
+import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 
 
@@ -81,37 +82,43 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                     p={8}
                     width='full'>
                     <TableContainer>
-                        <Table variant='striped' colorScheme='grey'>
-                            <Thead>
-                                <Tr>
-                                    <Th></Th>
-                                    <Th>Token No.</Th>
-                                    <Th>Name</Th>
-                                    <Th>File No.</Th>
-                                    <Th>Type</Th>
-                                    <Th>In</Th>
-                                    <Th>Out</Th>
+                        <Table size="sm" variant='striped' colorScheme='grey'>
+                        <Thead>
+                            <Tr>
+                                <Th></Th>
+                                <Th>Token No.
+                                </Th>
+                                <Th>Name</Th>
+                                <Th></Th>
+                                {/* <Th>File No.</Th>
+                                <Th>Type</Th>
+                                <Th>In</Th>
+                                <Th>Out</Th> */}
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {filterList(aftlist).map((item, index) =>
+                                <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
+                                    <Td width={"10%"}><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    <Td  width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
+                                    <Td width={"35%"}>{item.name}</Td>
+                                    <Td  width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    {/* <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
+                                        <EditablePreview />
+                                        <EditableInput />
+                                    </Editable></Td>
+                                    <Td>{item.type}</Td>
+                                    <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
+                                        .toLocaleTimeString('en-US',
+                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                    </Td>
+                                    <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
+                                        .toLocaleTimeString('en-US',
+                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                    </Td> */}
                                 </Tr>
-                            </Thead>
-                            <Tbody>
-                                {filterList(aftlist).map((item, index) =>
-                                    <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
-                                        <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                        <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
-                                        <Td>{item.name}</Td>
-                                        <Td>{item.fileNumber}</Td>
-                                        <Td>{item.type}</Td>
-                                        <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
-                                            .toLocaleTimeString('en-US',
-                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                        </Td>
-                                        <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
-                                            .toLocaleTimeString('en-US',
-                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                        </Td>
-                                    </Tr>
-                                )
-                                }
+                            )
+                            }
                             </Tbody>
                         </Table>
                     </TableContainer>
