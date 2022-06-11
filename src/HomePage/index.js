@@ -63,7 +63,8 @@ export const PatientList = () => {
       <Flex
         minH={'100vh'}
         width='fit-content'
-        height="fit-content"
+        height="full"
+        overflow={"scroll"}
         bg={"gray.100"}>
 
         {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
@@ -75,7 +76,7 @@ export const PatientList = () => {
           ml={"40%"}
           mt="20%"
         /> </Box> :
-          <Stack spacing="2%" py={3} px={3} width={'auto'}>
+          <Stack spacing="2%" py={3} px={3} width={'50%'}>
             <Box>
               <Menu m="2%" closeOnBlur={true}>
                 <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
