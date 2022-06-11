@@ -126,53 +126,55 @@ export const GeneralSettings = () => {
                 p={8}
                 width='full'>
                 <Heading size="lg">Settings</Heading>
-                    <VStack width="full">
-                        <HStack width="full" spacing="auto">
-                            <Text width="50%">Working hours - Morning</Text>
-                            <HStack width="50%">
-                                <Input type="time" id={"1"} onChange={handleChange} value={settings.working_start_time_1}></Input>
-                                <Text>to</Text>
-                                <Input type="time" id={"2"} onChange={handleChange} value={settings.working_end_time_1}></Input>
-                            </HStack>
+                <VStack width="full">
+                    <VStack width="full" alignItems={"baseline"}>
+                        <Text mt="2%" fontWeight={"bold"}>Working hours - Morning</Text>
+                        <HStack >
+                            <Input type="time" id={"1"} onChange={handleChange} value={settings.working_start_time_1}></Input>
+                            <Text>to</Text>
+                            <Input type="time" id={"2"} onChange={handleChange} value={settings.working_end_time_1}></Input>
                         </HStack>
-                        <HStack width="full" spacing="auto">
-                            <Text width="50%">Working hours - Afternoon</Text>
-                            <HStack width="50%">
-                                <Input type="time" id={"3"} onChange={handleChange} value={settings.working_start_time_2}></Input>
-                                <Text>to</Text>
-                                <Input type="time" id={"4"} onChange={handleChange} value={settings.working_end_time_2}></Input>
-                            </HStack>
+                    </VStack>
+                    <VStack width="full"  alignItems={"baseline"}>
+                        <Text  mt="2%" fontWeight={"bold"}>Working hours - Afternoon</Text>
+                        <HStack >
+                            <Input type="time" id={"3"} onChange={handleChange} value={settings.working_start_time_2}></Input>
+                            <Text>to</Text>
+                            <Input type="time" id={"4"} onChange={handleChange} value={settings.working_end_time_2}></Input>
                         </HStack>
-                        <HStack>
-                            <Text>Doctor's working days</Text>
+                    </VStack>
+                    <VStack width="full"  alignItems={"baseline"}>
+                        <Text  mt="2%" fontWeight={"bold"} >Working days</Text>
+                        <HStack >
                             <Input type="text" id={"5"} onChange={handleChange} value={settings.working_start_day}></Input>
                             <Text>to</Text>
                             <Input type="text" id={"6"} onChange={handleChange} value={settings.working_end_day}></Input>
                         </HStack>
-                        <HStack>
-                            <Text>Max. number of tokens in the morning slot</Text>
-                            <Input type="number" id={"7"} onChange={handleChange} value={settings.morn_max_tokens}></Input>
-                        </HStack>
-                        <HStack>
-                            <Text>Max. number of tokens in the afternoon slot</Text>
-                            <Input type="number" id={"8"} onChange={handleChange} value={settings.aft_max_tokens}></Input>
-                        </HStack>
-                        <HStack>
-                            <Text>Number of patients remaining before notifying next patient</Text>
-                            <Input type="number" id={"9"} onChange={handleChange} value={settings.gap}></Input>
-
-                        </HStack>
-                        <HStack>
-                            <Text>Token booking opens at</Text>
-                            <Input type="time" id={"10"} onChange={handleChange} value={settings.token_start}></Input>
-
-                        </HStack>
-                        <HStack>
-                            <Text>Token booking closes at</Text>
-                            <Input type="time" id={"11"} onChange={handleChange} value={settings.token_end}></Input>
-                        </HStack>
                     </VStack>
-               
+                    <VStack width="full"  alignItems={"baseline"}>
+                        <Text mt="2%" fontWeight={"bold"} >Maximum tokens - Morning</Text>
+                        <Input type="number" id={"7"} onChange={handleChange} value={settings.morn_max_tokens}></Input>
+                    </VStack>
+                    <VStack width="full"  alignItems={"baseline"}>
+                        <Text mt="2%" fontWeight={"bold"} >Maximum tokens - Afternoon</Text>
+                        <Input type="number" id={"8"} onChange={handleChange} value={settings.aft_max_tokens}></Input>
+                    </VStack>
+                    <VStack width="full"  alignItems={"baseline"}>
+                        <Text mt="2%" fontWeight={"bold"} >Notify before</Text>
+                        <Input type="number" id={"9"} onChange={handleChange} value={settings.gap}></Input>
+
+                    </VStack>
+                    <VStack width="full"  alignItems={"baseline"}>
+                        <Text mt="2%" fontWeight={"bold"} >Token booking opens at</Text>
+                        <Input type="time" id={"10"} onChange={handleChange} value={settings.token_start}></Input>
+
+                    </VStack>
+                    <VStack width="full"  alignItems={"baseline"}>
+                        <Text mt="2%" fontWeight={"bold"} >Token booking closes at</Text>
+                        <Input type="time" id={"11"} onChange={handleChange} value={settings.token_end}></Input>
+                    </VStack>
+                </VStack>
+
                 <Box mt="2%" align={"right"}>
                     <Button isLoading={isLoading} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>

@@ -59,7 +59,7 @@ export const PatientList = () => {
 
       <Flex
         minH={'100vh'}
-        width="full"
+        width="fit-content"
         bg={"gray.100"}>
         <Box>
           <Menu m="2%" closeOnBlur={true}>
