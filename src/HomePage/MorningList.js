@@ -76,9 +76,8 @@ export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurr
                 rounded={'lg'}
                 bg={'white'}
                 boxShadow={'lg'}
-                p={8}
-                width='full'>
-                <TableContainer>
+                p={3}
+                width='auto'>
                     <Table size="sm" variant='striped' colorScheme='grey'>
                         <Thead>
                             <Tr>
@@ -96,10 +95,10 @@ export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurr
                         <Tbody>
                             {filterList(mornlist).map((item, index) =>
                                 <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
-                                    <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                    <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
-                                    <Td>{item.name}</Td>
-                                    <Td><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    <Td width={"10%"}><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    <Td  width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
+                                    <Td width={"35%"}>{item.name}</Td>
+                                    <Td  width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
                                     {/* <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
                                         <EditablePreview />
                                         <EditableInput />
@@ -116,11 +115,8 @@ export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurr
                                 </Tr>
                             )
                             }
-
-
                         </Tbody>
                     </Table>
-                </TableContainer>
             </Box>
 
         </>

@@ -34,6 +34,7 @@ export const PatientList = () => {
 
     api.token.fetchMorningList().then((res) => {
       const response = JSON.parse(res.data).result
+      console.log(response)
       for (var i = 0; i < response.length; i++)
         if (response[i].status == "current") {
           setCurrent(response[i])
@@ -74,7 +75,7 @@ export const PatientList = () => {
           ml={"40%"}
           mt="20%"
         /> </Box> :
-          <Stack mx={'auto'} spacing="2%" py={3} px={3} width={'full'}>
+          <Stack mx={'auto'} spacing="2%" py={3} px={3} width={'50%'}>
             <Box>
               <Menu m="2%" closeOnBlur={true}>
                 <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />

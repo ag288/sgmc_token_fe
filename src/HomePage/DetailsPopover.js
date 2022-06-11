@@ -33,11 +33,16 @@ import api from '../api';
 export const DetailsPopover = ({ item, current, setCurrent }) => {
 
     const [isOpen, setIsOpen] = useState(false)
+    const [file, setFile] = useState(item.fileNumber)
     const open = () => setIsOpen(!isOpen)
     const close = () => setIsOpen(false)
     const toast = useToast()
 
-    function editFileNumber(file, id) {
+    function handleFile(value) {
+        setFile(value)
+    }
+
+    function editFileNumber(id) {
         api.token.editFileNumber({ file, id }).then((res) => {
             const response = JSON.parse(res.data).result
         })
@@ -65,7 +70,8 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                         </Thead>
                         <Tbody>
                             <Tr>
-                                <Td><Editable onSubmit={(file) => editFileNumber(file, item.patientID)} defaultValue={item.fileNumber}>
+                                {console.log(item.fileNumber)}
+                                <Td><Editable onSubmit={() => editFileNumber(item.patientID)} onChange={handleFile} value={file}>
                                     <EditablePreview />
                                     <EditableInput />
                                 </Editable></Td>
