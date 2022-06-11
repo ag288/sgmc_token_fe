@@ -1,22 +1,17 @@
-import { HamburgerIcon, SettingsIcon } from "@chakra-ui/icons";
-import { Box, Flex, Heading, Stack, Image, Text, HStack, Center, VStack, Button } from "@chakra-ui/react"
-import { useEffect, useState } from "react";
+import { HamburgerIcon, } from "@chakra-ui/icons";
+import { Box, Heading,  Text, HStack, VStack, Button } from "@chakra-ui/react"
+import { useEffect } from "react";
 import api from "../api";
 
 
-export const CurrentPatient = ({ current, setCurrent }) => {
-    const [curr, setCurr] = useState("")
+export const CurrentPatient = ({ current}) => {
+    
 
     useEffect(() => {
 
     }, [current]);
 
-    function next() {
-
-        api.token.callNextToken({ item: current }).then((res) => {
-            window.location.reload()
-        })
-    }
+   
 
     return (
         <VStack>
@@ -24,7 +19,6 @@ export const CurrentPatient = ({ current, setCurrent }) => {
                 borderWidth="1px"
                 borderRadius="lg"
                 width={"100%"}
-               // w={{ sm: '100%', md: '35rem' }}
                 height={{ sm: '476px', md: '9rem' }}
                 direction={{ base: 'column', md: 'row' }}
                 bg={'white'}

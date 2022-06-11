@@ -5,7 +5,6 @@ import { Settings } from './Settings';
 import { TokenGeneration } from './TokenGeneration';
 import { TokenDetails } from './TokenGeneration/TokenDetails';
 import { PatientDetails } from './TokenGeneration/PatientDetails';
-import { OTPEntryField } from './TokenGeneration/VerifyOtp';
 
 function AuthenticatedUser() {
 
@@ -16,7 +15,6 @@ function AuthenticatedUser() {
         <Route path="/home" element={<PatientList />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/book" element={<TokenGeneration />} />
-        <Route path="/verify-otp" element={<OTPEntryField />} />
         <Route path="/patient-details" element={<PatientDetails />} />
         <Route path="/token-details" element={<TokenDetails />} />
         <Route path="*" element={<PatientList />} />

@@ -1,38 +1,18 @@
-import { ArrowUpIcon, DeleteIcon } from '@chakra-ui/icons'
+
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
+   
     Box,
     Flex,
     Stack,
-    HStack,
-    Tooltip,
-    useDisclosure,
-    IconButton,
-    Text,
+ 
     Heading,
-    Checkbox,
-    filter,
-    VStack,
+   
     Input,
     Button,
     FormControl,
     FormLabel,
-    List,
-    useToast,
-    ListItem,
-    UnorderedList,
-    useColorModeValue,
-    RadioGroup,
-    Radio,
+  
     Select,
-    InputGroup,
-    InputLeftAddon
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FcHome } from 'react-icons/fc'

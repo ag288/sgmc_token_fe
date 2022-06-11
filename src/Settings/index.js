@@ -1,5 +1,4 @@
 import {
-    Button,
     Flex,
     IconButton,
     Stack,
@@ -9,7 +8,6 @@ import { useNavigate } from 'react-router-dom'
 import { GeneralSettings } from './GeneralSettings'
 import { Holidays } from './Holidays'
 import { FaHome } from 'react-icons/fa'
-import { useState } from 'react'
 
 
 export const Settings = () => {

@@ -1,24 +1,20 @@
 import React, { useState } from 'react'
 import {
-    Box, Button, Modal, Text, useDisclosure, VStack, Popover,
+    Popover,
     PopoverTrigger,
     PopoverContent,
-    PopoverHeader,
+    
     PopoverBody,
-    PopoverFooter,
+  
     PopoverArrow,
     PopoverCloseButton,
-    PopoverAnchor,
-    HStack,
     IconButton,
     Tr,
     Td,
-    Spinner,
     useToast,
     Editable,
     EditablePreview,
     EditableInput,
-    Heading,
     Table,
     Thead,
     Tbody,
@@ -70,7 +66,6 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                         </Thead>
                         <Tbody>
                             <Tr>
-                                {console.log(item.fileNumber)}
                                 <Td><Editable onSubmit={() => editFileNumber(item.patientID)} onChange={handleFile} value={file}>
                                     <EditablePreview />
                                     <EditableInput />

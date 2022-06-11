@@ -1,36 +1,16 @@
-import { DeleteIcon } from '@chakra-ui/icons'
+
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
     Box,
-    Flex,
-    Stack,
     HStack,
-    Tooltip,
-    useDisclosure,
-    IconButton,
     Text,
     Heading,
-    Checkbox,
-    filter,
     VStack,
     Input,
     Button,
-    FormControl,
-    FormLabel,
-    List,
     useToast,
-    ListItem,
-    UnorderedList,
     Divider
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import { FcCalendar } from 'react-icons/fc'
 import api from '../api'
 
 

@@ -1,22 +1,15 @@
 import React, { useState } from 'react'
 import {
-    Box, Button, Modal, Text, useDisclosure, VStack, Popover,
+    Button, Popover,
     PopoverTrigger,
     PopoverContent,
-    PopoverHeader,
     PopoverBody,
-    PopoverFooter,
     PopoverArrow,
-    PopoverCloseButton,
-    PopoverAnchor,
     HStack,
     IconButton,
-    Tr,
-    Td,
-    Spinner,
     useToast,
 } from '@chakra-ui/react';
-import { CheckIcon, HamburgerIcon, SettingsIcon } from '@chakra-ui/icons';
+import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../api';
 
 // confirm deletion of staff profile
@@ -85,12 +78,6 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
 
     }
 
-    function completed() {
-        api.token.setAsCompleted({ item }).then((res) => {
-            const response = JSON.parse(res.data)
-            window.location.reload()
-        })
-    }
 
     return (
         <Popover trigger="click" placement="bottom-end" isOpen={isOpen} onClose={close} preventOverflow={true}

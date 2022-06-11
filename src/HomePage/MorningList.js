@@ -1,4 +1,4 @@
-import { CheckIcon, EditIcon } from '@chakra-ui/icons';
+
 import {
     Table,
     Thead,
@@ -6,22 +6,10 @@ import {
     Tr,
     Th,
     Td,
-    TableContainer,
     Box,
-    Flex,
-    Stack,
     HStack,
-    Tooltip,
-    useDisclosure,
-    IconButton,
-    Text,
     Heading,
     Checkbox,
-    filter,
-    EditablePreview,
-    Editable,
-    EditableInput,
-    Input
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../api';
@@ -57,12 +45,6 @@ export const MorningList = ({isLoading, setIsLoading, mornlist, current, setCurr
                 else return true
             }
         })
-    }
-
-    function editFileNumber(file, id) {
-       api.token.editFileNumber({file,id}).then((res)=>{
-           const response = JSON.parse(res.data).result
-       })
     }
 
     return (

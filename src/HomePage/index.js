@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   Flex,
   IconButton,
   Menu,
@@ -27,7 +26,6 @@ export const PatientList = () => {
   const [current, setCurrent] = useState(0)
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
-  const [state, setState] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
@@ -40,7 +38,6 @@ export const PatientList = () => {
           setCurrent(response[i])
         }
       setMornList(response)
-      // setCurrent(response[0].tokenNumber)
     })
 
     api.token.fetchAfternoonList().then((res) => {

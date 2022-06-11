@@ -1,36 +1,18 @@
-import { ArrowUpIcon, DeleteIcon } from '@chakra-ui/icons'
+
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
-    TableContainer,
+
     Box,
     Flex,
     Stack,
     HStack,
-    Tooltip,
-    useDisclosure,
+
     IconButton,
-    Text,
+
     Heading,
-    Checkbox,
-    filter,
-    VStack,
     Input,
     Button,
     FormControl,
     FormLabel,
-    List,
-    useToast,
-    ListItem,
-    UnorderedList,
-    useColorModeValue,
-    RadioGroup,
-    Radio,
-    Select,
     InputGroup,
     InputLeftAddon,
     PinInputField,
@@ -43,7 +25,9 @@ import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import api from '../api';
-
+import {
+    Timer
+} from '../utils/timer'
 export const TokenGeneration = () => {
     let navigate = useNavigate()
     const [otp, setOtp] = useState("")
@@ -136,8 +120,8 @@ export const TokenGeneration = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                     <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
-                   
+                <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+
                 <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
                     {settings != "" ?
                         <Heading size="md">{settings}</Heading>
@@ -161,7 +145,7 @@ export const TokenGeneration = () => {
                                             <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
                                         </PinInput>
                                     </HStack>
-                                    {/* <Timer time="40" /> */}
+                                    <Timer time="40" setState={setState}/>
                                     <Link align="right" fontSize={14} color={'blue.400'}>Resend OTP</Link>
                                     <Button
                                         type='submit'

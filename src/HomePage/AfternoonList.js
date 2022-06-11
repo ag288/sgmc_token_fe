@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronRightIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import {
     Table,
     Thead,
@@ -8,19 +8,11 @@ import {
     Td,
     TableContainer,
     Box,
-    Flex,
-    Stack,
     HStack,
-    Tooltip,
-    useDisclosure,
-    IconButton,
-    Text,
     Heading,
     Checkbox
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import api from '../api';
-import { CurrentPatient } from './CurrentPatient';
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 
@@ -39,11 +31,6 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
 
     useEffect(() => {
 
-        // api.token.fetchAfternoonList().then((res) => {
-        //     const response = JSON.parse(res.data).result
-        //     setAftList(response)
-        //     console.log(response)
-        // })
 
     }, []);
 
@@ -83,27 +70,27 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                     width='full'>
                     <TableContainer>
                         <Table size="sm" variant='striped' colorScheme='grey'>
-                        <Thead>
-                            <Tr>
-                                <Th></Th>
-                                <Th>Token No.
-                                </Th>
-                                <Th>Name</Th>
-                                <Th></Th>
-                                {/* <Th>File No.</Th>
+                            <Thead>
+                                <Tr>
+                                    <Th></Th>
+                                    <Th>Token No.
+                                    </Th>
+                                    <Th>Name</Th>
+                                    <Th></Th>
+                                    {/* <Th>File No.</Th>
                                 <Th>Type</Th>
                                 <Th>In</Th>
                                 <Th>Out</Th> */}
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            {filterList(aftlist).map((item, index) =>
-                                <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
-                                    <Td width={"10%"}><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                    <Td  width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
-                                    <Td width={"35%"}>{item.name}</Td>
-                                    <Td  width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
-                                    {/* <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {filterList(aftlist).map((item, index) =>
+                                    <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
+                                        <Td width={"10%"}><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
+                                        <Td width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
+                                        <Td width={"35%"}>{item.name}</Td>
+                                        <Td width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
+                                        {/* <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
                                         <EditablePreview />
                                         <EditableInput />
                                     </Editable></Td>
@@ -116,9 +103,9 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                                         .toLocaleTimeString('en-US',
                                             { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                                     </Td> */}
-                                </Tr>
-                            )
-                            }
+                                    </Tr>
+                                )
+                                }
                             </Tbody>
                         </Table>
                     </TableContainer>

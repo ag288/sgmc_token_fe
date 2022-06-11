@@ -4,12 +4,9 @@ import {
     FormControl,
     FormLabel,
     Input,
-    Checkbox,
     Stack,
-    Link,
     Button,
     Heading,
-    Text,
     useColorModeValue,
 } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
