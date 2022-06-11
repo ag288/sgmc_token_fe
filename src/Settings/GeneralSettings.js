@@ -126,41 +126,61 @@ export const GeneralSettings = () => {
                 p={8}
                 width='auto'>
                 <Heading size="lg">Settings</Heading>
-                <HStack >
+                <VStack >
                     <VStack spacing="5%" alignItems={"left"}>
-                        <Text>Doctor's working hours for morning slot</Text>
-                        <Text>Doctor's working hours for afternoon slot</Text>
-                        <Text>Doctor's working days</Text>
-                        <Text>Max. number of tokens in the morning slot</Text>
-                        <Text>Max. number of tokens in the afternoon slot</Text>
-                        <Text>Number of patients remaining before notifying next patient</Text>
-                        <Text>Token booking opens at</Text>
-                        <Text>Token booking closes at</Text>
+
+
+
+
 
                     </VStack>
                     <VStack>
-                        <HStack>
-                            <Input type="time" id={"1"} onChange={handleChange} value={settings.working_start_time_1}></Input>
-                            <Text>to</Text>
-                            <Input type="time" id={"2"} onChange={handleChange} value={settings.working_end_time_1}></Input>
+                        <HStack width="full" spacing="auto">
+                            <Text width="50%">Working hours - Morning</Text>
+                            <HStack width="50%">
+                                <Input type="time" id={"1"} onChange={handleChange} value={settings.working_start_time_1}></Input>
+                                <Text>to</Text>
+                                <Input type="time" id={"2"} onChange={handleChange} value={settings.working_end_time_1}></Input>
+                            </HStack>
+                        </HStack>
+                        <HStack width="full" spacing="auto">
+                            <Text width="50%">Working hours - Afternoon</Text>
+                            <HStack width="50%">
+                                <Input type="time" id={"3"} onChange={handleChange} value={settings.working_start_time_2}></Input>
+                                <Text>to</Text>
+                                <Input type="time" id={"4"} onChange={handleChange} value={settings.working_end_time_2}></Input>
+                            </HStack>
                         </HStack>
                         <HStack>
-                            <Input type="time" id={"3"} onChange={handleChange} value={settings.working_start_time_2}></Input>
-                            <Text>to</Text>
-                            <Input type="time" id={"4"} onChange={handleChange} value={settings.working_end_time_2}></Input>
-                        </HStack>
-                        <HStack>
+                            <Text>Doctor's working days</Text>
                             <Input type="text" id={"5"} onChange={handleChange} value={settings.working_start_day}></Input>
                             <Text>to</Text>
                             <Input type="text" id={"6"} onChange={handleChange} value={settings.working_end_day}></Input>
                         </HStack>
-                        <Input type="number" id={"7"} onChange={handleChange} value={settings.morn_max_tokens}></Input>
-                        <Input type="number" id={"8"} onChange={handleChange} value={settings.aft_max_tokens}></Input>
-                        <Input type="number" id={"9"} onChange={handleChange} value={settings.gap}></Input>
-                        <Input type="time" id={"10"} onChange={handleChange} value={settings.token_start}></Input>
-                        <Input type="time" id={"11"} onChange={handleChange} value={settings.token_end}></Input>
+                        <HStack>
+                            <Text>Max. number of tokens in the morning slot</Text>
+                            <Input type="number" id={"7"} onChange={handleChange} value={settings.morn_max_tokens}></Input>
+                        </HStack>
+                        <HStack>
+                            <Text>Max. number of tokens in the afternoon slot</Text>
+                            <Input type="number" id={"8"} onChange={handleChange} value={settings.aft_max_tokens}></Input>
+                        </HStack>
+                        <HStack>
+                            <Text>Number of patients remaining before notifying next patient</Text>
+                            <Input type="number" id={"9"} onChange={handleChange} value={settings.gap}></Input>
+
+                        </HStack>
+                        <HStack>
+                            <Text>Token booking opens at</Text>
+                            <Input type="time" id={"10"} onChange={handleChange} value={settings.token_start}></Input>
+
+                        </HStack>
+                        <HStack>
+                            <Text>Token booking closes at</Text>
+                            <Input type="time" id={"11"} onChange={handleChange} value={settings.token_end}></Input>
+                        </HStack>
                     </VStack>
-                </HStack>
+                </VStack>
                 <Box mt="2%" align={"right"}>
                     <Button isLoading={isLoading} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
