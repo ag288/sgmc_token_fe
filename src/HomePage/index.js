@@ -10,18 +10,20 @@ import {
   Spinner,
   Stack,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import api from '../api';
 import { AfternoonList } from './AfternoonList';
 import { CurrentPatient } from './CurrentPatient';
 import { MorningList } from './MorningList';
 import { FaEllipsisV } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom';
+import { AppContext } from '../App';
 
 // List of staff profiles pending approval
 
 export const PatientList = () => {
 
+  const user = useContext(AppContext)
   const [current, setCurrent] = useState(0)
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
@@ -59,7 +61,7 @@ export const PatientList = () => {
 
       <Flex
         minH={'100vh'}
-        width="fit-content"
+        width="full"
         bg={"gray.100"}>
         <Box>
           <Menu m="2%" closeOnBlur={true}>
@@ -67,6 +69,7 @@ export const PatientList = () => {
             <MenuList color={"black"}>
               <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
               <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
+              <MenuItem onClick={() => user.setUser(null)} >Logout</MenuItem>
             </MenuList>
           </Menu>
         </Box>

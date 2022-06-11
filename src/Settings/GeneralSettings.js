@@ -26,7 +26,8 @@ import {
     List,
     useToast,
     ListItem,
-    UnorderedList
+    UnorderedList,
+    Divider
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import { FcCalendar } from 'react-icons/fc'
@@ -127,7 +128,7 @@ export const GeneralSettings = () => {
                 width='full'>
                 <Heading size="lg">Settings</Heading>
                 <VStack width="full">
-                    <VStack width="full" alignItems={"baseline"}>
+                    <VStack width="full" alignItems={"baseline"} m={2}>
                         <Text mt="2%" fontWeight={"bold"}>Working hours - Morning</Text>
                         <HStack >
                             <Input type="time" id={"1"} onChange={handleChange} value={settings.working_start_time_1}></Input>
@@ -135,46 +136,51 @@ export const GeneralSettings = () => {
                             <Input type="time" id={"2"} onChange={handleChange} value={settings.working_end_time_1}></Input>
                         </HStack>
                     </VStack>
-                    <VStack width="full"  alignItems={"baseline"}>
-                        <Text  mt="2%" fontWeight={"bold"}>Working hours - Afternoon</Text>
+                    <Divider borderColor={"gray"} orientation='horizontal'/>
+                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                        <Text fontWeight={"bold"}>Working hours - Afternoon</Text>
                         <HStack >
                             <Input type="time" id={"3"} onChange={handleChange} value={settings.working_start_time_2}></Input>
                             <Text>to</Text>
                             <Input type="time" id={"4"} onChange={handleChange} value={settings.working_end_time_2}></Input>
                         </HStack>
                     </VStack>
-                    <VStack width="full"  alignItems={"baseline"}>
-                        <Text  mt="2%" fontWeight={"bold"} >Working days</Text>
+                    <Divider borderColor={"gray"} orientation='horizontal'/>
+                    <VStack p={4}  width="full"  alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Working days</Text>
                         <HStack >
                             <Input type="text" id={"5"} onChange={handleChange} value={settings.working_start_day}></Input>
                             <Text>to</Text>
                             <Input type="text" id={"6"} onChange={handleChange} value={settings.working_end_day}></Input>
                         </HStack>
                     </VStack>
-                    <VStack width="full"  alignItems={"baseline"}>
-                        <Text mt="2%" fontWeight={"bold"} >Maximum tokens - Morning</Text>
+                    <Divider borderColor={"gray"} orientation='horizontal'/>
+                    <VStack  p={4} width="full"  alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Maximum tokens - Morning</Text>
                         <Input type="number" id={"7"} onChange={handleChange} value={settings.morn_max_tokens}></Input>
                     </VStack>
-                    <VStack width="full"  alignItems={"baseline"}>
-                        <Text mt="2%" fontWeight={"bold"} >Maximum tokens - Afternoon</Text>
+                    <Divider borderColor={"gray"} orientation='horizontal'/>
+                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Maximum tokens - Afternoon</Text>
                         <Input type="number" id={"8"} onChange={handleChange} value={settings.aft_max_tokens}></Input>
                     </VStack>
-                    <VStack width="full"  alignItems={"baseline"}>
-                        <Text mt="2%" fontWeight={"bold"} >Notify before</Text>
+                    <Divider borderColor={"gray"} orientation='horizontal'/>
+                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Notify before</Text>
                         <Input type="number" id={"9"} onChange={handleChange} value={settings.gap}></Input>
-
                     </VStack>
-                    <VStack width="full"  alignItems={"baseline"}>
-                        <Text mt="2%" fontWeight={"bold"} >Token booking opens at</Text>
+                    <Divider borderColor={"gray"} orientation='horizontal'/>
+                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Token booking opens at</Text>
                         <Input type="time" id={"10"} onChange={handleChange} value={settings.token_start}></Input>
-
                     </VStack>
-                    <VStack width="full"  alignItems={"baseline"}>
-                        <Text mt="2%" fontWeight={"bold"} >Token booking closes at</Text>
+                    <Divider borderColor={"gray"} orientation='horizontal'/>
+                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Token booking closes at</Text>
                         <Input type="time" id={"11"} onChange={handleChange} value={settings.token_end}></Input>
                     </VStack>
                 </VStack>
-
+                <Divider borderColor={"gray"} orientation='horizontal'/>
                 <Box mt="2%" align={"right"}>
                     <Button isLoading={isLoading} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>

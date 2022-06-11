@@ -1,30 +1,20 @@
+import { createContext, useState } from 'react';
+import AuthenticatedUser from './AuthenticatedUser';
+import UnauthenticatedUser from './UnauthenticatedUser';
 
-import { PatientList } from './HomePage';
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Settings } from './Settings';
-import { TokenGeneration } from './TokenGeneration';
-import { TokenDetails } from './TokenGeneration/TokenDetails';
-import { PatientDetails } from './TokenGeneration/PatientDetails';
-import { OTPEntryField } from './TokenGeneration/VerifyOtp';
+export const AppContext = createContext(null);
 
 function App() {
 
+  const [user, setUser] = useState(localStorage.getItem("currentUser"))
+
+  const userObject = { user, setUser }
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<PatientList />} />
-        <Route path="/home" element={<PatientList />} />
-        <Route path="/settings" element={<Settings />} />
-        <Route path="/book" element={<TokenGeneration />} />
-        <Route path="/verify-otp" element={<OTPEntryField />} />
-        <Route path="/patient-details" element={<PatientDetails />} />
-        <Route path="/token-details" element={<TokenDetails />} />
-        <Route path="*" element={<PatientList />} />
-      </Routes>
-    </BrowserRouter>
-
-
-
+    <AppContext.Provider
+      value={userObject}>
+      {user ? <AuthenticatedUser /> : <UnauthenticatedUser />}
+    </AppContext.Provider>
 
   )
 }
