@@ -124,17 +124,9 @@ export const GeneralSettings = () => {
                 bg={'white'}
                 boxShadow={'lg'}
                 p={8}
-                width='auto'>
+                width='full'>
                 <Heading size="lg">Settings</Heading>
-                <VStack >
-                    <VStack spacing="5%" alignItems={"left"}>
-
-
-
-
-
-                    </VStack>
-                    <VStack>
+                    <VStack width="full">
                         <HStack width="full" spacing="auto">
                             <Text width="50%">Working hours - Morning</Text>
                             <HStack width="50%">
@@ -180,7 +172,7 @@ export const GeneralSettings = () => {
                             <Input type="time" id={"11"} onChange={handleChange} value={settings.token_end}></Input>
                         </HStack>
                     </VStack>
-                </VStack>
+               
                 <Box mt="2%" align={"right"}>
                     <Button isLoading={isLoading} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
