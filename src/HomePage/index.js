@@ -76,7 +76,7 @@ export const PatientList = () => {
           ml={"40%"}
           mt="20%"
         /> </Box> :
-          <Stack spacing="2%" py={3} px={3} width={'50%'}>
+          <Stack spacing="2%" py={3} px={3} width={'auto'}>
             <Box>
               <Menu m="2%" closeOnBlur={true}>
                 <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
