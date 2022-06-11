@@ -54,6 +54,11 @@ export const PatientList = () => {
 
   }, []);
 
+  function logout() {
+    user.setUser(null)
+    localStorage.removeItem("currentUser")
+  }
+
   let navigate = useNavigate()
 
 
@@ -83,7 +88,7 @@ export const PatientList = () => {
                 <MenuList color={"black"}>
                   <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
                   <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
-                  <MenuItem onClick={() => user.setUser(null)} >Logout</MenuItem>
+                  <MenuItem onClick={logout} >Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Box>
