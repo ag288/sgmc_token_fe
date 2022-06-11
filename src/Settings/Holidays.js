@@ -35,8 +35,8 @@ import api from '../api'
 
 
 export const Holidays = () => {
-    const [settings, setSettings] = useState({})
     const [holidays, setHolidays] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
     const [date, setDate] = useState("")
     const toast = useToast()
 
@@ -54,9 +54,12 @@ export const Holidays = () => {
 
     function updateHolidays() {
         if (date != "") {
+            setIsLoading(true)
             api.settings.updateHolidays({ date }).then((res) => {
+                setIsLoading(false)
                 setHolidays(prev => ([...prev, { "date": new Date(date) }]))
             }).catch((err) => {
+                setIsLoading(false)
                 toast({
                     title: 'An error occured.',
                     description: 'Please try again later',
@@ -71,12 +74,12 @@ export const Holidays = () => {
 
 
     function deleteHoliday(day) {
-        console.log(day)
-        console.log(holidays.filter(item => item.date != day))
-
+        setIsLoading(true)
         api.settings.deleteHolidays({ date: day.date }).then((res) => {
+            setIsLoading(false)
             setHolidays(holidays.filter(item => item.date != day.date))
         }).catch((err) => {
+            setIsLoading(false)
             toast({
                 title: 'An error occured.',
                 description: 'Please try again later',
@@ -118,7 +121,7 @@ export const Holidays = () => {
                         </Box>
                     </Box>
                     <Box mt="2%" align={"right"}>
-                        <Button colorScheme="blue" onClick={updateHolidays}>Add</Button>
+                        <Button isLoading={isLoading} colorScheme="blue" onClick={updateHolidays}>Add</Button>
                     </Box>
                 </HStack>
                 <Box rounded={'lg'}
@@ -132,7 +135,7 @@ export const Holidays = () => {
                         {holidays.map((day) =>
                             <HStack width="30%" spacing="auto" alignItems={"baseline"}>
                                 <ListItem mb="2%" fontWeight={"bold"}>{new Date(day.date).toDateString()}</ListItem>
-                                <IconButton onClick={() => deleteHoliday(day)} bg="transparent" icon={<DeleteIcon />}></IconButton>
+                                <IconButton isLoading={isLoading} onClick={() => deleteHoliday(day)} bg="transparent" icon={<DeleteIcon />}></IconButton>
                             </HStack>
                         )}
                     </UnorderedList>
