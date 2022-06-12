@@ -3,22 +3,16 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-
     PopoverBody,
-
     PopoverArrow,
     PopoverCloseButton,
     IconButton,
-    Tr,
-    Td,
     useToast,
     Editable,
     EditablePreview,
     EditableInput,
-    Table,
-    Thead,
-    Tbody,
-    Th,
+    HStack,
+    Text,
 } from '@chakra-ui/react';
 import { FaEllipsisH } from 'react-icons/fa'
 import api from '../api';
@@ -55,38 +49,32 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                 <PopoverArrow />
                 <PopoverCloseButton />
                 <PopoverBody>
-                    <Table size={"sm"}>
-                        <Thead>
-                            <Tr>
-                                <Th >File</Th>
-                                <Th>Type</Th>
-                                <Th>In</Th>
-                                <Th>Out</Th>
-                            </Tr>
-                        </Thead>
-                        <Tbody>
-                            <Tr>
-                                <Td><Editable onSubmit={() => editFileNumber(item.patientID)} onChange={handleFile} value={file}>
-                                    <EditablePreview />
-                                    <EditableInput />
-                                </Editable></Td>
-                                <Td > {item.type}</Td>
-                                <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
-                                    .toLocaleTimeString('en-US',
-                                        { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                </Td>
-                                <Td> {item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
-                                    .toLocaleTimeString('en-US',
-                                        { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                </Td>
-                            </Tr>
-                            <Tr><Td>{item.phone.substring(2)}</Td></Tr>
-                        </Tbody>
-                    </Table>
+                    <HStack spacing="auto" mx={5}>
+                        <Editable onSubmit={() => editFileNumber(item.patientID)} onChange={handleFile} value={file ? file : "File: ----"}>
+                            <EditablePreview />
+                            <EditableInput />
+                        </Editable>
+                        <Text> {item.type}</Text>
+                        <Text>{item.phone.substring(2)}</Text>
+                    </HStack>
+                    <HStack spacing="3%" mt={1} mx={5}>
+                        {item.timeIn ? <HStack>
+                            <Text fontWeight={"bold"}>IN:</Text>
+                            <Text> {new Date('1970-01-01T' + item.timeIn + 'Z')
+                                .toLocaleTimeString('en-US',
+                                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}
+                            </Text> </HStack> : ""}
+                        {item.timeOut ? <HStack>
+                            <Text fontWeight={"bold"}>OUT:</Text>
+                            <Text> {new Date('1970-01-01T' + item.timeOut + 'Z')
+                                .toLocaleTimeString('en-US',
+                                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}
+                            </Text> </HStack> : ""}
+
+                    </HStack>
                 </PopoverBody>
             </PopoverContent>
         </Popover >
     )
-
 }
 

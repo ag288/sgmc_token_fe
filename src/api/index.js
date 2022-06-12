@@ -1,11 +1,10 @@
-
 import axios from "axios";
 import bookApi from "./book";
 import settingsApi from "./settings";
 import tokenApi from "./token"
 import userApi from "./user";
 export const fetch = axios.create({
-    baseURL: "https://localhost:1337", // Replace with Env-Specific URL
+    baseURL: "https://prism-ablaze-moss.glitch.me", // Replace with Env-Specific URL
     timeout: 8000,
     headers: {
         common: {
