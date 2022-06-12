@@ -5,7 +5,7 @@ import settingsApi from "./settings";
 import tokenApi from "./token"
 import userApi from "./user";
 export const fetch = axios.create({
-    baseURL: "https://prism-ablaze-moss.glitch.me", // Replace with Env-Specific URL
+    baseURL: "https://localhost:1337", // Replace with Env-Specific URL
     timeout: 8000,
     headers: {
         common: {
