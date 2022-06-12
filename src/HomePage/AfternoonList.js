@@ -27,7 +27,11 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
             false : true)
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
-
+    const types = {
+        "Review": "R",
+        "First time": 'F',
+        "Other": "O"
+    }
 
     useEffect(() => {
 
@@ -73,8 +77,9 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                             <Thead>
                                 <Tr>
                                     <Th></Th>
-                                    <Th>Token No.
+                                    <Th>Token
                                     </Th>
+                                    <Th>Type</Th>
                                     <Th>Name</Th>
                                     <Th></Th>
                                     {/* <Th>File No.</Th>
@@ -88,21 +93,10 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                                     <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
                                         <Td width={"10%"}><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
+                                        <Td width="10%">{types[item.type]}</Td>
                                         <Td width={"35%"}>{item.name}</Td>
                                         <Td width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
-                                        {/* <Td><Editable onSubmit={(file) => editFileNumber(file,item.patientID)} defaultValue={item.fileNumber}>
-                                        <EditablePreview />
-                                        <EditableInput />
-                                    </Editable></Td>
-                                    <Td>{item.type}</Td>
-                                    <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
-                                        .toLocaleTimeString('en-US',
-                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                    </Td>
-                                    <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
-                                        .toLocaleTimeString('en-US',
-                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                    </Td> */}
+                                     
                                     </Tr>
                                 )
                                 }

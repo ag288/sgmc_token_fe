@@ -3,9 +3,9 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    
+
     PopoverBody,
-  
+
     PopoverArrow,
     PopoverCloseButton,
     IconButton,
@@ -80,6 +80,7 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                                 </Td>
                             </Tr>
+                            <Tr><Td>{item.phone.substring(2)}</Td></Tr>
                         </Tbody>
                     </Table>
                 </PopoverBody>

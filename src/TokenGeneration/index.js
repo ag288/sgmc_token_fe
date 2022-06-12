@@ -42,6 +42,7 @@ export const TokenGeneration = () => {
 
         api.settings.checkAvailability().then((res) => {
             const response = JSON.parse(res.data).result
+            console.log(response)
             setSettings(response)
         })
 
