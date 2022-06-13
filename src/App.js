@@ -14,8 +14,8 @@ function App() {
   return (
     <AppContext.Provider
       value={userObject}>
-        <UnauthenticatedUser/>
-     </AppContext.Provider>
+      {user?.userID == 1 ? <AuthenticatedUser /> : (user?.userID == 2 ? <ReceptionUser /> : <UnauthenticatedUser />)}
+    </AppContext.Provider>
 
   )
 }
