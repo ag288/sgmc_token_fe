@@ -7,7 +7,7 @@ export const AppContext = createContext(null);
 
 function App() {
 
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem("currentUser")))
+  const [user, setUser] = useState(localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")) : null)
 
   const userObject = { user, setUser }
 

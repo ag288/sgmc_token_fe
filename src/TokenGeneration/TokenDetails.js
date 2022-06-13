@@ -20,9 +20,10 @@ import {
     useDisclosure,
     HStack,
     Spinner,
+    IconButton,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FcHome } from 'react-icons/fc'
+import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
 
@@ -144,9 +145,10 @@ export const TokenDetails = () => {
         <>
             <Flex
                 minH={'100vh'}
-                bg={"gray.100"}>
-                <Button m="1%" isDisabled={isLoading} leftIcon={<FcHome />} colorScheme={"blue"} onClick={() => navigate('/home')}>Home</Button>
-                {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
+                bg={"gray.100"}> 
+                <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+
+               {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
                     thickness='4px'
                     speed='0.65s'
                     emptyColor='gray.200'

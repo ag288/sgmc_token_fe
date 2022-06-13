@@ -13,9 +13,10 @@ import {
     FormLabel,
   
     Select,
+    IconButton,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FcHome } from 'react-icons/fc'
+import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
 
@@ -90,7 +91,7 @@ export const PatientDetails = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                <Button m="1%" leftIcon={<FcHome />} colorScheme={"blue"} onClick={() => navigate('/home')}>Home</Button>
+                <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
                 <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
                     <Heading fontSize={'2xl'}>Book a Token</Heading>
                     <Box
