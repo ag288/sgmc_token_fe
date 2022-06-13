@@ -10,7 +10,18 @@ import {
     FormLabel,
     useToast,
     ListItem,
-    UnorderedList
+    UnorderedList,
+    Radio,
+    RadioGroup,
+    Modal,
+    ModalOverlay,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    Text,
+    VStack,
+    useDisclosure,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../api'
@@ -20,7 +31,10 @@ import api from '../api'
 export const Holidays = () => {
     const [holidays, setHolidays] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const [isGeneralHoliday, setIsGeneralHoliday] = useState("")
     const [date, setDate] = useState("")
+    const { isOpen, onOpen, onClose } = useDisclosure()
+
     const toast = useToast()
 
     useEffect(() => {
@@ -33,12 +47,20 @@ export const Holidays = () => {
     }, []);
 
 
+    function chooseType() {
+        onOpen()
+    }
 
+    function handleRadioChange(e) {
+        console.log(e.target.value)
+        setIsGeneralHoliday(e.target.value)
+    }
 
     function updateHolidays() {
+        onClose()
         if (date != "") {
             setIsLoading(true)
-            api.settings.updateHolidays({ date }).then((res) => {
+            api.settings.updateHolidays({ date, isGeneralHoliday }).then((res) => {
                 setIsLoading(false)
                 setHolidays(prev => ([...prev, { "date": new Date(date) }]))
             }).catch((err) => {
@@ -104,7 +126,7 @@ export const Holidays = () => {
                         </Box>
                     </Box>
                     <Box mt="2%" align={"right"}>
-                        <Button isLoading={isLoading} colorScheme="blue" onClick={updateHolidays}>Add</Button>
+                        <Button isLoading={isLoading} colorScheme="blue" onClick={chooseType}>Add</Button>
                     </Box>
                 </HStack>
                 <Box rounded={'lg'}
@@ -116,13 +138,35 @@ export const Holidays = () => {
                     <Heading mb={"2%"} fontWeight={"extrabold"} size="md">List of Holidays</Heading>
                     <UnorderedList >
                         {holidays.map((day) =>
-                            <HStack width="30%" spacing="auto" alignItems={"baseline"}>
+                            <HStack width="50%" spacing="auto" alignItems={"baseline"}>
                                 <ListItem mb="2%" fontWeight={"bold"}>{new Date(day.date).toDateString()}</ListItem>
+
                                 <IconButton isLoading={isLoading} onClick={() => deleteHoliday(day)} bg="transparent" icon={<DeleteIcon />}></IconButton>
+
                             </HStack>
                         )}
                     </UnorderedList>
                 </Box>
+                <Modal isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent>
+                        <ModalHeader>Choose leave type</ModalHeader>
+                        <ModalBody>
+                            <VStack>
+                                <Text>Choose the appropriate leave type</Text>
+                                <RadioGroup>
+                                    <VStack>
+                                        <Radio onChange={handleRadioChange} value={true}>Clinic holiday</Radio>
+                                        <Radio onChange={handleRadioChange} value={false}>Doctor leave</Radio>
+                                    </VStack>
+                                </RadioGroup>
+                            </VStack>
+                        </ModalBody>
+                        <ModalFooter>
+                            <Button onClick={updateHolidays}>Ok</Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </Modal>
             </Box>
         </>
     )

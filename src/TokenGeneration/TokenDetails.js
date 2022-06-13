@@ -31,11 +31,13 @@ export const TokenDetails = () => {
     const [slots, setSlots] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [reasons, setReasons] = useState([])
+    const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
         slot: "",
         reason: "",
     })
     const [tokenNo, setTokenNo] = useState("")
+    const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
@@ -43,6 +45,11 @@ export const TokenDetails = () => {
         api.settings.fetchReasons().then((res) => {
             const response = JSON.parse(res.data).result
             setReasons(response)
+        })
+
+        api.settings.fetchSettings().then((res) => {
+            const response = JSON.parse(res.data).result
+            setSettings(response[0])
         })
 
         api.settings.decideSlots().then((res) => {
@@ -74,6 +81,7 @@ export const TokenDetails = () => {
             setIsLoading(true)
             api.book.generateToken({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
+                console.log(response)
                 if (response.message != "") {
                     setIsLoading(false)
                     alert("All tokens are full for today. Please try again later")
@@ -82,6 +90,47 @@ export const TokenDetails = () => {
                 else {
                     setIsLoading(false)
                     setTokenNo(`${response.slot}-${response.tokenNo}`)
+                    const start = new Date(), end = new Date()
+                    if (response.slot == "A" && response.tokenNo == 1) {
+                        const morn = new Date("2022-01-01 " + settings.working_start_time_1);
+                        start.setHours(morn.getHours());
+                        start.setMinutes(morn.getMinutes() - 15);
+                        end.setHours(morn.getHours());
+                        end.setMinutes(morn.getMinutes() + 10);
+                    }
+                    else if (response.slot == "A" && response.tokenNo == 2) {
+                        const morn = new Date("2022-01-01 " + settings.working_start_time_1);
+                        start.setHours(morn.getHours());
+                        start.setMinutes(morn.getMinutes() - 15);
+                        end.setHours(morn.getHours());
+                        end.setMinutes(morn.getMinutes() + 30);
+                    }
+                    else if (response.slot == "B" && response.tokenNo == 1) {
+                        const morn = new Date("2022-01-01 " + settings.working_start_time_2);
+                        start.setHours(morn.getHours());
+                        start.setMinutes(morn.getMinutes() - 15);
+                        end.setHours(morn.getHours());
+                        end.setMinutes(morn.getMinutes() + 10);
+                    }
+                    else if (response.slot == "B" && response.tokenNo == 2) {
+                        const morn = new Date("2022-01-01 " + settings.working_start_time_2);
+                        start.setHours(morn.getHours());
+                        start.setMinutes(morn.getMinutes() - 15);
+                        end.setHours(morn.getHours());
+                        end.setMinutes(morn.getMinutes() + 30);
+                    }
+                    else {
+                        var coeff = 1000 * 60 * 5;
+                        var rounded = new Date(Math.round(new Date(response.time) / coeff) * coeff)
+                        console.log(rounded)
+                        start.setHours(rounded.getHours())
+                        start.setMinutes(rounded.getMinutes() - 15)
+                        end.setHours(rounded.getHours())
+                        end.setMinutes(rounded.getMinutes() + 30)
+                    }
+                    setTime({ start: start, end: end })
+                    console.log(start)
+                    console.log(end)
                     onOpen()
                 }
             })
@@ -134,17 +183,20 @@ export const TokenDetails = () => {
                                     </Select>
                                 </FormControl>
                             </Stack>
-                            <Modal isOpen={isOpen} onClose={onClose}>
+                            <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                                 <ModalOverlay />
                                 <ModalContent>
                                     <ModalHeader>Booking successful</ModalHeader>
                                     <ModalBody>
-                                        { }
                                         <HStack>
                                             <Text>Your token number is </Text> <Text fontWeight={"bold"}>{tokenNo}</Text>
                                         </HStack>
-                                        <Text mt="2%">You will be notified around an hour before your estimated time.
-                                        </Text>
+                                            <Text mt="2%">Your estimated consultation time is between </Text>
+                                            <HStack alignItems={"baseline"}>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.start).toLocaleTimeString("en-us",{timeZone:"UTC",hour12:true,hour:"numeric",minute:"numeric"})}</Text>
+                                            <Text mt="2%">and </Text>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.end).toLocaleTimeString("en-us",{timeZone:"UTC",hour12:true,hour:"numeric",minute:"numeric"})}</Text>
+                                            </HStack>
                                         <Text mt="2%"> Send 'status' to 9061901441 to know the status of your token.</Text>
                                     </ModalBody>
                                     <ModalFooter>

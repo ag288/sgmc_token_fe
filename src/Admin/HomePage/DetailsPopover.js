@@ -15,7 +15,7 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { FaEllipsisH } from 'react-icons/fa'
-import api from '../api';
+import api from '../../api';
 
 // confirm deletion of staff profile
 

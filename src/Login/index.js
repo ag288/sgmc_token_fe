@@ -35,9 +35,12 @@ export default function Login() {
             const response = JSON.parse(res.data).result
             console.log(response)
             if (response) {
-                localStorage.setItem("currentUser", response)
+                localStorage.setItem("currentUser", JSON.stringify(response))
                 user.setUser(response)
-                navigate("/home")
+                if (response.userID == 1)
+                    navigate("/home")
+                else
+                    navigate("/reception")
             }
             else alert("Incorrect username or password")
         }).catch((err) => {

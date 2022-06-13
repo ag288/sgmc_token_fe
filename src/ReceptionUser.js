@@ -1,23 +1,25 @@
 
-import { PatientList } from './Admin/HomePage';
+import { PatientListReception } from './Reception/Home';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Settings } from './Settings';
 import { TokenGeneration } from './TokenGeneration';
 import { TokenDetails } from './TokenGeneration/TokenDetails';
 import { PatientDetails } from './TokenGeneration/PatientDetails';
 
-function AuthenticatedUser() {
+function ReceptionUser() {
+
+    console.log("reception")
 
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<PatientList />} />
-        <Route path="/home" element={<PatientList />} />
+        <Route path="/" element={<PatientListReception />} />
+        <Route path="/home" element={<PatientListReception />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/book" element={<TokenGeneration />} />
         <Route path="/patient-details" element={<PatientDetails />} />
         <Route path="/token-details" element={<TokenDetails />} />
-        <Route path="*" element={<PatientList />} />
+        <Route path="*" element={<PatientListReception />} />
       </Routes>
     </BrowserRouter>
 
@@ -27,8 +29,6 @@ function AuthenticatedUser() {
   )
 }
 
-export default AuthenticatedUser;
+export default ReceptionUser;
 
-
-// all routes contained in the Unauthenticated App (routes accessible when the user is not logged in)
 

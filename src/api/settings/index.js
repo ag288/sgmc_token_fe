@@ -12,6 +12,9 @@ export default function settingsApi(fetch, baseUrl) {
         updateSettings(data) {
             return fetch.post(`${baseUrl}/update`, { data })
         },
+        updateReasons(data) {
+            return fetch.post(`${baseUrl}/update-reasons`, { data })
+        },
         fetchHolidays() {
             return fetch(`${baseUrl}/holidays`)
         },

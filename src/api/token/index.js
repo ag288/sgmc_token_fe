@@ -10,7 +10,9 @@ export default function tokenApi(fetch, baseUrl) {
         fetchAfternoonList() {
             return fetch(`${baseUrl}/fetch_afternoon`)
         },
-
+        fetchLastToken() {
+            return fetch(`${baseUrl}/fetch_last`)
+        },
         fetchCurrent(data) {
             return fetch.post(`${baseUrl}/fetch_current`,{data})
         },

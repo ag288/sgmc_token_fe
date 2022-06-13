@@ -1,10 +1,10 @@
 import { HamburgerIcon, } from "@chakra-ui/icons";
 import { Box, Heading,  Text, HStack, VStack, Button } from "@chakra-ui/react"
 import { useEffect } from "react";
-import api from "../api";
 
 
-export const CurrentPatient = ({ current}) => {
+
+export const CurrentPatientReception = ({ current}) => {
     
 
     useEffect(() => {
@@ -12,13 +12,12 @@ export const CurrentPatient = ({ current}) => {
     }, [current]);
 
    
-
     return (
         <VStack>
             <Box
                 borderWidth="1px"
                 borderRadius="lg"
-                width={"100%"}
+                width={"50%"}
                 height={{ sm: '476px', md: '9rem' }}
                 direction={{ base: 'column', md: 'row' }}
                 bg={'white'}

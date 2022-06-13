@@ -85,7 +85,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                 <Td width="10%">{types[item.type]}</Td>
                                 <Td width={"35%"}>{item.name}</Td>
                                 <Td width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
-                              
+
                             </Tr>
                         )
                         }

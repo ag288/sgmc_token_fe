@@ -10,12 +10,12 @@ import {
     useToast,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import api from '../api';
+import api from '../../api';
 
 // confirm deletion of staff profile
 
 
-export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurrent }) => {
+export const ButtonPopoverReception = ({ isLoading, setIsLoading, item, current, setCurrent }) => {
 
     const [isOpen, setIsOpen] = useState(false)
     const open = () => setIsOpen(!isOpen)
@@ -83,7 +83,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
         <Popover trigger="click" placement="bottom-end" isOpen={isOpen} onClose={close} preventOverflow={true}
             flip={true}  >
             <PopoverTrigger>
-                <IconButton isDisabled={item.status == "completed" || item.status == "current"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                <IconButton isDisabled={true} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                 </IconButton>
             </PopoverTrigger >
             <PopoverContent>

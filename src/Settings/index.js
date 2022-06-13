@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import { GeneralSettings } from './GeneralSettings'
 import { Holidays } from './Holidays'
 import { FaHome } from 'react-icons/fa'
+import { TokenTypes } from './TokenTypes'
 
 
 export const Settings = () => {
@@ -20,9 +21,9 @@ export const Settings = () => {
                 bg={"gray.100"}>
                 <Stack mx={'auto'} spacing="2%" px={3} width="full">
                     <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
-
                     <GeneralSettings />
                     <Holidays />
+                    <TokenTypes/>
                 </Stack>
             </Flex>
         </>

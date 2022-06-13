@@ -11,6 +11,7 @@ import {
     Divider
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
+import { scryRenderedComponentsWithType } from 'react-dom/test-utils'
 import api from '../api'
 
 
@@ -19,6 +20,7 @@ export const GeneralSettings = () => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [settings, setSettings] = useState({})
+    const [max, setMax] = useState([])
     const toast = useToast()
 
     useEffect(() => {
@@ -26,6 +28,21 @@ export const GeneralSettings = () => {
         api.settings.fetchSettings().then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
+        })
+
+        api.token.fetchLastToken().then((res) => {
+            const response = JSON.parse(res.data).result
+            console.log(response)
+            setMax(response)
+            if (response.length == 0)
+                setMax({ slot: "A", tokenNumber: 0 }, { slot: "B", tokenNumber: 0 })
+            else if (response.length == 1) {
+                if (response[0].slot == "A")
+                    setMax(prev => ([...prev, { slot: "B", tokenNumber: 0 }]))
+                else
+                    setMax(prev => ([...prev, { slot: "A", tokenNumber: 0 }]))
+            }
+          //  console.log()
         })
 
     }, []);
@@ -72,34 +89,39 @@ export const GeneralSettings = () => {
     }
 
     function updateSettings() {
-        setIsLoading(true)
-        api.settings.updateSettings({ settings }).then((res) => {
-            setIsLoading(false)
-            toast({
-                title: 'Updated settings successfully',
-                status: 'success',
-                duration: 3000,
-                isClosable: false,
-                position: "top"
+        if (settings.morn_max_tokens < max.find(item => item.slot == "A").tokenNumber + 5)
+            alert("Please enter the correct value for maximum morning tokens!")
+        else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber + 5)
+            alert("Please enter the correct value for maximum afternoon tokens!")
+        else {
+            setIsLoading(true)
+            api.settings.updateSettings({ settings }).then((res) => {
+                setIsLoading(false)
+                toast({
+                    title: 'Updated settings successfully',
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
+            }).catch((err) => {
+                setIsLoading(false)
+                toast({
+                    title: 'An error occured.',
+                    description: 'Please try again later',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
             })
-        }).catch((err) => {
-            setIsLoading(false)
-            toast({
-                title: 'An error occured.',
-                description: 'Please try again later',
-                status: 'error',
-                duration: 3000,
-                isClosable: false,
-                position: "top"
-            })
-        })
+        }
     }
 
 
 
     return (
         <>
-
             <Box
                 rounded={'lg'}
                 bg={'white'}
@@ -111,62 +133,64 @@ export const GeneralSettings = () => {
                     <VStack width="full" alignItems={"baseline"} p={4}>
                         <Text fontWeight={"bold"}>Working hours - Morning</Text>
                         <HStack >
-                            <Input type="time" id={"1"} onChange={handleChange} value={settings.working_start_time_1}></Input>
+                            <Input type="time" id={"1"} onChange={handleChange} value={settings?.working_start_time_1}></Input>
                             <Text>to</Text>
-                            <Input type="time" id={"2"} onChange={handleChange} value={settings.working_end_time_1}></Input>
+                            <Input type="time" id={"2"} onChange={handleChange} value={settings?.working_end_time_1}></Input>
                         </HStack>
                     </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal'/>
-                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"}>Working hours - Afternoon</Text>
                         <HStack >
-                            <Input type="time" id={"3"} onChange={handleChange} value={settings.working_start_time_2}></Input>
+                            <Input type="time" id={"3"} onChange={handleChange} value={settings?.working_start_time_2}></Input>
                             <Text>to</Text>
-                            <Input type="time" id={"4"} onChange={handleChange} value={settings.working_end_time_2}></Input>
+                            <Input type="time" id={"4"} onChange={handleChange} value={settings?.working_end_time_2}></Input>
                         </HStack>
                     </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal'/>
-                    <VStack p={4}  width="full"  alignItems={"baseline"}>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Working days</Text>
                         <HStack >
-                            <Input type="text" id={"5"} onChange={handleChange} value={settings.working_start_day}></Input>
+                            <Input type="text" id={"5"} onChange={handleChange} value={settings?.working_start_day}></Input>
                             <Text>to</Text>
-                            <Input type="text" id={"6"} onChange={handleChange} value={settings.working_end_day}></Input>
+                            <Input type="text" id={"6"} onChange={handleChange} value={settings?.working_end_day}></Input>
                         </HStack>
                     </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal'/>
-                    <VStack  p={4} width="full"  alignItems={"baseline"}>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Maximum tokens - Morning</Text>
-                        <Input type="number" id={"7"} onChange={handleChange} value={settings.morn_max_tokens}></Input>
-                    </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal'/>
-                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                        <Input type="number" id={"7"} onChange={handleChange} value={settings?.morn_max_tokens}></Input>
+                      { max.find(item => item.slot == "A") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "A").tokenNumber + 5})`}</Text>
+                   : null}
+                    </VStack> 
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Maximum tokens - Afternoon</Text>
-                        <Input type="number" id={"8"} onChange={handleChange} value={settings.aft_max_tokens}></Input>
+                        <Input type="number" id={"8"} onChange={handleChange} value={settings?.aft_max_tokens}></Input>
+                        { max.find(item => item.slot == "B") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "B").tokenNumber + 5})`}</Text>
+                   : null}
                     </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal'/>
-                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Notify before</Text>
-                        <Input type="number" id={"9"} onChange={handleChange} value={settings.gap}></Input>
+                        <Input type="number" id={"9"} onChange={handleChange} value={settings?.gap}></Input>
                     </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal'/>
-                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Token booking opens at</Text>
-                        <Input type="time" id={"10"} onChange={handleChange} value={settings.token_start}></Input>
+                        <Input type="time" id={"10"} onChange={handleChange} value={settings?.token_start}></Input>
                     </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal'/>
-                    <VStack p={4} width="full"  alignItems={"baseline"}>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Token booking closes at</Text>
-                        <Input type="time" id={"11"} onChange={handleChange} value={settings.token_end}></Input>
+                        <Input type="time" id={"11"} onChange={handleChange} value={settings?.token_end}></Input>
                     </VStack>
                 </VStack>
-                <Divider borderColor={"gray"} orientation='horizontal'/>
+                <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>
                     <Button isLoading={isLoading} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
-
             </Box>
-
         </>
     )
 }
