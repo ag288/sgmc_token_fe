@@ -11,6 +11,7 @@ function App() {
 
   const userObject = { user, setUser }
 
+  console.log(user)
   return (
     <AppContext.Provider
       value={userObject}>

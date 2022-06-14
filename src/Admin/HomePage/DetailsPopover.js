@@ -33,7 +33,7 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
     }
 
     function editFileNumber(id) {
-        api.token.editFileNumber({ file, id }).then((res) => {
+        api.token.editFileNumber({ value:file, id }).then((res) => {
             const response = JSON.parse(res.data).result
         })
     }

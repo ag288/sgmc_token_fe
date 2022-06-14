@@ -35,7 +35,7 @@ export const GeneralSettings = () => {
             console.log(response)
             setMax(response)
             if (response.length == 0)
-                setMax({ slot: "A", tokenNumber: 0 }, { slot: "B", tokenNumber: 0 })
+                setMax([{ slot: "A", tokenNumber: 0 }, { slot: "B", tokenNumber: 0 }])
             else if (response.length == 1) {
                 if (response[0].slot == "A")
                     setMax(prev => ([...prev, { slot: "B", tokenNumber: 0 }]))
