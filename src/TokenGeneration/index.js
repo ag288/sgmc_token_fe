@@ -146,7 +146,7 @@ export const TokenGeneration = () => {
                                             <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
                                         </PinInput>
                                     </HStack>
-                                    <Timer time="40" setState={setState}/>
+                                    <Timer time="120" setState={setState}/>
                                     <Link align="right" fontSize={14} color={'blue.400'}>Resend OTP</Link>
                                     <Button
                                         type='submit'
