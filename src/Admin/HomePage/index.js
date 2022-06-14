@@ -36,6 +36,7 @@ export const PatientList = () => {
         if (response[i].status == "current") {
           setCurrent(response[i])
         }
+        console.log(response)
       setMornList(response)
     })
 

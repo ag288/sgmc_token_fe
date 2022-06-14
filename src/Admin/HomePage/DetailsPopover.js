@@ -23,18 +23,22 @@ import api from '../../api';
 export const DetailsPopover = ({ item, current, setCurrent }) => {
 
     const [isOpen, setIsOpen] = useState(false)
-    const [file, setFile] = useState(item.fileNumber)
+    //const [file, setFile] = useState(item.fileNumber)
     const open = () => setIsOpen(!isOpen)
     const close = () => setIsOpen(false)
     const toast = useToast()
 
-    function handleFile(value) {
-        setFile(value)
+   
+
+    function handleDoubleClick(id){
+        let fileNo = window.prompt("Enter the file number")
+        editFileNumber(fileNo,id)
     }
 
-    function editFileNumber(id) {
+    function editFileNumber(file,id) {
         api.token.editFileNumber({ value:file, id }).then((res) => {
             const response = JSON.parse(res.data).result
+            window.location.reload()
         })
     }
 
@@ -50,10 +54,11 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                 <PopoverCloseButton />
                 <PopoverBody>
                     <HStack spacing="auto" mx={5}>
-                        <Editable onSubmit={() => editFileNumber(item.patientID)} onChange={handleFile} value={file ? file : "File: ----"}>
+                        {/* <Editable onSubmit={() => editFileNumber(item.patientID)} onChange={handleFile} value={file ? file : "File: ----"}>
                             <EditablePreview />
                             <EditableInput />
-                        </Editable>
+                        </Editable> */}
+                        <Text placeholder='Add file' onDoubleClick={()=>handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                         <Text> {item.type}</Text>
                         <Text>{item.phone.substring(2)}</Text>
                     </HStack>

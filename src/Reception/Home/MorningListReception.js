@@ -13,6 +13,7 @@ import {
     Editable,
     EditablePreview,
     EditableInput,
+    Text,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../../api';
@@ -53,10 +54,16 @@ export const MorningListReception = ({ isLoading, setIsLoading, mornlist, curren
         })
     }
 
+    function handleDoubleClick(id) {
+        let fileNo = window.prompt("Enter the file number")
+        editFileNumber(fileNo, id)
+    }
 
-    function editFileNumber(value,id) {
+
+    function editFileNumber(value, id) {
         api.token.editFileNumber({ value, id }).then((res) => {
             const response = JSON.parse(res.data).result
+            window.location.reload()
         })
     }
 
@@ -96,11 +103,14 @@ export const MorningListReception = ({ isLoading, setIsLoading, mornlist, curren
                                 <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                 <Td >{types[item.type]}</Td>
                                 <Td >{item.name}</Td>
-                                <Td>
+                                {/* <Td>
                                     <Editable onSubmit={(value) => editFileNumber(value,item.patientID)} defaultValue={item.fileNumber}>
-                                        <EditablePreview />
-                                        <EditableInput />
+                                        <EditablePreview placeholder="Add file"/>
+                                        <EditableInput placeholder="Add file"/>
                                     </Editable>
+                                    
+                                </Td> */}
+                                <Td><Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                                 </Td>
                                 <Td> {item.type}</Td>
                                 <Td>{item.phone.substring(2)}</Td>

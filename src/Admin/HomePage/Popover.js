@@ -54,6 +54,8 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     }
 
     function cancel() {
+        let flag = window.confirm(`Your are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`)
+        if(flag){
         setIsLoading(true)
         api.token.cancelToken({ item }).then((res) => {
             const response = JSON.parse(res.data)
@@ -75,7 +77,11 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                 position: "top"
             })
         })
+    }
 
+    else {
+        close()
+    }
     }
 
 

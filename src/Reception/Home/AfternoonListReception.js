@@ -13,7 +13,8 @@ import {
     Checkbox,
     Editable,
     EditablePreview,
-    EditableInput
+    EditableInput,
+    Text
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../../api';
@@ -62,10 +63,16 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
         setShowCompleted(!showCompleted)
     }
 
+    function handleDoubleClick(id) {
+        let fileNo = window.prompt("Enter the file number")
+        editFileNumber(fileNo, id)
+    }
+
 
     function editFileNumber(value,id) {
         api.token.editFileNumber({ value, id }).then((res) => {
             const response = JSON.parse(res.data).result
+            window.location.reload()
         })
     }
 
@@ -107,12 +114,14 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
                                 <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                 <Td>{types[item.type]}</Td>
                                 <Td >{item.name}</Td>
-                                <Td>
-                                <Editable onSubmit={(value) => editFileNumber(value,item.patientID)}  defaultValue={item.fileNumber}>
-                            <EditablePreview/>
+                                {/* <Td>
+                                <Editable onSubmit={(value) => editFileNumber(value,item.patientID)}  defaultValue={item.fileNumber ? item.fileNumber : "Add file"}>
+                            <EditablePreview />
                             <EditableInput />
                         </Editable>
-                        </Td>
+                        </Td> */}
+                          <Td><Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+                                </Td>
                         <Td> {item.type}</Td>
                         <Td>{item.phone.substring(2)}</Td>
                         <Td>{ item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
