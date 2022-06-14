@@ -21,7 +21,7 @@ import { ButtonPopover } from './Popover';
 
 export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCurrent }) => {
 
-    const morningEnd = new Date(new Date().setHours(14, 0, 0));
+    const morningEnd = new Date(new Date().setHours(12, 30, 0));
     const [hideAfternoon, setHideAfternoon] = useState(
         new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getTime() > morningEnd.getTime() ?
             false : true)
