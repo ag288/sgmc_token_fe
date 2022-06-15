@@ -73,7 +73,7 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
 
             <HStack spacing={"auto"}>
                 <Heading size="md">Afternoon {hideAfternoon ? <ChevronDownIcon onClick={() => setHideAfternoon(false)} /> : <ChevronUpIcon onClick={() => setHideAfternoon(true)} />} </Heading>
-                <Checkbox onChange={handleChange} colorScheme={"blue"} borderColor={"black"} size={"md"}>Show completed</Checkbox>
+                <Checkbox onChange={handleChange} colorScheme={"blue"} borderColor={"black"} size={"md"}>Show all</Checkbox>
             </HStack>
             {hideAfternoon ? null :
                 <Box

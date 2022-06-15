@@ -8,10 +8,11 @@ import {
     HStack,
     IconButton,
     useToast,
+    Td,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../../api';
-
+import { FaPhoneAlt } from 'react-icons/fa';
 // confirm deletion of staff profile
 
 
@@ -99,7 +100,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
         <Popover trigger="click" placement="bottom-end" isOpen={isOpen} onClose={close} preventOverflow={true}
             flip={true}  >
             <PopoverTrigger>
-                <IconButton isDisabled={item.status == "completed" || item.status=="cancelled"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                <IconButton isDisabled={item.status == "completed" || item.status == "cancelled"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                 </IconButton>
             </PopoverTrigger >
             <PopoverContent>
@@ -109,7 +110,9 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                         {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
                         <Button width={"sm"} colorScheme={"green"} onClick={call} >Call</Button>
                         <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
-                        {/* <Button width={"sm"} colorScheme={"yellow"} onClick={completed} >Completed</Button> */}
+                        <Button width={"sm"} colorScheme={"yellow"} onClick={completed} >Done</Button>
+                        <Button href={`tel:${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
+
                     </HStack>
                 </PopoverBody>
             </PopoverContent>

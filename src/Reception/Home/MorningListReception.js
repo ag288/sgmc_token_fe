@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../../api';
-import {filterList, findBg} from '../../utils/tokenFunctions';
+import { filterList, findBg } from '../../utils/tokenFunctions';
 import { ButtonPopoverReception } from './PopoverReception';
 
 
@@ -62,7 +62,7 @@ export const MorningListReception = ({ isLoading, setIsLoading, mornlist, curren
 
             <HStack spacing={"auto"}>
                 <Heading size="md">Morning</Heading>
-                <Checkbox onChange={handleChange} colorScheme={"blue"} borderColor={"black"} size={"md"}>Show completed</Checkbox>
+                <Checkbox onChange={handleChange} colorScheme={"blue"} borderColor={"black"} size={"md"}>Show all</Checkbox>
             </HStack>
             <Box
                 rounded={'lg'}
@@ -87,7 +87,7 @@ export const MorningListReception = ({ isLoading, setIsLoading, mornlist, curren
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {filterList(mornlist,showCompleted).map((item, index) =>
+                        {filterList(mornlist, showCompleted).map((item, index) =>
                             <Tr key={index} bg={findBg(item)}>
                                 <Td ><ButtonPopoverReception loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                 <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
