@@ -19,8 +19,8 @@ export default function tokenApi(fetch, baseUrl) {
         cancelToken(data) {
             return fetch.post(`${baseUrl}/cancel`,{data})
         },
-        setAsCompleted(data) {
-            return fetch.post(`${baseUrl}/completed`,{data})
+        setAsCompleted() {
+            return fetch.post(`${baseUrl}/completed`)
         },
         setAsArrived(data) {
             return fetch.post(`${baseUrl}/arrived`,{data})

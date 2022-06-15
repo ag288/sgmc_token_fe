@@ -58,9 +58,15 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     }
 
     function completed() {
+
         let flag = window.confirm("Do you want to mark this token as completed?")
         if (flag) {
-            api.token.setAsCompleted().then((res => window.location.reload()))
+            setIsLoading(true)
+            api.token.setAsCompleted().then((res) => {
+                setIsLoading(false)
+                window.location.reload()
+            }
+            )
         }
     }
 
@@ -110,8 +116,8 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                         {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
                         <Button width={"sm"} colorScheme={"green"} onClick={call} >Call</Button>
                         <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
-                        <Button width={"sm"} colorScheme={"yellow"} onClick={completed} >Done</Button>
-                        <Button href={`tel:${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
+                        <Button  isDisabled={item.status!="current"} width={"sm"} colorScheme={"yellow"} onClick={completed} >Done</Button>
+                        <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
 
                     </HStack>
                 </PopoverBody>
