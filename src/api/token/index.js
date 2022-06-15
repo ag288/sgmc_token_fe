@@ -34,5 +34,9 @@ export default function tokenApi(fetch, baseUrl) {
         editFileNumber(data) {
             return fetch.post(`${baseUrl}/edit-file`,{data})
         },
+
+        invitePatient(data) {
+            return fetch.post(`${baseUrl}/invite`,{data})
+        },
     }
 }

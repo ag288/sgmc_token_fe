@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { FaEllipsisH } from 'react-icons/fa'
 import api from '../../api';
+import { diffMinutes } from '../../utils/tokenFunctions';
 
 // confirm deletion of staff profile
 
@@ -51,7 +52,7 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                 <PopoverArrow />
                 <PopoverCloseButton />
                 <PopoverBody>
-                    <HStack spacing="auto" mx={5}>
+                    <HStack spacing="auto" mr={5}>
                         {/* <Editable onSubmit={() => editFileNumber(item.patientID)} onChange={handleFile} value={file ? file : "File: ----"}>
                             <EditablePreview />
                             <EditableInput />
@@ -60,8 +61,8 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                         <Text> {item.type}</Text>
                         <Text>{item.phone.substring(2)}</Text>
                     </HStack>
-                    <HStack spacing="3%" mt={1} mx={5}>
-                    {item.timeInEst ? <HStack>
+                    <HStack mt={1} mr={5}>
+                        {item.timeInEst ? <HStack>
                             <Text fontWeight={"bold"}>TT:</Text>
                             <Text> {new Date('1970-01-01T' + item.timeInEst + 'Z')
                                 .toLocaleTimeString('en-US',
@@ -79,8 +80,14 @@ export const DetailsPopover = ({ item, current, setCurrent }) => {
                                 .toLocaleTimeString('en-US',
                                     { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}
                             </Text> </HStack> : ""}
-
+                            
                     </HStack>
+                    {/* <HStack mt={1} mr={5}>
+                        <HStack>
+                            <Text fontWeight={"bold"}>DIFF:</Text>
+                            <Text color={diffMinutes(item.timeIn, item.timeInEst).includes("-")? "red" : "green"} >{diffMinutes(item.timeIn, item.timeInEst)} </Text>
+                        </HStack> 
+                    </HStack>*/}
                 </PopoverBody>
             </PopoverContent>
         </Popover >

@@ -5,6 +5,7 @@ import { Settings } from './Settings';
 import { TokenGeneration } from './TokenGeneration';
 import { TokenDetails } from './TokenGeneration/TokenDetails';
 import { PatientDetails } from './TokenGeneration/PatientDetails';
+import { SendMessage} from './SendMessage';
 
 function ReceptionUser() {
 
@@ -19,6 +20,7 @@ function ReceptionUser() {
         <Route path="/book" element={<TokenGeneration />} />
         <Route path="/patient-details" element={<PatientDetails />} />
         <Route path="/token-details" element={<TokenDetails />} />
+        <Route path="/send-message" element={<SendMessage/>} />
         <Route path="*" element={<PatientListReception />} />
       </Routes>
     </BrowserRouter>
