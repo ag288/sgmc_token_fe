@@ -116,7 +116,7 @@ export const PatientDetails = () => {
                                 </FormControl> : null}
                             <FormControl id="file">
                                 <FormLabel >File Number</FormLabel>
-                                <Input type="number" value={token.fileNumber} onChange={handleFileChange} />
+                                <Input type="text" value={token.fileNumber} onChange={handleFileChange} />
                             </FormControl>
                         </Stack>
                         <Button

@@ -13,6 +13,7 @@ import {
     Checkbox
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
+import {filterList, findBg} from '../../utils/tokenFunctions';
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 
@@ -39,24 +40,13 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
     }, []);
 
 
-    function filterList(list) {
-        return list.filter(item => {
-            if (item.status != "cancelled") {
-                if (item.status == "completed" && showCompleted) {
-                    return true
-                }
-                else if (item.status == "completed" && !showCompleted) {
-                    return false
-                }
-                else return true
-            }
-        })
-    }
+   
 
     function handleChange() {
         setShowCompleted(!showCompleted)
     }
 
+  
 
     return (
         <>
@@ -89,8 +79,8 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                                 </Tr>
                             </Thead>
                             <Tbody>
-                                {filterList(aftlist).map((item, index) =>
-                                    <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
+                                {filterList(aftlist, showCompleted).map((item, index) =>
+                                    <Tr key={index} bg={findBg(item)}>
                                         <Td width={"10%"}><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
                                         <Td width="10%">{types[item.type]}</Td>

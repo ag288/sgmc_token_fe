@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react';
+import { createContext, useEffect, useState } from 'react';
 import AuthenticatedUser from './AuthenticatedUser';
 import ReceptionUser from './ReceptionUser';
 import UnauthenticatedUser from './UnauthenticatedUser';
@@ -11,7 +11,13 @@ function App() {
 
   const userObject = { user, setUser }
 
-  console.log(user)
+  useEffect(() => {
+    setInterval(() => {
+     window.location.reload()
+    }, 300000)
+    
+  });
+
   return (
     <AppContext.Provider
       value={userObject}>

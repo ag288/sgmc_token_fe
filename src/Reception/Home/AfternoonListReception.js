@@ -14,10 +14,12 @@ import {
     Editable,
     EditablePreview,
     EditableInput,
-    Text
+    Text,
+    InputGroup
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../../api';
+import { filterList, findBg } from '../../utils/tokenFunctions';
 import { ButtonPopoverReception } from './PopoverReception';
 
 
@@ -38,26 +40,14 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
     }
     const [file, setFile] = useState("")
 
-   
+
     useEffect(() => {
 
 
     }, []);
 
 
-    function filterList(list) {
-        return list.filter(item => {
-            if (item.status != "cancelled") {
-                if (item.status == "completed" && showCompleted) {
-                    return true
-                }
-                else if (item.status == "completed" && !showCompleted) {
-                    return false
-                }
-                else return true
-            }
-        })
-    }
+
 
     function handleChange() {
         setShowCompleted(!showCompleted)
@@ -65,11 +55,12 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
 
     function handleDoubleClick(id) {
         let fileNo = window.prompt("Enter the file number")
-        editFileNumber(fileNo, id)
+        if (fileNo != null)
+            editFileNumber(fileNo, id)
     }
 
 
-    function editFileNumber(value,id) {
+    function editFileNumber(value, id) {
         api.token.editFileNumber({ value, id }).then((res) => {
             const response = JSON.parse(res.data).result
             window.location.reload()
@@ -93,49 +84,55 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
                     width='full'>
                     <TableContainer>
                         <Table variant='striped' colorScheme='grey'>
-                        <Thead>
-                        <Tr>
-                            <Th></Th>
-                            <Th>Token
-                            </Th>
-                            <Th>Type</Th>
-                            <Th>Name</Th>
-                            <Th>File No.</Th>
-                                <Th>Type</Th>
-                                <Th>Phone</Th>
-                                <Th>In</Th>
-                                <Th>Out</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {filterList(aftlist).map((item, index) =>
-                            <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
-                                <Td><ButtonPopoverReception loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
-                                <Td>{types[item.type]}</Td>
-                                <Td >{item.name}</Td>
-                                {/* <Td>
+                            <Thead>
+                                <Tr>
+                                    <Th></Th>
+                                    <Th>Token
+                                    </Th>
+                                    <Th>Type</Th>
+                                    <Th>Name</Th>
+                                    <Th>File No.</Th>
+                                    <Th>Type</Th>
+                                    <Th>Phone</Th>
+                                    <Th>Token Time</Th>
+                                    <Th>In</Th>
+                                    <Th>Out</Th>
+                                </Tr>
+                            </Thead>
+                            <Tbody>
+                                {filterList(aftlist, showCompleted).map((item, index) =>
+                                    <Tr key={index} bg={findBg(item)}>
+                                        <Td><ButtonPopoverReception loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
+                                        <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
+                                        <Td>{types[item.type]}</Td>
+                                        <Td >{item.name}</Td>
+                                        {/* <Td>
                                 <Editable onSubmit={(value) => editFileNumber(value,item.patientID)}  defaultValue={item.fileNumber ? item.fileNumber : "Add file"}>
                             <EditablePreview />
                             <EditableInput />
                         </Editable>
                         </Td> */}
-                          <Td><Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
-                                </Td>
-                        <Td> {item.type}</Td>
-                        <Td>{item.phone.substring(2)}</Td>
-                        <Td>{ item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
-                                .toLocaleTimeString('en-US',
-                                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                            </Td>
-                            <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
-                                .toLocaleTimeString('en-US',
-                                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                            </Td>
-                            </Tr>
-                        )
-                        }
-                    </Tbody>
+                                        <Td><Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+                                        </Td>
+                                        <Td> {item.type}</Td>
+                                        <Td>{item.phone.substring(2)}</Td>
+                                        <Td>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
+                                            .toLocaleTimeString('en-US',
+                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                        </Td>
+                                        <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
+                                            .toLocaleTimeString('en-US',
+                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                        </Td>
+                                        <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
+                                            .toLocaleTimeString('en-US',
+                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                        </Td>
+
+                                    </Tr>
+                                )
+                                }
+                            </Tbody>
                         </Table>
                     </TableContainer>
                 </Box>}

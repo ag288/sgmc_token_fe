@@ -30,7 +30,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     }
 
     function call() {
-        let file = "", call = false
+        let file = null, call = false
         if (item.fileNumber == null || item.fileNumber == "" || item.fileNumber == "N" || item.fileNumber == "n") {
             file = prompt("You are going to call " + item.name + "\nPlease enter the patient's file number")
             console.log(file)
@@ -48,40 +48,50 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                 window.location.reload()
             })
         }
+        else {
+            close()
+        }
         // localStorage.setItem("current", `${item.slot}-${item.tokenNumber}`)
         //localStorage.setItem("slot", item.slot)
         //close()
     }
 
-    function cancel() {
-        let flag = window.confirm(`Your are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`)
-        if(flag){
-        setIsLoading(true)
-        api.token.cancelToken({ item }).then((res) => {
-            const response = JSON.parse(res.data)
-            setIsLoading(false)
-            toast({
-                title: 'Cancelled token successfully',
-                status: 'success',
-                duration: 3000,
-                isClosable: false,
-                position: "top"
-            })
-            window.location.reload()
-        }).catch((err) => {
-            toast({
-                title: 'Something went wrong',
-                status: 'error',
-                duration: 3000,
-                isClosable: false,
-                position: "top"
-            })
-        })
+    function completed() {
+        let flag = window.confirm("Do you want to mark this token as completed?")
+        if (flag) {
+            api.token.setAsCompleted().then((res => window.location.reload()))
+        }
     }
 
-    else {
-        close()
-    }
+    function cancel() {
+        let flag = window.confirm(`WARNING!!\n\nYou are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`)
+        if (flag) {
+            setIsLoading(true)
+            api.token.cancelToken({ item }).then((res) => {
+                const response = JSON.parse(res.data)
+                setIsLoading(false)
+                toast({
+                    title: 'Cancelled token successfully',
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
+                window.location.reload()
+            }).catch((err) => {
+                toast({
+                    title: 'Something went wrong',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
+            })
+        }
+
+        else {
+            close()
+        }
     }
 
 
@@ -89,17 +99,17 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
         <Popover trigger="click" placement="bottom-end" isOpen={isOpen} onClose={close} preventOverflow={true}
             flip={true}  >
             <PopoverTrigger>
-                <IconButton isDisabled={item.status == "completed" || item.status == "current"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                <IconButton isDisabled={item.status == "completed" || item.status=="cancelled"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                 </IconButton>
             </PopoverTrigger >
             <PopoverContent>
                 <PopoverArrow />
                 <PopoverBody>
-                    <HStack spacing={"auto"}>
+                    <HStack>
                         {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
-                        <Button mx="2%" width={"sm"} colorScheme={"green"} onClick={call} >Call</Button>
-                        <Button mx="2%" width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
-
+                        <Button width={"sm"} colorScheme={"green"} onClick={call} >Call</Button>
+                        <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
+                        {/* <Button width={"sm"} colorScheme={"yellow"} onClick={completed} >Completed</Button> */}
                     </HStack>
                 </PopoverBody>
             </PopoverContent>

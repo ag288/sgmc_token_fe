@@ -17,6 +17,7 @@ import {
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../../api';
+import {filterList, findBg} from '../../utils/tokenFunctions';
 import { ButtonPopoverReception } from './PopoverReception';
 
 
@@ -40,23 +41,11 @@ export const MorningListReception = ({ isLoading, setIsLoading, mornlist, curren
         setShowCompleted(!showCompleted)
     }
 
-    function filterList(list) {
-        return list.filter(item => {
-            if (item.status != "cancelled") {
-                if (item.status == "completed" && showCompleted) {
-                    return true
-                }
-                else if (item.status == "completed" && !showCompleted) {
-                    return false
-                }
-                else return true
-            }
-        })
-    }
 
     function handleDoubleClick(id) {
         let fileNo = window.prompt("Enter the file number")
-        editFileNumber(fileNo, id)
+        if (fileNo != null)
+            editFileNumber(fileNo, id)
     }
 
 
@@ -92,13 +81,14 @@ export const MorningListReception = ({ isLoading, setIsLoading, mornlist, curren
                             <Th>File No.</Th>
                             <Th>Type</Th>
                             <Th>Phone</Th>
+                            <Th>Token Time</Th>
                             <Th>In</Th>
                             <Th>Out</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {filterList(mornlist).map((item, index) =>
-                            <Tr key={index} bg={item.status == "completed" ? "gray.200" : (item.status == "current" ? "green.100" : "white")}>
+                        {filterList(mornlist,showCompleted).map((item, index) =>
+                            <Tr key={index} bg={findBg(item)}>
                                 <Td ><ButtonPopoverReception loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                 <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                 <Td >{types[item.type]}</Td>
@@ -114,6 +104,10 @@ export const MorningListReception = ({ isLoading, setIsLoading, mornlist, curren
                                 </Td>
                                 <Td> {item.type}</Td>
                                 <Td>{item.phone.substring(2)}</Td>
+                                <Td>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
+                                    .toLocaleTimeString('en-US',
+                                        { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                </Td>
                                 <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                                     .toLocaleTimeString('en-US',
                                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}

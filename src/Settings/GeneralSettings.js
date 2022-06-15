@@ -89,9 +89,9 @@ export const GeneralSettings = () => {
     }
 
     function updateSettings() {
-        if (settings.morn_max_tokens < max.find(item => item.slot == "A").tokenNumber + 5)
+        if (settings.morn_max_tokens < max.find(item => item.slot == "A").tokenNumber + 3)
             alert("Please enter the correct value for maximum morning tokens!")
-        else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber + 5)
+        else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber + 3)
             alert("Please enter the correct value for maximum afternoon tokens!")
         else {
             setIsLoading(true)
@@ -160,14 +160,14 @@ export const GeneralSettings = () => {
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Maximum tokens - Morning</Text>
                         <Input type="number" id={"7"} onChange={handleChange} value={settings?.morn_max_tokens}></Input>
-                      { max.find(item => item.slot == "A") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "A").tokenNumber + 5})`}</Text>
+                      { max.find(item => item.slot == "A") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "A").tokenNumber + 3})`}</Text>
                    : null}
                     </VStack> 
                     <Divider borderColor={"gray"} orientation='horizontal' />
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Maximum tokens - Afternoon</Text>
                         <Input type="number" id={"8"} onChange={handleChange} value={settings?.aft_max_tokens}></Input>
-                        { max.find(item => item.slot == "B") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "B").tokenNumber + 5})`}</Text>
+                        { max.find(item => item.slot == "B") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "B").tokenNumber + 3})`}</Text>
                    : null}
                     </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
