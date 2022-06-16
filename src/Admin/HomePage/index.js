@@ -15,12 +15,12 @@ import { AfternoonList } from './AfternoonList';
 import { CurrentPatient } from './CurrentPatient';
 import { MorningList } from './MorningList';
 import { FaEllipsisV } from 'react-icons/fa'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../../App';
 
 // List of staff profiles pending approval
 
-export const PatientList = () => {
+export const PatientList = (props) => {
 
   const user = useContext(AppContext)
   const [current, setCurrent] = useState(0)
@@ -28,11 +28,13 @@ export const PatientList = () => {
   const [aftlist, setAftList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
+
   useEffect(() => {
 
     setInterval(() => {
-      window.location.reload()
-    }, 300000)
+      if (window.location.pathname == "/" || window.location.pathname == "/home")
+        window.location.reload()
+    }, 60000)
 
     api.token.fetchMorningList().then((res) => {
       const response = JSON.parse(res.data).result

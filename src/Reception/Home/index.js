@@ -30,6 +30,11 @@ export const PatientListReception = () => {
 
     useEffect(() => {
 
+        setInterval(() => {
+            if (window.location.pathname == "/" || window.location.pathname == "/home")
+                window.location.reload()
+        }, 60000)
+
         api.token.fetchMorningList().then((res) => {
             const response = JSON.parse(res.data).result
             for (var i = 0; i < response.length; i++)

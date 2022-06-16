@@ -13,6 +13,10 @@ function App() {
 
   useEffect(() => {
    
+    // setInterval(() => {
+    //   window.location.reload()
+    // }, 60000)
+
   });
 
   return (

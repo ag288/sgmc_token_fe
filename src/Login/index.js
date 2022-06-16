@@ -37,10 +37,11 @@ export default function Login() {
             if (response) {
                 localStorage.setItem("currentUser", JSON.stringify(response))
                 user.setUser(response)
-                if (response.userID == 1)
-                    navigate("/home")
-                else
-                    navigate("/reception")
+                navigate("/home")
+                // if (response.userID == 1)
+                //     navigate("/home")
+                // else
+                //     navigate("/reception")
             }
             else alert("Incorrect username or password")
         }).catch((err) => {
