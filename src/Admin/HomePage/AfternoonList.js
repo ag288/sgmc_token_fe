@@ -10,10 +10,11 @@ import {
     Box,
     HStack,
     Heading,
-    Checkbox
+    Checkbox,
+    Text
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import {filterList, findBg} from '../../utils/tokenFunctions';
+import {diffMinutes, filterList, findBg} from '../../utils/tokenFunctions';
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 
@@ -86,7 +87,8 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                                         <Td width="10%">{types[item.type]}</Td>
                                         <Td width={"35%"}>{item.name}</Td>
                                         <Td width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
-
+                                        {/* <Text color={diffMinutes(item.timeIn, item.timeInEst).includes("-")? "red" : "green"} >{item.timeIn? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text>
+                         */}
                                     </Tr>
                                 )
                                 }
