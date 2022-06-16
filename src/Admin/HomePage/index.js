@@ -30,13 +30,17 @@ export const PatientList = () => {
 
   useEffect(() => {
 
+    setInterval(() => {
+      window.location.reload()
+    }, 300000)
+
     api.token.fetchMorningList().then((res) => {
       const response = JSON.parse(res.data).result
       for (var i = 0; i < response.length; i++)
         if (response[i].status == "current") {
           setCurrent(response[i])
         }
-        console.log(response)
+      console.log(response)
       setMornList(response)
     })
 

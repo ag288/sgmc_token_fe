@@ -3,6 +3,8 @@ export function findBg(item) {
         return "gray.200"
     else if (item.status == "cancelled")
         return "red.200"
+    else if (item.status == "current" && item.timeOut)
+        return "gray.200"
     else if (item.status == "current")
         return "green.100"
     else return "white"
@@ -24,11 +26,11 @@ export function filterList(list, showCompleted) {
 export function diffMinutes(time1, time2) {
     const start = new Date("2020-01-01 " + time1)
     const end = new Date("2020-01-01 " + time2)
-    let hours =end.getHours() - start.getHours()
+    let hours = end.getHours() - start.getHours()
     let minutes = end.getMinutes() - start.getMinutes()
-    if(start <= end)
-    return (`${Math.abs(hours)}:${Math.abs(minutes)}`); // Can use Math.floor or Math.ceil depends up to you
-else
-return (`-${Math.abs(hours)}:${Math.abs(minutes)}`)
+    if (start <= end)
+        return (`${Math.abs(hours)}:${Math.abs(minutes)}`); // Can use Math.floor or Math.ceil depends up to you
+    else
+        return (`-${Math.abs(hours)}:${Math.abs(minutes)}`)
 
 }

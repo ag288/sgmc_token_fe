@@ -12,10 +12,7 @@ function App() {
   const userObject = { user, setUser }
 
   useEffect(() => {
-    setInterval(() => {
-     window.location.reload()
-    }, 300000)
-    
+   
   });
 
   return (
