@@ -33,7 +33,7 @@ export const PatientListReception = () => {
         setInterval(() => {
             if (window.location.pathname == "/" || window.location.pathname == "/home")
                 window.location.reload()
-        }, 60000)
+        }, 300000)
 
         api.token.fetchMorningList().then((res) => {
             const response = JSON.parse(res.data).result
