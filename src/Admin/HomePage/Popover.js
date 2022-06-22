@@ -61,6 +61,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
 
         let flag = window.confirm("Do you want to mark this token as completed?")
         if (flag) {
+          //  let review = window.prompt(`If applicable, enter number of days after which a review is required for ${current.name}`)
             setIsLoading(true)
             api.token.setAsCompleted().then((res) => {
                 setIsLoading(false)

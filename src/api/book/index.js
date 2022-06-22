@@ -12,5 +12,9 @@ export default function bookApi(fetch, baseUrl) {
         generateToken(data) {
             return fetch.post(`${baseUrl}/generate`, { data })
         },
+        fetchTokens(data) {
+            return fetch.post(`${baseUrl}/fetch-token`, { data })
+        },
     }
-}
+    }
+

@@ -15,11 +15,12 @@ import {
     EditablePreview,
     EditableInput,
     Text,
+    VStack,
     InputGroup
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../../api';
-import { filterList, findBg } from '../../utils/tokenFunctions';
+import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
 import { ButtonPopoverReception } from './PopoverReception';
 
 
@@ -116,9 +117,14 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
                                         </Td>
                                         <Td> {item.type}</Td>
                                         <Td>{item.phone.substring(2)}</Td>
-                                        <Td>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
-                                            .toLocaleTimeString('en-US',
-                                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                        <Td>
+                                            <VStack>
+                                                <Text>  {item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
+                                                    .toLocaleTimeString('en-US',
+                                                        { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                                </Text>
+                                                <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
+                                            </VStack>
                                         </Td>
                                         <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                                             .toLocaleTimeString('en-US',

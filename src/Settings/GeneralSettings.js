@@ -42,14 +42,13 @@ export const GeneralSettings = () => {
                 else
                     setMax(prev => ([...prev, { slot: "A", tokenNumber: 0 }]))
             }
-          //  console.log()
+            //  console.log()
         })
 
     }, []);
 
 
     function handleChange(e) {
-        console.log(e.target.id)
         switch (e.target.id) {
             case "1":
                 setSettings(prev => ({ ...prev, ["working_start_time_1"]: e.target.value }));
@@ -84,14 +83,20 @@ export const GeneralSettings = () => {
             case "11":
                 setSettings(prev => ({ ...prev, ["token_end"]: e.target.value }));
                 break;
+            case "12":
+                setSettings(prev => ({ ...prev, ["morn_token_start"]: e.target.value }));
+                break;
+            case "13":
+                setSettings(prev => ({ ...prev, ["aft_token_start"]: e.target.value }));
+                break;
 
         }
     }
 
     function updateSettings() {
-        if (settings.morn_max_tokens < max.find(item => item.slot == "A").tokenNumber + 3)
+        if (settings.morn_max_tokens < max.find(item => item.slot == "A").tokenNumber)
             alert("Please enter the correct value for maximum morning tokens!")
-        else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber + 3)
+        else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber)
             alert("Please enter the correct value for maximum afternoon tokens!")
         else {
             setIsLoading(true)
@@ -160,15 +165,15 @@ export const GeneralSettings = () => {
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Maximum tokens - Morning</Text>
                         <Input type="number" id={"7"} onChange={handleChange} value={settings?.morn_max_tokens}></Input>
-                      { max.find(item => item.slot == "A") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "A").tokenNumber + 3})`}</Text>
-                   : null}
-                    </VStack> 
+                        {max.find(item => item.slot == "A") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "A").tokenNumber})`}</Text>
+                            : null}
+                    </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Maximum tokens - Afternoon</Text>
                         <Input type="number" id={"8"} onChange={handleChange} value={settings?.aft_max_tokens}></Input>
-                        { max.find(item => item.slot == "B") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "B").tokenNumber + 3})`}</Text>
-                   : null}
+                        {max.find(item => item.slot == "B") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "B").tokenNumber})`}</Text>
+                            : null}
                     </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
                     <VStack p={4} width="full" alignItems={"baseline"}>
@@ -184,6 +189,16 @@ export const GeneralSettings = () => {
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Token booking closes at</Text>
                         <Input type="time" id={"11"} onChange={handleChange} value={settings?.token_end}></Input>
+                    </VStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Morning tokens start from</Text>
+                        <Input type="number" id={"12"} onChange={handleChange} value={settings?.morn_token_start}></Input>
+                    </VStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Evening tokens start from</Text>
+                        <Input type="number" id={"13"} onChange={handleChange} value={settings?.aft_token_start}></Input>
                     </VStack>
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />

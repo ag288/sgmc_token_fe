@@ -30,12 +30,14 @@ import api from '../api';
 export const TokenDetails = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
+    const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [reasons, setReasons] = useState([])
     const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
         slot: "",
-        reason: "",
+        token :"",
+        reason: ""
     })
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
@@ -65,6 +67,15 @@ export const TokenDetails = () => {
     function handleSlotChange(e) {
         console.log(e.target.value)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
+        api.book.fetchTokens({slot:e.target.value}).then((res)=>{
+            const response = JSON.parse(res.data).result
+            setTokens(response)
+        })
+
+    }
+
+    function handleTokenChange(e) {
+        setToken(prev => ({ ...prev, "token": e.target.value }))
 
     }
 
@@ -73,16 +84,17 @@ export const TokenDetails = () => {
 
     }
 
+   
 
     function handleSubmit() {
         if (token.slot != "" && token.reason != "") {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
+            location.state.token.token = token.token
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             setIsLoading(true)
             api.book.generateToken({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
-                console.log(response)
                 if (response.message != "") {
                     setIsLoading(false)
                     alert("All tokens are full for today. Please try again later")
@@ -92,28 +104,29 @@ export const TokenDetails = () => {
                     setIsLoading(false)
                     setTokenNo(`${response.slot}-${response.tokenNo}`)
                     const start = new Date(), end = new Date()
-                    if (response.slot == "A" && response.tokenNo == 1) {
+                    console.log(response.time)
+                    if (response.slot == "A" && response.tokenNo == settings.morn_token_start) {
                         const morn = new Date("2022-01-01 " + settings.working_start_time_1);
                         start.setHours(morn.getHours());
                         start.setMinutes(morn.getMinutes() - 15);
                         end.setHours(morn.getHours());
                         end.setMinutes(morn.getMinutes() + 10);
                     }
-                    else if (response.slot == "A" && response.tokenNo == 2) {
+                    else if (response.slot == "A" && response.tokenNo == settings.morn_token_start+1) {
                         const morn = new Date("2022-01-01 " + settings.working_start_time_1);
                         start.setHours(morn.getHours());
                         start.setMinutes(morn.getMinutes() - 15);
                         end.setHours(morn.getHours());
                         end.setMinutes(morn.getMinutes() + 30);
                     }
-                    else if (response.slot == "B" && response.tokenNo == 1) {
+                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start) {
                         const morn = new Date("2022-01-01 " + settings.working_start_time_2);
                         start.setHours(morn.getHours());
                         start.setMinutes(morn.getMinutes() - 15);
                         end.setHours(morn.getHours());
                         end.setMinutes(morn.getMinutes() + 10);
                     }
-                    else if (response.slot == "B" && response.tokenNo == 2) {
+                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start+1) {
                         const morn = new Date("2022-01-01 " + settings.working_start_time_2);
                         start.setHours(morn.getHours());
                         start.setMinutes(morn.getMinutes() - 15);
@@ -122,16 +135,15 @@ export const TokenDetails = () => {
                     }
                     else {
                         var coeff = 1000 * 60 * 5;
+                        console.log(new Date(response.time))
                         var rounded = new Date(Math.round(new Date(response.time) / coeff) * coeff)
-                        console.log(rounded)
+                        console.log(Math.round(new Date(response.time) / coeff) * coeff)
                         start.setHours(rounded.getHours())
                         start.setMinutes(rounded.getMinutes() - 15)
                         end.setHours(rounded.getHours())
-                        end.setMinutes(rounded.getMinutes() + 30)
+                        end.setMinutes(rounded.getMinutes() + 15)
                     }
                     setTime({ start: start, end: end })
-                    console.log(start)
-                    console.log(end)
                     onOpen()
                 }
             })
@@ -170,9 +182,18 @@ export const TokenDetails = () => {
                                     <FormLabel >Select slot</FormLabel>
                                     <RadioGroup name="slot" >
                                         <VStack align={"right"}>
-                                            {slots.map((slot) => <Radio value={slot.slot} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.work_hr_1 + 'Z')
-                                                .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.work_hr_2 + 'Z')
+                                            {slots.map((slot) => <Radio bg={token.slot==slot.slotNumber ? "green":"white"} value={slot.slotNumber} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
+                                                .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
                                                     .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
+                                        </VStack>
+                                    </RadioGroup>
+                                </FormControl>
+
+                                <FormControl id="slot" isRequired >
+                                    <FormLabel >Select token number</FormLabel>
+                                    <RadioGroup name="slot" >
+                                        <VStack align={"right"}>
+                                            {tokens.map((item) => <Radio bg={token.token==item.tokenID ? "green":"white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
@@ -195,9 +216,9 @@ export const TokenDetails = () => {
                                         </HStack>
                                             <Text mt="2%">Your estimated consultation time is between </Text>
                                             <HStack alignItems={"baseline"}>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.start).toLocaleTimeString("en-us",{timeZone:"UTC",hour12:true,hour:"numeric",minute:"numeric"})}</Text>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.start).toLocaleTimeString("en-us",{hour12:true,hour:"numeric",minute:"numeric"})}</Text>
                                             <Text mt="2%">and </Text>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.end).toLocaleTimeString("en-us",{timeZone:"UTC",hour12:true,hour:"numeric",minute:"numeric"})}</Text>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.end).toLocaleTimeString("en-us",{hour12:true,hour:"numeric",minute:"numeric"})}</Text>
                                             </HStack>
                                         <Text mt="2%"> Send 'status' to 9061901441 to know the status of your token.</Text>
                                     </ModalBody>

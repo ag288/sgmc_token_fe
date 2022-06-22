@@ -11,9 +11,10 @@ import {
     Heading,
     Checkbox,
     Text,
+    VStack,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
-import { diffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
+import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 import { FaPhoneAlt } from 'react-icons/fa';
@@ -74,9 +75,13 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                 <Td width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
                                 <Td width="10%">{types[item.type]}</Td>
                                 <Td width={"35%"}>{item.name}</Td>
-                                <Td width={"10%"}><DetailsPopover current={current} setCurrent={setCurrent} item={item} /></Td>
-                            {/* <Text color={diffMinutes(item.timeIn, item.timeInEst).includes("-")? "red" : "green"} >{item.timeIn? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text>
-                         */}
+                                <Td width={"10%"}>
+                                    <VStack>
+                                    <DetailsPopover current={current} setCurrent={setCurrent} item={item} />
+                                    <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item}/>
+                                    {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
+                                    </VStack>
+                                </Td>
                             </Tr>
                         )
                         }

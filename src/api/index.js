@@ -4,7 +4,7 @@ import settingsApi from "./settings";
 import tokenApi from "./token"
 import userApi from "./user";
 export const fetch = axios.create({
-    baseURL: "https://prism-ablaze-moss.glitch.me", // Replace with Env-Specific URL
+    baseURL: "https://sgmc-token-be.herokuapp.com", // Replace with Env-Specific URL
     timeout: 8000,
     headers: {
         common: {

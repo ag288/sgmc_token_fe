@@ -6,6 +6,7 @@ import { TokenGeneration } from './TokenGeneration';
 import { TokenDetails } from './TokenGeneration/TokenDetails';
 import { PatientDetails } from './TokenGeneration/PatientDetails';
 import { SendMessage } from './SendMessage';
+import { PatientDetails1 } from './TokenGeneration/PatientDetails1';
 
 function AuthenticatedUser() {
 
@@ -15,7 +16,7 @@ function AuthenticatedUser() {
         <Route path="/" element={<PatientList />} />
         <Route path="/home" element={<PatientList />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/book" element={<TokenGeneration />} />
+        <Route path="/book" element={<PatientDetails1 />} />
         <Route path="/patient-details" element={<PatientDetails />} />
         <Route path="/token-details" element={<TokenDetails />} />
         <Route path="/send-message" element={<SendMessage />} />

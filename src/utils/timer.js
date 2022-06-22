@@ -8,8 +8,7 @@ import {
 export const Timer = (props) => {
 
   const [minutes, setMinutes] = useState(props.min);
-  const [seconds, setSeconds] = useState(props.sec);  
-  console.log(props.min)     // Countdown starts from 40 sec
+  const [seconds, setSeconds] = useState(props.sec);
 
   useEffect(() => {
     let myInterval = setInterval(() => {
