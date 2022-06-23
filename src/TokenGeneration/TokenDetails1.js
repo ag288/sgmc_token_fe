@@ -27,14 +27,16 @@ import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
 
-export const TokenDetails = () => {
+export const TokenDetails1 = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
+    const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [reasons, setReasons] = useState([])
     const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
         slot: "",
+        token :"",
         reason: ""
     })
     const [tokenNo, setTokenNo] = useState("")
@@ -65,10 +67,17 @@ export const TokenDetails = () => {
     function handleSlotChange(e) {
         console.log(e.target.value)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
-     
+        api.book.fetchTokens({slot:e.target.value}).then((res)=>{
+            const response = JSON.parse(res.data).result
+            setTokens(response)
+        })
 
     }
 
+    function handleTokenChange(e) {
+        setToken(prev => ({ ...prev, "token": e.target.value }))
+
+    }
 
     function handleReasonChange(e) {
         setToken(prev => ({ ...prev, "reason": e.target.value }))
@@ -81,6 +90,7 @@ export const TokenDetails = () => {
         if (token.slot != "" && token.reason != "") {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
+            location.state.token.token = token.token
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             setIsLoading(true)
             api.book.generateToken({ token: location.state.token }).then((res) => {
@@ -179,7 +189,14 @@ export const TokenDetails = () => {
                                     </RadioGroup>
                                 </FormControl>
 
-                               
+                                <FormControl id="slot" isRequired >
+                                    <FormLabel >Select token number</FormLabel>
+                                    <RadioGroup name="slot" >
+                                        <VStack align={"right"}>
+                                            {tokens.map((item) => <Radio bg={token.token==item.tokenID ? "green":"white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
+                                        </VStack>
+                                    </RadioGroup>
+                                </FormControl>
                                 <FormControl id="reason">
                                     <FormLabel>Select reason</FormLabel>
                                     <Select placeholder='Select reason for visit' onChange={handleReasonChange}>

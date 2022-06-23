@@ -71,21 +71,26 @@ export const PatientDetails1 = () => {
 
     function handleSubmit() {
         console.log(token)
-        if (token.fileNumber != "" && (token.name != "" || token.new_name != "")) {
-            if (token.new_name == "") {
-                navigate("/token-details", { state: { token } })
-            }
-            else {
-                api.book.createPatient({ token }).then((res) => {
-                    const response = JSON.parse(res.data).result
-                    console.log(response)
-                    setToken(prev => ({ ...prev, "id": response }))
-                    navigate("/token-details", { state: { token, id: response } })
-                })
-            }
+        if (token.phone.length != 10) {
+            alert("Phone number must be 10 digits!!")
         }
         else {
-            alert("Please fill in all the values")
+            if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != "")) {
+                if (token.new_name == "") {
+                    navigate("/token-details", { state: { token } })
+                }
+                else {
+                    api.book.createPatient({ token }).then((res) => {
+                        const response = JSON.parse(res.data).result
+                        console.log(response)
+                        setToken(prev => ({ ...prev, "id": response }))
+                        navigate("/token-details", { state: { token, id: response } })
+                    })
+                }
+            }
+            else {
+                alert("Please fill in all the values")
+            }
         }
     }
 
