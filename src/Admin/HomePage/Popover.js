@@ -9,9 +9,11 @@ import {
     IconButton,
     useToast,
     Td,
+    Box,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../../api';
+import {Link} from 'react-router-dom'
 import { FaPhoneAlt } from 'react-icons/fa';
 // confirm deletion of staff profile
 
@@ -119,8 +121,10 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                         <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
                         <Button  isDisabled={item.status!="current"} width={"sm"} colorScheme={"yellow"} onClick={completed} >Done</Button>
                         <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
-
                     </HStack>
+                    <Box align='center' mt={"2%"}>
+                    <Link style={{textDecoration : "underline"}} to="/book-review" state={{ item }}>Book a review</Link>
+                    </Box>
                 </PopoverBody>
             </PopoverContent>
         </Popover >

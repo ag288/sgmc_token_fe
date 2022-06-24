@@ -26,9 +26,6 @@ export default function settingsApi(fetch, baseUrl) {
         },
         checkAvailability() {
             return fetch(`${baseUrl}/check`)
-        },
-        decideSlots() {
-            return fetch(`${baseUrl}/slot`)
-        },
+        }
     }
 }

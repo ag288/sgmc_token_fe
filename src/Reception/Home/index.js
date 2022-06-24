@@ -87,6 +87,7 @@ export const PatientListReception = () => {
                                 <MenuList color={"black"}>
                                     <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
                                     <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
+                                    <MenuItem onClick={() => navigate('/book-review')} >Book a review</MenuItem>
                                     {/* <MenuItem onClick={() => navigate('/send-message')} >Send a message</MenuItem> */}
                                     <MenuItem onClick={logout} >Logout</MenuItem>
                                 </MenuList>

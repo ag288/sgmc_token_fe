@@ -1,15 +1,17 @@
 
 import {
+   
     Box,
     Flex,
     Stack,
+ 
     Heading,
-    InputGroup,
-    InputLeftAddon,
+   
     Input,
     Button,
     FormControl,
     FormLabel,
+  
     Select,
     IconButton,
 } from '@chakra-ui/react'
@@ -18,13 +20,13 @@ import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
 
-export const PatientDetails1 = () => {
+export const PatientDetailsforReviewOtp = () => {
     let navigate = useNavigate()
     let location = useLocation()
     const [patients, setPatients] = useState([])
     const [token, setToken] = useState({
         id: "",
-        phone: "",
+        phone : location.state.token.phone,
         new_name: "",
         name: "",
         fileNumber: ""
@@ -32,7 +34,10 @@ export const PatientDetails1 = () => {
 
     useEffect(() => {
 
-
+        api.book.fetchPatients(`91${location.state.token.phone}`).then((res) => {
+            const response = JSON.parse(res.data).result
+            setPatients(response)
+        })
     }, [])
 
 
@@ -61,36 +66,23 @@ export const PatientDetails1 = () => {
 
     }
 
-    function fetchPatients() {
-
-        api.book.fetchPatients(`91${token.phone}`).then((res) => {
-            const response = JSON.parse(res.data).result
-            setPatients(response)
-        })
-    }
-
     function handleSubmit() {
         console.log(token)
-        if (token.phone.length != 10) {
-            alert("Phone number must be 10 digits!!")
-        }
-        else {
-            if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != "")) {
-                if (token.new_name == "") {
-                    navigate("/token-details", { state: { token } })
-                }
-                else {
-                    api.book.createPatient({ token }).then((res) => {
-                        const response = JSON.parse(res.data).result
-                        console.log(response)
-                        setToken(prev => ({ ...prev, "id": response }))
-                        navigate("/token-details", { state: { token, id: response } })
-                    })
-                }
+        if (token.fileNumber != "" && (token.name != "" || token.new_name != "")) {
+            if (token.new_name == "") {
+                navigate("/review-details", { state: { token } })
             }
             else {
-                alert("Please fill in all the values")
+                api.book.createPatient({ token }).then((res) => {
+                    const response = JSON.parse(res.data).result
+                    console.log(response)
+                    setToken(prev => ({ ...prev, "id": response }))
+                    navigate("/review-details", { state: { token, id: response } })
+                })
             }
+        }
+        else {
+            alert("Please fill in all the values")
         }
     }
 
@@ -109,13 +101,6 @@ export const PatientDetails1 = () => {
                         width="full"
                         p={8}>
                         <Stack spacing={4}>
-                            <FormControl id="phone" isRequired >
-                                <FormLabel>Phone number</FormLabel>
-                                <InputGroup>
-                                    <InputLeftAddon children='91'></InputLeftAddon>
-                                    <Input value={token.phone} onBlur={fetchPatients} onChange={handlePhoneChange} type="number" />
-                                </InputGroup>
-                            </FormControl>
                             <FormControl id="name" isRequired >
                                 <FormLabel>Name</FormLabel>
                                 <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>

@@ -3,11 +3,10 @@ import { PatientList } from './Admin/HomePage';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Settings } from './Settings';
 import { TokenGeneration } from './TokenGeneration';
-import { TokenDetails } from './TokenGeneration/TokenDetails';
+import { PatientDetailsforReview } from './ReviewBooking/PatientDetails';
+import { TokenDetailsForReviewChooseToken } from './ReviewBooking/TokenDetailsChooseToken';
 import { PatientDetails } from './TokenGeneration/PatientDetails';
-import { SendMessage } from './SendMessage';
-import { PatientDetails1 } from './TokenGeneration/PatientDetails1';
-import { TokenDetails1 } from './TokenGeneration/TokenDetails1';
+import { TokenDetailsChooseToken } from './TokenGeneration/TokenDetailsChooseTokens';
 
 function AuthenticatedUser() {
 
@@ -17,10 +16,11 @@ function AuthenticatedUser() {
         <Route path="/" element={<PatientList />} />
         <Route path="/home" element={<PatientList />} />
         <Route path="/settings" element={<Settings />} />
-        <Route path="/book" element={<PatientDetails1 />} />
-        <Route path="/patient-details" element={<PatientDetails />} />
-        <Route path="/token-details" element={<TokenDetails1 />} />
-        <Route path="/send-message" element={<SendMessage />} />
+        <Route path="/book" element={<PatientDetails />} />
+        {/* <Route path="/patient-details" element={<PatientDetails />} /> */}
+        <Route path="/book-review" element={< PatientDetailsforReview/>} />
+        <Route path="/review-details" element={< TokenDetailsForReviewChooseToken/>} />
+        <Route path="/token-details" element={<TokenDetailsChooseToken />} />
         <Route path="*" element={<PatientList />} />
       </Routes>
     </BrowserRouter>

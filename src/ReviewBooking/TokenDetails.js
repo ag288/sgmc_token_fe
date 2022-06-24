@@ -27,7 +27,7 @@ import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
 
-export const TokenDetails = () => {
+export const TokenDetailsforReview = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -53,7 +53,7 @@ export const TokenDetails = () => {
             setSettings(response[0])
         })
 
-        api.book.decideSlots().then((res) => {
+        api.review.decideSlotsReview().then((res) => {
             const response = JSON.parse(res.data).result
             setSlots(response)
         })

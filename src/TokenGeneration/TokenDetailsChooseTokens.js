@@ -27,7 +27,7 @@ import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
 
-export const TokenDetails1 = () => {
+export const TokenDetailsChooseToken = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
     const [tokens, setTokens] = useState([])
@@ -36,7 +36,7 @@ export const TokenDetails1 = () => {
     const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
         slot: "",
-        token :"",
+        token: "",
         reason: ""
     })
     const [tokenNo, setTokenNo] = useState("")
@@ -55,8 +55,9 @@ export const TokenDetails1 = () => {
             setSettings(response[0])
         })
 
-        api.settings.decideSlots().then((res) => {
+        api.book.decideSlots().then((res) => {
             const response = JSON.parse(res.data).result
+            console.log(response)
             setSlots(response)
         })
 
@@ -67,7 +68,7 @@ export const TokenDetails1 = () => {
     function handleSlotChange(e) {
         console.log(e.target.value)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
-        api.book.fetchTokens({slot:e.target.value}).then((res)=>{
+        api.book.fetchTokens({ slot: e.target.value }).then((res) => {
             const response = JSON.parse(res.data).result
             setTokens(response)
         })
@@ -84,14 +85,15 @@ export const TokenDetails1 = () => {
 
     }
 
-   
+
 
     function handleSubmit() {
-        if (token.slot != "" && token.reason != "") {
+        if (token.slot != "" && token.reason != "" && token.token != "") {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
             location.state.token.token = token.token
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
+            console.log(token)
             setIsLoading(true)
             api.book.generateToken({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
@@ -112,7 +114,7 @@ export const TokenDetails1 = () => {
                         end.setHours(morn.getHours());
                         end.setMinutes(morn.getMinutes() + 10);
                     }
-                    else if (response.slot == "A" && response.tokenNo == settings.morn_token_start+1) {
+                    else if (response.slot == "A" && response.tokenNo == settings.morn_token_start + 1) {
                         const morn = new Date("2022-01-01 " + settings.working_start_time_1);
                         start.setHours(morn.getHours());
                         start.setMinutes(morn.getMinutes() - 15);
@@ -126,7 +128,7 @@ export const TokenDetails1 = () => {
                         end.setHours(morn.getHours());
                         end.setMinutes(morn.getMinutes() + 10);
                     }
-                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start+1) {
+                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start + 1) {
                         const morn = new Date("2022-01-01 " + settings.working_start_time_2);
                         start.setHours(morn.getHours());
                         start.setMinutes(morn.getMinutes() - 15);
@@ -157,10 +159,10 @@ export const TokenDetails1 = () => {
         <>
             <Flex
                 minH={'100vh'}
-                bg={"gray.100"}> 
+                bg={"gray.100"}>
                 <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
 
-               {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
+                {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
                     thickness='4px'
                     speed='0.65s'
                     emptyColor='gray.200'
@@ -182,9 +184,10 @@ export const TokenDetails1 = () => {
                                     <FormLabel >Select slot</FormLabel>
                                     <RadioGroup name="slot" >
                                         <VStack align={"right"}>
-                                            {slots.map((slot) => <Radio bg={token.slot==slot.slotNumber ? "green":"white"} value={slot.slotNumber} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
+                                            {slots.map((slot) => <Radio bg={token.slot == slot.slotNumber ? "green" : "white"} value={slot.slotNumber} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
                                                 .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
                                                     .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
+
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
@@ -193,7 +196,8 @@ export const TokenDetails1 = () => {
                                     <FormLabel >Select token number</FormLabel>
                                     <RadioGroup name="slot" >
                                         <VStack align={"right"}>
-                                            {tokens.map((item) => <Radio bg={token.token==item.tokenID ? "green":"white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
+                                            {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
+                                        {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
@@ -214,12 +218,12 @@ export const TokenDetails1 = () => {
                                         <HStack>
                                             <Text>Your token number is </Text> <Text fontWeight={"bold"}>{tokenNo}</Text>
                                         </HStack>
-                                            <Text mt="2%">Your estimated consultation time is between </Text>
-                                            <HStack alignItems={"baseline"}>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.start).toLocaleTimeString("en-us",{hour12:true,hour:"numeric",minute:"numeric"})}</Text>
+                                        <Text mt="2%">Your estimated consultation time is between </Text>
+                                        <HStack alignItems={"baseline"}>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.start).toLocaleTimeString("en-us", { hour12: true, hour: "numeric", minute: "numeric" })}</Text>
                                             <Text mt="2%">and </Text>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.end).toLocaleTimeString("en-us",{hour12:true,hour:"numeric",minute:"numeric"})}</Text>
-                                            </HStack>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.end).toLocaleTimeString("en-us", { hour12: true, hour: "numeric", minute: "numeric" })}</Text>
+                                        </HStack>
                                         <Text mt="2%"> Send 'status' to 9061901441 to know the status of your token.</Text>
                                     </ModalBody>
                                     <ModalFooter>

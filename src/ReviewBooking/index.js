@@ -28,7 +28,7 @@ import api from '../api';
 import {
     Timer
 } from '../utils/timer'
-export const ReviewBooking = () => {
+export const TokenGeneration = () => {
     let navigate = useNavigate()
     const [otp, setOtp] = useState("")
     const [settings, setSettings] = useState("")

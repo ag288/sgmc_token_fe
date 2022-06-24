@@ -21,39 +21,41 @@ import {
     HStack,
     Spinner,
     IconButton,
+    Input,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
 
-export const TokenDetails = () => {
+export const TokenDetailsForReviewChooseToken = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
+    const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const [reasons, setReasons] = useState([])
-    const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
+        date: "",
         slot: "",
-        reason: ""
+        token: ""
     })
     const [tokenNo, setTokenNo] = useState("")
+    const [holidays, setHolidays] = useState([])
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const today = new Date()
+    const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
 
     useEffect(() => {
 
-        api.settings.fetchReasons().then((res) => {
+
+        api.settings.fetchHolidays().then((res) => {
             const response = JSON.parse(res.data).result
-            setReasons(response)
+            setHolidays(response)
+            console.log(response)
+
         })
 
-        api.settings.fetchSettings().then((res) => {
-            const response = JSON.parse(res.data).result
-            setSettings(response[0])
-        })
-
-        api.book.decideSlots().then((res) => {
+        api.review.decideSlotsReview().then((res) => {
             const response = JSON.parse(res.data).result
             setSlots(response)
         })
@@ -65,25 +67,35 @@ export const TokenDetails = () => {
     function handleSlotChange(e) {
         console.log(e.target.value)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
-     
+        api.review.fetchTokensReview({ slot: e.target.value, date:token.date }).then((res) => {
+            const response = JSON.parse(res.data).result
+            setTokens(response)
+        })
+
+    }
+
+    function handleTokenChange(e) {
+        setToken(prev => ({ ...prev, "token": e.target.value }))
 
     }
 
 
-    function handleReasonChange(e) {
-        setToken(prev => ({ ...prev, "reason": e.target.value }))
-
+    function handleDateChange(e) {
+        if (!(holidays.find(holiday => holiday.date.split("T")[0] == e.target.value)))
+            setToken(prev => ({ ...prev, "date": e.target.value }))
+        else
+            alert("Selected date is a holiday!")
     }
 
-   
 
     function handleSubmit() {
-        if (token.slot != "" && token.reason != "") {
+        if (token.slot != "" && token.token != "") {
             location.state.token.slot = token.slot
-            location.state.token.reason = token.reason
+            location.state.token.date = token.date
+            location.state.token.token = token.token
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             setIsLoading(true)
-            api.book.generateToken({ token: location.state.token }).then((res) => {
+            api.review.generateTokenReview({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
                 if (response.message != "") {
                     setIsLoading(false)
@@ -93,47 +105,7 @@ export const TokenDetails = () => {
                 else {
                     setIsLoading(false)
                     setTokenNo(`${response.slot}-${response.tokenNo}`)
-                    const start = new Date(), end = new Date()
-                    console.log(response.time)
-                    if (response.slot == "A" && response.tokenNo == settings.morn_token_start) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_1);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 10);
-                    }
-                    else if (response.slot == "A" && response.tokenNo == settings.morn_token_start+1) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_1);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 30);
-                    }
-                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_2);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 10);
-                    }
-                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start+1) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_2);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 30);
-                    }
-                    else {
-                        var coeff = 1000 * 60 * 5;
-                        console.log(new Date(response.time))
-                        var rounded = new Date(Math.round(new Date(response.time) / coeff) * coeff)
-                        console.log(Math.round(new Date(response.time) / coeff) * coeff)
-                        start.setHours(rounded.getHours())
-                        start.setMinutes(rounded.getMinutes() - 15)
-                        end.setHours(rounded.getHours())
-                        end.setMinutes(rounded.getMinutes() + 15)
-                    }
-                    setTime({ start: start, end: end })
+                    setTime(response.time)
                     onOpen()
                 }
             })
@@ -147,10 +119,10 @@ export const TokenDetails = () => {
         <>
             <Flex
                 minH={'100vh'}
-                bg={"gray.100"}> 
+                bg={"gray.100"}>
                 <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
 
-               {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
+                {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
                     thickness='4px'
                     speed='0.65s'
                     emptyColor='gray.200'
@@ -160,7 +132,7 @@ export const TokenDetails = () => {
                     mt="20%"
                 /> </Box> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                        <Heading fontSize={'2xl'}>Book a Token</Heading>
+                        <Heading fontSize={'2xl'}>Book a Review</Heading>
                         <Box
                             rounded={'lg'}
                             bg={'white'}
@@ -168,26 +140,40 @@ export const TokenDetails = () => {
                             width="full"
                             p={8}>
                             <Stack spacing={4}>
+
+                                <FormControl id="date" isRequired >
+                                    <FormLabel >Select date</FormLabel>
+                                    <Input value={token.date} onChange={handleDateChange} min={tomorrow} type="date"></Input>
+                                </FormControl>
+
                                 <FormControl id="slot" isRequired >
                                     <FormLabel >Select slot</FormLabel>
                                     <RadioGroup name="slot" >
                                         <VStack align={"right"}>
-                                            {slots.map((slot) => <Radio bg={token.slot==slot.slotNumber ? "green":"white"} value={slot.slotNumber} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
+                                            {slots.map((slot) => <Radio bg={token.slot == slot.slotID ? "green" : "white"} value={slot.slotID} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
                                                 .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
                                                     .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
+                                  
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
 
-                               
-                                <FormControl id="reason">
+                                <FormControl id="token" isRequired >
+                                    <FormLabel >Select token number</FormLabel>
+                                    <RadioGroup name="token" >
+                                        <VStack align={"right"}>
+                                            {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
+                                        </VStack>
+                                    </RadioGroup>
+                                </FormControl>
+                                {/* <FormControl id="reason">
                                     <FormLabel>Select reason</FormLabel>
                                     <Select placeholder='Select reason for visit' onChange={handleReasonChange}>
                                         {reasons.map(reason =>
                                             <option value={reason.reasonID}>{reason.name}</option>
                                         )}
                                     </Select>
-                                </FormControl>
+                                </FormControl> */}
                             </Stack>
                             <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                                 <ModalOverlay />
@@ -197,13 +183,12 @@ export const TokenDetails = () => {
                                         <HStack>
                                             <Text>Your token number is </Text> <Text fontWeight={"bold"}>{tokenNo}</Text>
                                         </HStack>
-                                            <Text mt="2%">Your estimated consultation time is between </Text>
-                                            <HStack alignItems={"baseline"}>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.start).toLocaleTimeString("en-us",{hour12:true,hour:"numeric",minute:"numeric"})}</Text>
-                                            <Text mt="2%">and </Text>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time.end).toLocaleTimeString("en-us",{hour12:true,hour:"numeric",minute:"numeric"})}</Text>
-                                            </HStack>
-                                        <Text mt="2%"> Send 'status' to 9061901441 to know the status of your token.</Text>
+                                        <Text mt="2%">Your estimated consultation time is at</Text>
+                                        <HStack alignItems={"baseline"}>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time).toLocaleTimeString("en-us", { hour12: true, hour: "numeric", minute: "numeric" })}</Text>
+                                            <Text mt="2%">on </Text>
+                                            <Text mt="2%" fontWeight={"bold"}>{new Date(token.date).toDateString()}</Text>
+                                        </HStack>
                                     </ModalBody>
                                     <ModalFooter>
                                         <Button colorScheme='blue' mr={3} onClick={() => navigate('/home')}>
@@ -220,7 +205,7 @@ export const TokenDetails = () => {
                                 _hover={{
                                     bg: 'blue.500',
                                 }}>
-                                Generate Token
+                                Generate Review Token
                             </Button>
                         </Box>
                     </Stack>}

@@ -1,10 +1,11 @@
 import axios from "axios";
 import bookApi from "./book";
+import reviewApi from "./review";
 import settingsApi from "./settings";
 import tokenApi from "./token"
 import userApi from "./user";
 export const fetch = axios.create({
-    baseURL: "https://sgmc-token-be.herokuapp.com", // Replace with Env-Specific URL
+    baseURL: "https://prism-ablaze-moss.glitch.me", // Replace with Env-Specific URL
     timeout: 8000,
     headers: {
         common: {
@@ -31,7 +32,8 @@ const api = {
     token: tokenApi(fetch, "/token"),
     settings: settingsApi(fetch, "/settings"),
     book: bookApi(fetch, "/book"),
-    user: userApi(fetch, "/user")
+    user: userApi(fetch, "/user"),
+    review : reviewApi(fetch, "/review")
 };
 
 export default api;
