@@ -89,6 +89,9 @@ export const GeneralSettings = () => {
             case "13":
                 setSettings(prev => ({ ...prev, ["aft_token_start"]: e.target.value }));
                 break;
+            case "14":
+                setSettings(prev => ({ ...prev, ["review_date_limit"]: e.target.value }));
+                break;
 
         }
     }
@@ -199,6 +202,11 @@ export const GeneralSettings = () => {
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Evening tokens start from</Text>
                         <Input type="number" id={"13"} onChange={handleChange} value={settings?.aft_token_start}></Input>
+                    </VStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Days upto which reviews can be booked</Text>
+                        <Input type="number" id={"14"} onChange={handleChange} value={settings?.review_date_limit}></Input>
                     </VStack>
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />

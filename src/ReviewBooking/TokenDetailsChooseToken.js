@@ -40,11 +40,12 @@ export const TokenDetailsForReviewChooseToken = () => {
     })
     const [tokenNo, setTokenNo] = useState("")
     const [holidays, setHolidays] = useState([])
+    const [settings, setSettings] = useState([])
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
     const today = new Date()
     const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
-
+let maxdate
     useEffect(() => {
 
 
@@ -53,6 +54,13 @@ export const TokenDetailsForReviewChooseToken = () => {
             setHolidays(response)
             console.log(response)
 
+        })
+
+        api.settings.fetchSettings().then((res) => {
+            const response = JSON.parse(res.data).result
+            setSettings(response)
+            console.log(response)
+           maxdate = new Date(today.setDate(today.getDate() + response.review_date_limit)).toISOString().split('T')[0];
         })
 
         api.review.decideSlotsReview().then((res) => {
@@ -89,7 +97,7 @@ export const TokenDetailsForReviewChooseToken = () => {
 
 
     function handleSubmit() {
-        if (token.slot != "" && token.token != "") {
+        if (token.slot != "" && token.token != "" && token.date!="") {
             location.state.token.slot = token.slot
             location.state.token.date = token.date
             location.state.token.token = token.token
@@ -143,7 +151,7 @@ export const TokenDetailsForReviewChooseToken = () => {
 
                                 <FormControl id="date" isRequired >
                                     <FormLabel >Select date</FormLabel>
-                                    <Input value={token.date} onChange={handleDateChange} min={tomorrow} type="date"></Input>
+                                    <Input value={token.date} onChange={handleDateChange} min={tomorrow} max={maxdate} type="date"></Input>
                                 </FormControl>
 
                                 <FormControl id="slot" isRequired >
