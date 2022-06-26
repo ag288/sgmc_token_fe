@@ -40,27 +40,25 @@ export const TokenDetailsForReviewChooseToken = () => {
     })
     const [tokenNo, setTokenNo] = useState("")
     const [holidays, setHolidays] = useState([])
-    const [settings, setSettings] = useState([])
+    const [maxdate, setMaxDate] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
     const today = new Date()
     const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
-let maxdate
+    //let maxdate=30
     useEffect(() => {
 
 
         api.settings.fetchHolidays().then((res) => {
             const response = JSON.parse(res.data).result
             setHolidays(response)
-            console.log(response)
+            //  console.log(response)
 
         })
 
         api.settings.fetchSettings().then((res) => {
             const response = JSON.parse(res.data).result
-            setSettings(response)
-            console.log(response)
-           maxdate = new Date(today.setDate(today.getDate() + response.review_date_limit)).toISOString().split('T')[0];
+            setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
         })
 
         api.review.decideSlotsReview().then((res) => {
@@ -68,14 +66,14 @@ let maxdate
             setSlots(response)
         })
 
-    }, [])
+    }, [maxdate])
 
     let location = useLocation()
 
     function handleSlotChange(e) {
         console.log(e.target.value)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
-        api.review.fetchTokensReview({ slot: e.target.value, date:token.date }).then((res) => {
+        api.review.fetchTokensReview({ slot: e.target.value, date: token.date }).then((res) => {
             const response = JSON.parse(res.data).result
             setTokens(response)
         })
@@ -97,7 +95,7 @@ let maxdate
 
 
     function handleSubmit() {
-        if (token.slot != "" && token.token != "" && token.date!="") {
+        if (token.slot != "" && token.token != "" && token.date != "") {
             location.state.token.slot = token.slot
             location.state.token.date = token.date
             location.state.token.token = token.token
@@ -161,7 +159,7 @@ let maxdate
                                             {slots.map((slot) => <Radio bg={token.slot == slot.slotID ? "green" : "white"} value={slot.slotID} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
                                                 .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
                                                     .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
-                                  
+
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
