@@ -1,17 +1,17 @@
 
 import {
-   
+
     Box,
     Flex,
     Stack,
- 
+
     Heading,
-   
+
     Input,
     Button,
     FormControl,
     FormLabel,
-  
+
     Select,
     IconButton,
 } from '@chakra-ui/react'
@@ -26,7 +26,7 @@ export const PatientDetailsWithOtp = () => {
     const [patients, setPatients] = useState([])
     const [token, setToken] = useState({
         id: "",
-        phone : location.state.token.phone,
+        phone: location.state.token.phone,
         new_name: "",
         name: "",
         fileNumber: ""
@@ -38,6 +38,10 @@ export const PatientDetailsWithOtp = () => {
             const response = JSON.parse(res.data).result
             setPatients(response)
         })
+
+
+
+
     }, [])
 
 
@@ -93,43 +97,46 @@ export const PatientDetailsWithOtp = () => {
                 bg={"gray.100"}>
                 <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
                 <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                    <Heading fontSize={'2xl'}>Book a Token</Heading>
-                    <Box
-                        rounded={'lg'}
-                        bg={'white'}
-                        boxShadow={'lg'}
-                        width="full"
-                        p={8}>
-                        <Stack spacing={4}>
-                            <FormControl id="name" isRequired >
-                                <FormLabel>Name</FormLabel>
-                                <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
-                                    {patients.map((patient) => <option>{`${patient.name}`}</option>)}
-                                    <option>Add new</option>
-                                </Select>
-                            </FormControl>
-                            {
-                                token.name == "Add new" ? <FormControl id="name" isRequired >
-                                    <FormLabel>Enter the name</FormLabel>
-                                    <Input value={token.new_name} onChange={handleNewNameChange}>
-                                    </Input>
-                                </FormControl> : null}
-                            <FormControl id="file">
-                                <FormLabel >File Number</FormLabel>
-                                <Input type="text" value={token.fileNumber} onChange={handleFileChange} />
-                            </FormControl>
-                        </Stack>
-                        <Button
-                            onClick={handleSubmit}
-                            mt={4}
-                            bg={'blue.400'}
-                            color={'white'}
-                            _hover={{
-                                bg: 'blue.500',
-                            }}>
-                            Next
-                        </Button>
-                    </Box>
+                  
+                            <Heading fontSize={'2xl'}>Book a Token</Heading>
+                            <Box
+                                rounded={'lg'}
+                                bg={'white'}
+                                boxShadow={'lg'}
+                                width="full"
+                                p={8}>
+                                <Stack spacing={4}>
+                                    <FormControl id="name" isRequired >
+                                        <FormLabel>Name</FormLabel>
+                                        <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
+                                            {patients.map((patient) => <option>{`${patient.name}`}</option>)}
+                                            <option>Add new</option>
+                                        </Select>
+                                    </FormControl>
+                                    {
+                                        token.name == "Add new" ? <FormControl id="name" isRequired >
+                                            <FormLabel>Enter the name</FormLabel>
+                                            <Input value={token.new_name} onChange={handleNewNameChange}>
+                                            </Input>
+                                        </FormControl> : null}
+                                    <FormControl id="file">
+                                        <FormLabel >File Number</FormLabel>
+                                        <Input type="text" value={token.fileNumber} onChange={handleFileChange} />
+                                    </FormControl>
+                                </Stack>
+                                <Button
+                                    onClick={handleSubmit}
+                                    mt={4}
+                                    bg={'blue.400'}
+                                    color={'white'}
+                                    _hover={{
+                                        bg: 'blue.500',
+                                    }}>
+                                    Next
+                                </Button>
+                            </Box>
+                    
+                    
                 </Stack>
             </Flex>
         </>

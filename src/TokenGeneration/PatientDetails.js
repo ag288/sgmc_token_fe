@@ -22,6 +22,7 @@ export const PatientDetails = () => {
     let navigate = useNavigate()
     let location = useLocation()
     const [patients, setPatients] = useState([])
+    const [availability, setAvailability] = useState("")
     const [token, setToken] = useState({
         id: "",
         phone: "",
@@ -33,6 +34,10 @@ export const PatientDetails = () => {
     useEffect(() => {
 
 
+        api.settings.checkAvailability().then((res) => {
+            const response = JSON.parse(res.data).result
+            setAvailability(response)
+        })
     }, [])
 
 
@@ -101,6 +106,10 @@ export const PatientDetails = () => {
                 bg={"gray.100"}>
                 <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
                 <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
+                {availability != "" ?
+                        <Heading size="md">{availability}</Heading>
+                        :
+                        <>
                     <Heading fontSize={'2xl'}>Book a Token</Heading>
                     <Box
                         rounded={'lg'}
@@ -145,6 +154,8 @@ export const PatientDetails = () => {
                             Next
                         </Button>
                     </Box>
+                    </>
+}
                 </Stack>
             </Flex>
         </>
