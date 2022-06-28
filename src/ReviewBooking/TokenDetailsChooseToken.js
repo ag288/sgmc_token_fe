@@ -98,7 +98,6 @@ export const TokenDetailsForReviewChooseToken = () => {
         console.log(token)
         if (token.slot != "" && token.token != "" && token.date != "") {
             location.state.token.slot = token.slot
-            location.state.token.reviewID = location.state.reviewID
             location.state.token.date = token.date
             location.state.token.token = token.token
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id

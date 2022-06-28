@@ -105,7 +105,7 @@ export const PatientDetailsforReview = () => {
                             let update = window.confirm(`A review already exists for ${token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
                             if (update) {
                                // setToken(prev => ({ ...prev, "reviewID": response.reviewID }))
-                                navigate("/review-details", { state: { token, reviewID:response[0].reviewID } })
+                                navigate("/review-details", { state: { token} })
                             }
                             else {
                                 navigate("/home")
