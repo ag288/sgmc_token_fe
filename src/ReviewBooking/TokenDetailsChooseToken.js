@@ -106,17 +106,12 @@ export const TokenDetailsForReviewChooseToken = () => {
             setIsLoading(true)
             api.review.generateTokenReview({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
-                if (response.message != "") {
-                    setIsLoading(false)
-                    alert("All tokens are full for today. Please try again later")
-                    navigate("/home")
-                }
-                else {
+              
                     setIsLoading(false)
                     setTokenNo(`${response.slot}-${response.tokenNo}`)
                     setTime(response.time)
                     onOpen()
-                }
+                
             })
         }
         else {
