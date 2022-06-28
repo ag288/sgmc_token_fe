@@ -13,23 +13,32 @@ import {
     Select,
     IconButton,
     Spinner,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
+    HStack,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FaHome } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { FaEllipsisV, FaHome, FaList } from 'react-icons/fa'
+import { useContext, useEffect, useState } from 'react'
 import api from '../api';
+import { AppContext } from '../App';
+import { logout } from '../utils/tokenFunctions';
 
 export const PatientDetailsforReview = () => {
     let navigate = useNavigate()
     let location = useLocation()
+    const { user, setUser } = useContext(AppContext)
     const [patients, setPatients] = useState([])
-    const[isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const [token, setToken] = useState({
         id: location.state ? location.state.item.patientID : "",
         phone: location.state ? location.state.item.phone.substring(2) : "",
         new_name: "",
         name: location.state ? location.state.item.name : "",
-        fileNumber: location.state ? location.state.item.fileNumber : ""
+        fileNumber: location.state ? location.state.item.fileNumber : "",
+        reviewID: ''
     })
 
     useEffect(() => {
@@ -87,7 +96,22 @@ export const PatientDetailsforReview = () => {
         else {
             if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != "")) {
                 if (token.new_name == "") {
-                    navigate("/review-details", { state: { token } })
+                    api.review.reviewExists({ id: token.id }).then((res) => {
+                        const response = JSON.parse(res.data).result
+                        console.log(response)
+                        if (response.length == 0)
+                            navigate("/review-details", { state: { token } })
+                        else {
+                            let update = window.confirm(`A review already exists for ${token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
+                            if (update) {
+                               // setToken(prev => ({ ...prev, "reviewID": response.reviewID }))
+                                navigate("/review-details", { state: { token, reviewID:response[0].reviewID } })
+                            }
+                            else {
+                                navigate("/home")
+                            }
+                        }
+                    })
                 }
                 else {
                     api.book.createPatient({ token }).then((res) => {
@@ -109,8 +133,24 @@ export const PatientDetailsforReview = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
-
+                {/* Logout button for physio */}
+                {user.userID == 3 ?
+                    <Box>
+                        <Menu m="2%" closeOnBlur={true}>
+                            <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
+                            <MenuList color={"black"}>
+                                <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
+                                <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
+                                <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
+                            </MenuList>
+                        </Menu>
+                    </Box>
+                    :
+                    <HStack alignItems={"baseline"} spacing="auto">
+                         <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaList />} onClick={() => navigate('/home')}></IconButton>
+                        <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+                         </HStack>
+                      }
                 {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
                     thickness='4px'
                     speed='0.65s'
@@ -121,7 +161,7 @@ export const PatientDetailsforReview = () => {
                     mt="20%"
                 /> </Box> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                        <Heading fontSize={'2xl'}>Book a Review</Heading>
+                        <Heading color={"crimson"} fontSize={'2xl'}>Book a Future Review</Heading>
                         <Box
                             rounded={'lg'}
                             bg={'white'}

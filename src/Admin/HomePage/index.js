@@ -17,12 +17,13 @@ import { MorningList } from './MorningList';
 import { FaEllipsisV } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../../App';
+import { logout } from '../../utils/tokenFunctions';
 
 // List of staff profiles pending approval
 
 export const PatientList = (props) => {
 
-  const user = useContext(AppContext)
+  const {user, setUser} = useContext(AppContext)
   const [current, setCurrent] = useState(0)
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
@@ -57,10 +58,6 @@ export const PatientList = (props) => {
 
   }, []);
 
-  function logout() {
-    user.setUser(null)
-    localStorage.removeItem("currentUser")
-  }
 
   let navigate = useNavigate()
 
@@ -91,9 +88,8 @@ export const PatientList = (props) => {
                 <MenuList color={"black"}>
                   <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
                   <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
-                  <MenuItem onClick={() => navigate('/book-review')} >Book a review</MenuItem>
-                  {/* <MenuItem onClick={() => navigate('/send-message')} >Invite a patient</MenuItem> */}
-                  <MenuItem onClick={logout} >Logout</MenuItem>
+                  <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
+                  <MenuItem onClick={()=>logout(setUser)} >Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Box>

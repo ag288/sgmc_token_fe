@@ -53,3 +53,9 @@ export function DiffMinutes({ time1, time2, item }) {
     )
     // return (`${sign}${hourDifference}:${minuteDifference}`); // Can use Math.floor or Math.ceil depends up to you
 }
+
+
+export function logout(setUser) {
+    setUser(null)
+    localStorage.removeItem("currentUser")
+}

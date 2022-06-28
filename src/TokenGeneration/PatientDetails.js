@@ -12,15 +12,21 @@ import {
     FormLabel,
     Select,
     IconButton,
+    Menu,
+    MenuButton,
+    MenuList,
+    MenuItem,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FaHome } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { FaEllipsisV, FaHome } from 'react-icons/fa'
+import { useContext, useEffect, useState } from 'react'
 import api from '../api';
+import { AppContext } from '../App';
+import { logout } from '../utils/tokenFunctions';
 
 export const PatientDetails = () => {
     let navigate = useNavigate()
-    let location = useLocation()
+    const { user, setUser } = useContext(AppContext)
     const [patients, setPatients] = useState([])
     const [availability, setAvailability] = useState("")
     const [token, setToken] = useState({
@@ -104,58 +110,70 @@ export const PatientDetails = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+                {user.userID == 3 ?
+                    <Box>
+                        <Menu m="2%" closeOnBlur={true}>
+                            <MenuButton as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
+                            <MenuList color={"black"}>
+                                <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
+                                <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
+                                <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
+                            </MenuList>
+                        </Menu>
+                    </Box>
+                    : <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+                }
                 <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                {availability != "" ?
+                    {availability != "" ?
                         <Heading size="md">{availability}</Heading>
                         :
                         <>
-                    <Heading fontSize={'2xl'}>Book a Token</Heading>
-                    <Box
-                        rounded={'lg'}
-                        bg={'white'}
-                        boxShadow={'lg'}
-                        width="full"
-                        p={8}>
-                        <Stack spacing={4}>
-                            <FormControl id="phone" isRequired >
-                                <FormLabel>Phone number</FormLabel>
-                                <InputGroup>
-                                    <InputLeftAddon children='91'></InputLeftAddon>
-                                    <Input value={token.phone} onBlur={fetchPatients} onChange={handlePhoneChange} type="number" />
-                                </InputGroup>
-                            </FormControl>
-                            <FormControl id="name" isRequired >
-                                <FormLabel>Name</FormLabel>
-                                <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
-                                    {patients.map((patient) => <option>{`${patient.name}`}</option>)}
-                                    <option>Add new</option>
-                                </Select>
-                            </FormControl>
-                            {
-                                token.name == "Add new" ? <FormControl id="name" isRequired >
-                                    <FormLabel>Enter the name</FormLabel>
-                                    <Input value={token.new_name} onChange={handleNewNameChange}>
-                                    </Input>
-                                </FormControl> : null}
-                            <FormControl id="file">
-                                <FormLabel >File Number</FormLabel>
-                                <Input type="text" value={token.fileNumber} onChange={handleFileChange} />
-                            </FormControl>
-                        </Stack>
-                        <Button
-                            onClick={handleSubmit}
-                            mt={4}
-                            bg={'blue.400'}
-                            color={'white'}
-                            _hover={{
-                                bg: 'blue.500',
-                            }}>
-                            Next
-                        </Button>
-                    </Box>
-                    </>
-}
+                            <Heading color="red" fontSize={'2xl'}>Book a Token</Heading>
+                            <Box
+                                rounded={'lg'}
+                                bg={'white'}
+                                boxShadow={'lg'}
+                                width="full"
+                                p={8}>
+                                <Stack spacing={4}>
+                                    <FormControl id="phone" isRequired >
+                                        <FormLabel>Phone number</FormLabel>
+                                        <InputGroup>
+                                            <InputLeftAddon children='91'></InputLeftAddon>
+                                            <Input value={token.phone} onBlur={fetchPatients} onChange={handlePhoneChange} type="number" />
+                                        </InputGroup>
+                                    </FormControl>
+                                    <FormControl id="name" isRequired >
+                                        <FormLabel>Name</FormLabel>
+                                        <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
+                                            {patients.map((patient) => <option>{`${patient.name}`}</option>)}
+                                            <option>Add new</option>
+                                        </Select>
+                                    </FormControl>
+                                    {
+                                        token.name == "Add new" ? <FormControl id="name" isRequired >
+                                            <FormLabel>Enter the name</FormLabel>
+                                            <Input value={token.new_name} onChange={handleNewNameChange}>
+                                            </Input>
+                                        </FormControl> : null}
+                                    <FormControl id="file">
+                                        <FormLabel >File Number</FormLabel>
+                                        <Input type="text" value={token.fileNumber} onChange={handleFileChange} />
+                                    </FormControl>
+                                </Stack>
+                                <Button
+                                    onClick={handleSubmit}
+                                    mt={4}
+                                    bg={'blue.400'}
+                                    color={'white'}
+                                    _hover={{
+                                        bg: 'blue.500',
+                                    }}>
+                                    Next
+                                </Button>
+                            </Box>
+                        </>
+                    }
                 </Stack>
             </Flex>
         </>

@@ -25,8 +25,9 @@ import {
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import api from '../api';
+import { AppContext } from '../App';
 
 export const TokenDetailsForReviewChooseToken = () => {
     let navigate = useNavigate()
@@ -39,41 +40,31 @@ export const TokenDetailsForReviewChooseToken = () => {
         token: ""
     })
     const [tokenNo, setTokenNo] = useState("")
-    const [holidays, setHolidays] = useState([])
     const [maxdate, setMaxDate] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
     const today = new Date()
     const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
+    const {user} = useContext(AppContext)
     //let maxdate=30
     useEffect(() => {
-
-
-        api.settings.fetchHolidays().then((res) => {
-            const response = JSON.parse(res.data).result
-            setHolidays(response)
-            //  console.log(response)
-
-        })
 
         api.settings.fetchSettings().then((res) => {
             const response = JSON.parse(res.data).result
             setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
         })
 
-        api.review.decideSlotsReview().then((res) => {
-            const response = JSON.parse(res.data).result
-            setSlots(response)
-        })
 
-    }, [maxdate])
+
+    })
 
     let location = useLocation()
-
+    
     function handleSlotChange(e) {
-        console.log(e.target.value)
+        setIsLoading(true)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
         api.review.fetchTokensReview({ slot: e.target.value, date: token.date }).then((res) => {
+            setIsLoading(false)
             const response = JSON.parse(res.data).result
             setTokens(response)
         })
@@ -87,19 +78,31 @@ export const TokenDetailsForReviewChooseToken = () => {
 
 
     function handleDateChange(e) {
-        if (!(holidays.find(holiday => holiday.date.split("T")[0] == e.target.value)))
-            setToken(prev => ({ ...prev, "date": e.target.value }))
-        else
-            alert("Selected date is a holiday!")
+
+     const dateValue = e.target.value
+     setIsLoading(true)
+        api.review.decideSlotsReview({ date: e.target.value }).then((res) => {
+            setIsLoading(false)
+            const response = JSON.parse(res.data)
+            if (!response.result) {
+                alert(response.message)
+            }
+            else {
+                setToken(prev => ({ ...prev, "date": dateValue }))
+                setSlots(response.result)
+            }
+        })
     }
 
-
     function handleSubmit() {
+        console.log(token)
         if (token.slot != "" && token.token != "" && token.date != "") {
             location.state.token.slot = token.slot
+            location.state.token.reviewID = location.state.reviewID
             location.state.token.date = token.date
             location.state.token.token = token.token
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
+            location.state.token.creator=user.userID
             setIsLoading(true)
             api.review.generateTokenReview({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
@@ -138,7 +141,7 @@ export const TokenDetailsForReviewChooseToken = () => {
                     mt="20%"
                 /> </Box> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                        <Heading fontSize={'2xl'}>Book a Review</Heading>
+                        <Heading color="crimson" fontSize={'2xl'}>Book a Future Review</Heading>
                         <Box
                             rounded={'lg'}
                             bg={'white'}

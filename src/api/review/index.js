@@ -7,13 +7,16 @@ export default function reviewApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/generate`, { data })
         },
 
-        decideSlotsReview() {
-            console.log("hi")
-            return fetch(`${baseUrl}/slot`)
+        decideSlotsReview(data) {
+            return fetch.post(`${baseUrl}/slot`, { data })
         },
 
         fetchTokensReview(data) {
             return fetch.post(`${baseUrl}/fetch-token`, { data })
+        },
+
+        reviewExists(data) {
+            return fetch.post(`${baseUrl}/existing`, { data })
         },
 
     }

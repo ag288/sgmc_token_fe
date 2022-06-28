@@ -5,7 +5,8 @@ import settingsApi from "./settings";
 import tokenApi from "./token"
 import userApi from "./user";
 export const fetch = axios.create({
-    baseURL: "https://token.vinoosamuel.com", // Replace with Env-Specific URL
+    baseURL: "https://special-amenable-foundation.glitch.me",
+   // baseURL: "https://token.vinoosamuel.com",
     timeout: 8000,
     headers: {
         common: {
@@ -33,7 +34,7 @@ const api = {
     settings: settingsApi(fetch, "/settings"),
     book: bookApi(fetch, "/book"),
     user: userApi(fetch, "/user"),
-    review : reviewApi(fetch, "/review")
+    review: reviewApi(fetch, "/review")
 };
 
 export default api;

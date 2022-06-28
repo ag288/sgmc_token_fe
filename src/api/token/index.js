@@ -38,6 +38,9 @@ export default function tokenApi(fetch, baseUrl) {
         invitePatient(data) {
             return fetch.post(`${baseUrl}/invite`,{data})
         },
+        saveReview(data) {
+            return fetch.post(`${baseUrl}/save-review`,{data})
+        },
 
         
     }

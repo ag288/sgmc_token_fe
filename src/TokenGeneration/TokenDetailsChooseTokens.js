@@ -24,14 +24,17 @@ import {
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import api from '../api';
+import userApi from '../api/user';
+import { AppContext } from '../App';
 
 export const TokenDetailsChooseToken = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
     const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const { user } = useContext(AppContext)
     const [reasons, setReasons] = useState([])
     const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
@@ -44,7 +47,7 @@ export const TokenDetailsChooseToken = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
-
+        setIsLoading(true)
         api.settings.fetchReasons().then((res) => {
             const response = JSON.parse(res.data).result
             setReasons(response)
@@ -56,6 +59,7 @@ export const TokenDetailsChooseToken = () => {
         })
 
         api.book.decideSlots().then((res) => {
+            setIsLoading(false)
             const response = JSON.parse(res.data).result
             console.log(response)
             setSlots(response)
@@ -66,9 +70,10 @@ export const TokenDetailsChooseToken = () => {
     let location = useLocation()
 
     function handleSlotChange(e) {
-        console.log(e.target.value)
+        setIsLoading(true)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
         api.book.fetchTokens({ slot: e.target.value }).then((res) => {
+            setIsLoading(false)
             const response = JSON.parse(res.data).result
             setTokens(response)
         })
@@ -88,6 +93,8 @@ export const TokenDetailsChooseToken = () => {
 
 
     function handleSubmit() {
+        if (user.userID == 3)
+            token.reason = 1
         if (token.slot != "" && token.reason != "" && token.token != "") {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
@@ -197,18 +204,18 @@ export const TokenDetailsChooseToken = () => {
                                     <RadioGroup name="slot" >
                                         <VStack align={"right"}>
                                             {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
-                                        {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
+                                            {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
-                                <FormControl id="reason">
+                                {user.userID != 3 ? <FormControl id="reason">
                                     <FormLabel>Select reason</FormLabel>
                                     <Select placeholder='Select reason for visit' onChange={handleReasonChange}>
                                         {reasons.map(reason =>
                                             <option value={reason.reasonID}>{reason.name}</option>
                                         )}
                                     </Select>
-                                </FormControl>
+                                </FormControl> : null}
                             </Stack>
                             <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                                 <ModalOverlay />

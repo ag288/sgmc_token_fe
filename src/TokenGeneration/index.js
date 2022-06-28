@@ -99,7 +99,7 @@ export const ReviewBooking = () => {
             const auth = getAuth();
             signInWithPhoneNumber(auth, phoneNumber, appVerifier).then((confirmationResult) => {
                 // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code).
+                //  in with confirmationResult.confirm(code).
 
                 window.confirmationResult = confirmationResult;
                 // window.recaptchaVerifier.clear()
@@ -146,7 +146,7 @@ export const ReviewBooking = () => {
                                             <PinInputField onChange={(e) => { setOtp(prev => prev + e.target.value) }} />
                                         </PinInput>
                                     </HStack>
-                                    <Timer sec={0} min={3} setState={setState}/>
+                                    <Timer sec={0} min={3} setState={setState} />
                                     <Link align="right" fontSize={14} color={'blue.400'}>Resend OTP</Link>
                                     <Button
                                         type='submit'

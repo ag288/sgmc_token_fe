@@ -8,71 +8,68 @@ import {
     HStack,
     IconButton,
     useToast,
-    Td,
+    useDisclosure,
+    Text,
     Box,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../../api';
-import {Link} from 'react-router-dom'
-import { FaPhoneAlt } from 'react-icons/fa';
+import { ReviewModal } from './ReviewModal';
 // confirm deletion of staff profile
 
 
 export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurrent }) => {
 
-    const [isOpen, setIsOpen] = useState(false)
-    const open = () => setIsOpen(!isOpen)
-    const close = () => setIsOpen(false)
+    const [opened, setOpened] = useState(false)
+    const [origin, setOrigin] = useState("")
+    const open = () => setOpened(!opened)
+    const close = () => setOpened(false)
     const toast = useToast()
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
-    function arrived() {
-        api.token.setAsArrived({ item }).then((res) => {
-            const response = JSON.parse(res.data)
-            window.location.reload()
-        })
+
+    function onCall() {
+        if (current){
+            setOrigin("call")
+            onOpen()
+        }
+        else {
+            const confirm = window.confirm(`You are going to call ${item.name}`)
+            if (confirm)
+                call()
+        }
     }
 
     function call() {
-        let file = null, call = false
-        if (item.fileNumber == null || item.fileNumber == "" || item.fileNumber == "N" || item.fileNumber == "n") {
-            file = prompt("You are going to call " + item.name + "\nPlease enter the patient's file number")
-            console.log(file)
-        }
-        else {
-            call = window.confirm("You are going to call " + item.name)
-        }
-        if (file != null || call) {
-            if (!item.fileNumber)
-                item.fileNumber = file
-            setIsLoading(true)
-            api.token.callNewToken({ current, item }).then((res) => {
-                // setCurrent(item)
-                setIsLoading(false)
-                window.location.reload()
+        toast({
+            title: `Calling ${item.name}`,
+            status: 'info',
+            duration: 3000,
+            isClosable: false,
+            position: "top"
+        })
+        setIsLoading(true)
+        api.token.callNewToken({ current, item }).then((res) => {
+            // setCurrent(item)
+            setIsLoading(false)
+            window.location.reload()
+        }).catch(err => {
+            toast({
+                title: "An error occured",
+                status: 'error',
+                duration: 3000,
+                isClosable: false,
+                position: "top"
             })
-        }
-        else {
-            close()
-        }
-        // localStorage.setItem("current", `${item.slot}-${item.tokenNumber}`)
-        //localStorage.setItem("slot", item.slot)
-        //close()
+        })
     }
 
-    function completed() {
-
-        let flag = window.confirm("Do you want to mark this token as completed?")
-        if (flag) {
-          //  let review = window.prompt(`If applicable, enter number of days after which a review is required for ${current.name}`)
-            setIsLoading(true)
-            api.token.setAsCompleted().then((res) => {
-                setIsLoading(false)
-                window.location.reload()
-            }
-            )
-        }
+    function onCompleted(){
+        setOrigin("completed")
+        onOpen()
     }
 
+    
     function cancel() {
         let flag = window.confirm(`WARNING!!\n\nYou are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`)
         if (flag) {
@@ -106,28 +103,32 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
 
 
     return (
-        <Popover trigger="click" placement="bottom-end" isOpen={isOpen} onClose={close} preventOverflow={true}
-            flip={true}  >
-            <PopoverTrigger>
-                <IconButton isDisabled={item.status == "completed" || item.status == "cancelled"} bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
-                </IconButton>
-            </PopoverTrigger >
-            <PopoverContent>
-                <PopoverArrow />
-                <PopoverBody>
-                    <HStack>
-                        {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
-                        <Button width={"sm"} colorScheme={"green"} onClick={call} >Call</Button>
-                        <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
-                        <Button  isDisabled={item.status!="current"} width={"sm"} colorScheme={"yellow"} onClick={completed} >Done</Button>
-                        <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
-                    </HStack>
-                    <Box align='center' mt={"2%"}>
-                    <Link style={{textDecoration : "underline"}} to="/book-review" state={{ item }}>Book a review</Link>
-                    </Box>
-                </PopoverBody>
-            </PopoverContent>
-        </Popover >
+        <>
+            <Popover trigger="click" placement="bottom-end" isOpen={opened} onClose={close} preventOverflow={true}
+                flip={true}  >
+                <PopoverTrigger>
+                    <IconButton bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                    </IconButton>
+                </PopoverTrigger >
+                <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverBody>
+                        <HStack>
+                            {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
+                            <Button width={"sm"} isDisabled={item.status=="current"} colorScheme={"green"} onClick={onCall} >Call</Button>
+                            <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
+                            <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={onCompleted} >Done</Button>
+                            <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
+                        </HStack>
+                        {/* <Box align='center' mt={"2%"}>
+                    <Text style={{cursor : "pointer", textDecoration:"underline"}} onClick={onOpen} >Add review</Text>
+                    </Box> */}
+                    </PopoverBody>
+                </PopoverContent>
+            </Popover >
+            <ReviewModal isOpen={isOpen} onClose={onClose} item={item} current={current} isLoading={isLoading}
+                setIsLoading={setIsLoading}  origin={origin} />
+        </>
     )
 
 }

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from 'react';
 import AuthenticatedUser from './AuthenticatedUser';
+import PhysioUser from './PhysioUser';
 import ReceptionUser from './ReceptionUser';
 import UnauthenticatedUser from './UnauthenticatedUser';
 
@@ -12,17 +13,35 @@ function App() {
   const userObject = { user, setUser }
 
   useEffect(() => {
-   
+
     // setInterval(() => {
     //   window.location.reload()
     // }, 60000)
 
   });
 
+  function selectView() {
+
+    if(!user)
+    return <UnauthenticatedUser/>
+    else{
+    switch (user?.userID) {
+      case 1:
+        return <AuthenticatedUser />
+      case 2:
+        return <ReceptionUser />
+      case 3:
+        return <PhysioUser />
+
+    }
+  }
+  }
+
   return (
     <AppContext.Provider
       value={userObject}>
-      {user?.userID == 1 ? <AuthenticatedUser /> : (user?.userID == 2 ? <ReceptionUser /> : <UnauthenticatedUser />)}
+      {/* {user?.userID == 1 ? <AuthenticatedUser /> : (user?.userID == 2 ? <ReceptionUser /> : <UnauthenticatedUser />)} */}
+     {selectView()}
     </AppContext.Provider>
 
   )
