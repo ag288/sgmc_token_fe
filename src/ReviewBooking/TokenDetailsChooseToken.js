@@ -36,11 +36,12 @@ export const TokenDetailsForReviewChooseToken = () => {
     const [tokens, setTokens] = useState([])
     const [reasons, setReasons] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    let location = useLocation()
     const [token, setToken] = useState({
         date: "",
         slot: "",
         token: "",
-        reason : ""
+        reason: ""
     })
     const [tokenNo, setTokenNo] = useState("")
     const [maxdate, setMaxDate] = useState("")
@@ -52,6 +53,8 @@ export const TokenDetailsForReviewChooseToken = () => {
     //let maxdate=30
     useEffect(() => {
 
+
+
         api.settings.fetchSettings().then((res) => {
             const response = JSON.parse(res.data).result
             setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
@@ -62,9 +65,20 @@ export const TokenDetailsForReviewChooseToken = () => {
             setReasons(response)
         })
 
-    })
+        // api.review.reviewExists({ id: location.state.token.id }).then((res) => {
+        //     const response = JSON.parse(res.data).result
+        //     console.log(response)
+        //     if (response.length != 0) {
+        //         let update = window.confirm(`A review already exists for ${location.state.token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
+        //         if (!update) {
+        //             navigate("/home")
 
-    let location = useLocation()
+        //         }
+
+        //     }
+        //     })
+    }, [])
+
 
     function handleSlotChange(e) {
         setIsLoading(true)
@@ -110,7 +124,8 @@ export const TokenDetailsForReviewChooseToken = () => {
             location.state.token.slot = token.slot
             location.state.token.date = token.date
             location.state.token.token = token.token
-            location.state.token.id = location.state.id ? location.state.id : location.state.token.id
+            location.state.token.reason = user.userID == 3 ? 1 : token.reason
+            //location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             location.state.token.creator = user.userID
             setIsLoading(true)
             api.review.generateTokenReview({ token: location.state.token }).then((res) => {

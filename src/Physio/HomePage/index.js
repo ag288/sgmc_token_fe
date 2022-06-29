@@ -45,6 +45,7 @@ import { FullPageSpinner } from '../../utils/spinner';
 export const PhysioList = () => {
 
     const [slotlist, setSlotList] = useState([])
+
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const { user, setUser } = useContext(AppContext)
@@ -61,7 +62,14 @@ export const PhysioList = () => {
     }, []);
 
 
-
+    function handleChange(e, slotNumber) {
+        let token = {
+            slot: slotNumber,
+            token: e.target.value,
+            reason: 1
+        }
+//navigate("/book")
+    }
 
     return (
         <Flex bg="gray.100"
@@ -70,7 +78,7 @@ export const PhysioList = () => {
                 <Menu m="2%" closeOnBlur={true}>
                     <MenuButton as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
                     <MenuList color={"black"}>
-                        <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
+                        <MenuItem onClick={() => navigate('/book-review')} >Book future review</MenuItem>
                         <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
                     </MenuList>
                 </Menu>
@@ -91,7 +99,7 @@ export const PhysioList = () => {
                         <AccordionPanel pb={4}>
                             <RadioGroup>
                                 <VStack alignItems={"baseline"}>
-                                {slotlist[index].tokens.map((token) => <Radio>{token.tokenNumber}</Radio>)}
+                                    {slotlist[index].tokens.map((token) => <Radio value={token.tokenID} onChange={(e) => handleChange(e, slotlist[index].slotNumber)}>{token.tokenNumber}</Radio>)}
                                 </VStack>
                             </RadioGroup>
                         </AccordionPanel>

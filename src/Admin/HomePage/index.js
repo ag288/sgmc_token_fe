@@ -79,7 +79,7 @@ export const PatientList = (props) => {
                 <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
                 <MenuList color={"black"}>
                   <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
-                  <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
+                  <MenuItem onClick={() => navigate('/book')} >Book daily token</MenuItem>
                   <MenuItem onClick={()=>logout(setUser)} >Logout</MenuItem>
                 </MenuList>
               </Menu>

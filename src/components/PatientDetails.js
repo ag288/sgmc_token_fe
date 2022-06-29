@@ -24,11 +24,11 @@ import api from '../api';
 import { AppContext } from '../App';
 import { logout } from '../utils/tokenFunctions';
 
-export const PatientDetails = () => {
+export const PatientDetails = (props) => {
     let navigate = useNavigate()
+    const {availability, navigateTo} = props
     const { user, setUser } = useContext(AppContext)
     const [patients, setPatients] = useState([])
-    const [availability, setAvailability] = useState("")
     const [token, setToken] = useState({
         id: "",
         phone: "",
@@ -37,14 +37,6 @@ export const PatientDetails = () => {
         fileNumber: ""
     })
 
-    useEffect(() => {
-
-
-        api.settings.checkAvailability().then((res) => {
-            const response = JSON.parse(res.data).result
-            setAvailability(response)
-        })
-    }, [])
 
 
 
@@ -88,14 +80,14 @@ export const PatientDetails = () => {
         else {
             if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != "")) {
                 if (token.new_name == "") {
-                    navigate("/token-details", { state: { token } })
+                    navigate(navigateTo, { state: { token } })
                 }
                 else {
                     api.book.createPatient({ token }).then((res) => {
                         const response = JSON.parse(res.data).result
                         console.log(response)
                         setToken(prev => ({ ...prev, "id": response }))
-                        navigate("/token-details", { state: { token, id: response } })
+                        navigate(navigateTo, { state: { token, id: response } })
                     })
                 }
             }
@@ -106,23 +98,6 @@ export const PatientDetails = () => {
     }
 
     return (
-        <>
-            <Flex
-                minH={'100vh'}
-                bg={"gray.100"}>
-                {user.userID == 3 ?
-                    <Box>
-                        <Menu m="2%" closeOnBlur={true}>
-                            <MenuButton as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
-                            <MenuList color={"black"}>
-                                <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
-                                <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
-                                <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
-                            </MenuList>
-                        </Menu>
-                    </Box>
-                    : <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
-                }
                 <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
                     {availability != "" ?
                         <Heading size="md">{availability}</Heading>
@@ -175,7 +150,5 @@ export const PatientDetails = () => {
                         </>
                     }
                 </Stack>
-            </Flex>
-        </>
     )
 }

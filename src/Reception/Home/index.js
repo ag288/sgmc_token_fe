@@ -80,8 +80,8 @@ export const PatientListReception = () => {
                                 <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
                                 <MenuList color={"black"}>
                                     <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
-                                    <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
-                                    <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
+                                    <MenuItem onClick={() => navigate('/book')} >Book daily token</MenuItem>
+                                    <MenuItem onClick={() => navigate('/book-review')} >Book future token</MenuItem>
                                     {/* <MenuItem onClick={() => navigate('/send-message')} >Send a message</MenuItem> */}
                                     <MenuItem onClick={()=>logout(setUser)} >Logout</MenuItem>
                                 </MenuList>
