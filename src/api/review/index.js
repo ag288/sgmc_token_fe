@@ -19,6 +19,10 @@ export default function reviewApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/existing`, { data })
         },
 
+        fetchReviewList() {
+            return fetch(`${baseUrl}/list`)
+        },
+
     }
 }
 

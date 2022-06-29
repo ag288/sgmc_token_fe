@@ -6,7 +6,6 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Spinner,
   Stack,
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
@@ -18,6 +17,7 @@ import { FaEllipsisV } from 'react-icons/fa'
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AppContext } from '../../App';
 import { logout } from '../../utils/tokenFunctions';
+import { FullPageSpinner } from '../../utils/spinner';
 
 // List of staff profiles pending approval
 
@@ -72,15 +72,7 @@ export const PatientList = (props) => {
         overflow={"scroll"}
         bg={"gray.100"}>
 
-        {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
-          thickness='4px'
-          speed='0.65s'
-          emptyColor='gray.200'
-          color='blue.500'
-          size="xl"
-          ml={"40%"}
-          mt="20%"
-        /> </Box> :
+        {isLoading ? <FullPageSpinner/> :
           <Stack spacing="2%" py={3} px={3} width={'auto'}>
             <Box>
               <Menu m="2%" closeOnBlur={true}>
@@ -88,7 +80,6 @@ export const PatientList = (props) => {
                 <MenuList color={"black"}>
                   <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
                   <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
-                  <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
                   <MenuItem onClick={()=>logout(setUser)} >Logout</MenuItem>
                 </MenuList>
               </Menu>

@@ -7,6 +7,7 @@ import { PatientDetails } from './TokenGeneration/PatientDetails';
 import { PatientDetailsforReview} from './ReviewBooking/PatientDetails';
 import {  TokenDetailsForReviewChooseToken } from './ReviewBooking/TokenDetailsChooseToken';
 import { TokenDetailsChooseToken } from './TokenGeneration/TokenDetailsChooseTokens';
+import { ReviewList } from './ReviewBooking/ReviewList';
 
 function ReceptionUser() {
 
@@ -22,6 +23,7 @@ function ReceptionUser() {
         {/* <Route path="/patient-details" element={<PatientDetails />} /> */}
         <Route path="/token-details" element={<TokenDetailsChooseToken />} />
         <Route path="/book-review" element={< PatientDetailsforReview/>} />
+        <Route path="/review-list" element={< ReviewList/>} />
         <Route path="/review-details" element={< TokenDetailsForReviewChooseToken/>} />
         <Route path="*" element={<PatientListReception />} />
       </Routes>

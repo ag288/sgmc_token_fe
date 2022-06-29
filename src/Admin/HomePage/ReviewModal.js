@@ -35,7 +35,7 @@ export const ReviewModal = (props) => {
     console.log(current)
     const [info, setInfo] = useState({
         file: "",
-        days: ""
+        days: 0
     })
     const toast = useToast()
 
@@ -57,7 +57,7 @@ export const ReviewModal = (props) => {
             position: "top"
         })
         setIsLoading(true)
-        api.token.callNewToken({ current, item }).then((res) => {
+        api.token.callNewToken({ item }).then((res) => {
             // setCurrent(item)
             setIsLoading(false)
             window.location.reload()
@@ -85,17 +85,20 @@ export const ReviewModal = (props) => {
 
     function saveReview() {
         onClose()
-        api.token.saveReview({ id: current.patientID, info }).then((res) => {
-            window.location.reload()
-        }).catch(err => {
-            toast({
-                title: "An error occured",
-                status: 'error',
-                duration: 3000,
-                isClosable: false,
-                position: "top"
+        let id = origin == "previous" ? item.patientID : current.patientID
+        if (!(info.file == "" && info.days == 0)) {
+            api.token.saveReview({ id: id, info }).then((res) => {
+                //window.location.reload()
+            }).catch(err => {
+                toast({
+                    title: "An error occured",
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
             })
-        })
+        }
         if (origin == "call")
             call()
         else if (origin == "completed")
@@ -109,10 +112,10 @@ export const ReviewModal = (props) => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>{current.name}</ModalHeader>
+                <ModalHeader>{origin == "previous" ? item.name : current.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    {item.fileNumber == null ? <FormControl>
+                    {origin == "previous" && item.fileNumber == null || origin != "previous" && current.fileNumber == null ? <FormControl>
                         <FormLabel>File number</FormLabel>
                         <Input type="text" value={info.file} onChange={handleFileChange}></Input>
                     </FormControl> : null}

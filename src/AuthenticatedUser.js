@@ -17,9 +17,9 @@ function AuthenticatedUser() {
         <Route path="/home" element={<PatientList />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/book" element={<PatientDetails />} />
-        {/* <Route path="/patient-details" element={<PatientDetails />} /> */}
+        {/* <Route path="/patient-details" element={<PatientDetails />} />
         <Route path="/book-review" element={< PatientDetailsforReview/>} />
-        <Route path="/review-details" element={< TokenDetailsForReviewChooseToken/>} />
+        <Route path="/review-details" element={< TokenDetailsForReviewChooseToken/>} /> */}
         <Route path="/token-details" element={<TokenDetailsChooseToken />} />
         <Route path="*" element={<PatientList />} />
       </Routes>

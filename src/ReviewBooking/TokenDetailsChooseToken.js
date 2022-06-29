@@ -28,16 +28,19 @@ import { FaHome } from 'react-icons/fa'
 import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import { AppContext } from '../App';
+import { FullPageSpinner } from '../utils/spinner';
 
 export const TokenDetailsForReviewChooseToken = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
     const [tokens, setTokens] = useState([])
+    const [reasons, setReasons] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [token, setToken] = useState({
         date: "",
         slot: "",
-        token: ""
+        token: "",
+        reason : ""
     })
     const [tokenNo, setTokenNo] = useState("")
     const [maxdate, setMaxDate] = useState("")
@@ -45,7 +48,7 @@ export const TokenDetailsForReviewChooseToken = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const today = new Date()
     const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
-    const {user} = useContext(AppContext)
+    const { user } = useContext(AppContext)
     //let maxdate=30
     useEffect(() => {
 
@@ -54,12 +57,15 @@ export const TokenDetailsForReviewChooseToken = () => {
             setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
         })
 
-
+        api.settings.fetchReasons().then((res) => {
+            const response = JSON.parse(res.data).result
+            setReasons(response)
+        })
 
     })
 
     let location = useLocation()
-    
+
     function handleSlotChange(e) {
         setIsLoading(true)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
@@ -76,11 +82,15 @@ export const TokenDetailsForReviewChooseToken = () => {
 
     }
 
+    function handleReasonChange(e) {
+        setToken(prev => ({ ...prev, "reason": e.target.value }))
+
+    }
 
     function handleDateChange(e) {
 
-     const dateValue = e.target.value
-     setIsLoading(true)
+        const dateValue = e.target.value
+        setIsLoading(true)
         api.review.decideSlotsReview({ date: e.target.value }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data)
@@ -101,16 +111,19 @@ export const TokenDetailsForReviewChooseToken = () => {
             location.state.token.date = token.date
             location.state.token.token = token.token
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
-            location.state.token.creator=user.userID
+            location.state.token.creator = user.userID
             setIsLoading(true)
             api.review.generateTokenReview({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
-              
+                if (response.error)
+                    alert(response.error)
+                else {
                     setIsLoading(false)
                     setTokenNo(`${response.slot}-${response.tokenNo}`)
                     setTime(response.time)
                     onOpen()
-                
+                }
+
             })
         }
         else {
@@ -125,15 +138,7 @@ export const TokenDetailsForReviewChooseToken = () => {
                 bg={"gray.100"}>
                 <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
 
-                {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
-                    thickness='4px'
-                    speed='0.65s'
-                    emptyColor='gray.200'
-                    color='blue.500'
-                    size="xl"
-                    ml={"40%"}
-                    mt="20%"
-                /> </Box> :
+                {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
                         <Heading color="crimson" fontSize={'2xl'}>Book a Future Review</Heading>
                         <Box
@@ -169,14 +174,15 @@ export const TokenDetailsForReviewChooseToken = () => {
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
-                                {/* <FormControl id="reason">
+                                {user.userID != 3 ? <FormControl id="reason">
                                     <FormLabel>Select reason</FormLabel>
-                                    <Select placeholder='Select reason for visit' onChange={handleReasonChange}>
-                                        {reasons.map(reason =>
-                                            <option value={reason.reasonID}>{reason.name}</option>
-                                        )}
-                                    </Select>
-                                </FormControl> */}
+                                    <RadioGroup name="reason" >
+                                        <VStack align={"right"}>
+                                            {reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
+                                            {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
+                                        </VStack>
+                                    </RadioGroup>
+                                </FormControl> : null}
                             </Stack>
                             <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                                 <ModalOverlay />

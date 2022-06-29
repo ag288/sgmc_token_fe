@@ -28,6 +28,7 @@ import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import userApi from '../api/user';
 import { AppContext } from '../App';
+import { FullPageSpinner } from '../utils/spinner';
 
 export const TokenDetailsChooseToken = () => {
     let navigate = useNavigate()
@@ -169,15 +170,7 @@ export const TokenDetailsChooseToken = () => {
                 bg={"gray.100"}>
                 <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
 
-                {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
-                    thickness='4px'
-                    speed='0.65s'
-                    emptyColor='gray.200'
-                    color='blue.500'
-                    size="xl"
-                    ml={"40%"}
-                    mt="20%"
-                /> </Box> :
+                {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
                         <Heading fontSize={'2xl'}>Book a Token</Heading>
                         <Box
@@ -199,9 +192,9 @@ export const TokenDetailsChooseToken = () => {
                                     </RadioGroup>
                                 </FormControl>
 
-                                <FormControl id="slot" isRequired >
+                                <FormControl id="token" isRequired >
                                     <FormLabel >Select token number</FormLabel>
-                                    <RadioGroup name="slot" >
+                                    <RadioGroup name="token" >
                                         <VStack align={"right"}>
                                             {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
                                             {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
@@ -210,11 +203,12 @@ export const TokenDetailsChooseToken = () => {
                                 </FormControl>
                                 {user.userID != 3 ? <FormControl id="reason">
                                     <FormLabel>Select reason</FormLabel>
-                                    <Select placeholder='Select reason for visit' onChange={handleReasonChange}>
-                                        {reasons.map(reason =>
-                                            <option value={reason.reasonID}>{reason.name}</option>
-                                        )}
-                                    </Select>
+                                    <RadioGroup name="reason" >
+                                        <VStack align={"right"}>
+                                            {reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
+                                            {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
+                                        </VStack>
+                                    </RadioGroup>
                                 </FormControl> : null}
                             </Stack>
                             <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>

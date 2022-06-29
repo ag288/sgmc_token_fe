@@ -25,6 +25,7 @@ import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import { AppContext } from '../App';
 import { logout } from '../utils/tokenFunctions';
+import { FullPageSpinner } from '../utils/spinner';
 
 export const PatientDetailsforReview = () => {
     let navigate = useNavigate()
@@ -104,8 +105,8 @@ export const PatientDetailsforReview = () => {
                         else {
                             let update = window.confirm(`A review already exists for ${token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
                             if (update) {
-                               // setToken(prev => ({ ...prev, "reviewID": response.reviewID }))
-                                navigate("/review-details", { state: { token} })
+                                // setToken(prev => ({ ...prev, "reviewID": response.reviewID }))
+                                navigate("/review-details", { state: { token } })
                             }
                             else {
                                 navigate("/home")
@@ -133,33 +134,11 @@ export const PatientDetailsforReview = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                {/* Logout button for physio */}
-                {user.userID == 3 ?
-                    <Box>
-                        <Menu m="2%" closeOnBlur={true}>
-                            <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
-                            <MenuList color={"black"}>
-                                <MenuItem onClick={() => navigate('/book-review')} >Book a future review</MenuItem>
-                                <MenuItem onClick={() => navigate('/book')} >Book a token</MenuItem>
-                                <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
-                            </MenuList>
-                        </Menu>
-                    </Box>
-                    :
-                    <HStack alignItems={"baseline"} spacing="auto">
-                         <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaList />} onClick={() => navigate('/home')}></IconButton>
-                        <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
-                         </HStack>
-                      }
-                {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
-                    thickness='4px'
-                    speed='0.65s'
-                    emptyColor='gray.200'
-                    color='blue.500'
-                    size="xl"
-                    ml={"40%"}
-                    mt="20%"
-                /> </Box> :
+                <HStack alignItems={"baseline"} spacing="auto">
+                  { user.userID==2? <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaList />} onClick={() => navigate('/review-list')}></IconButton>
+                 :null  } <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+                </HStack>
+                {isLoading ?<FullPageSpinner/> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
                         <Heading color={"crimson"} fontSize={'2xl'}>Book a Future Review</Heading>
                         <Box

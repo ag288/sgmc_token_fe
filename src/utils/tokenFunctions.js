@@ -5,8 +5,6 @@ export function findBg(item) {
         return "gray.200"
     else if (item.status == "cancelled")
         return "red.200"
-    else if (item.status == "current" && item.timeOut)
-        return "gray.200"
     else if (item.status == "current")
         return "green.100"
     else return "white"

@@ -69,6 +69,10 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
         onOpen()
     }
 
+    function onPrevious(){
+        setOrigin("previous")
+        onOpen()
+    }
     
     function cancel() {
         let flag = window.confirm(`WARNING!!\n\nYou are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`)
@@ -115,14 +119,14 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                     <PopoverBody>
                         <HStack>
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
-                            <Button width={"sm"} isDisabled={item.status=="current"} colorScheme={"green"} onClick={onCall} >Call</Button>
+                            <Button width={"sm"} isDisabled={item.status=="current" || item.status=="completed"} colorScheme={"green"} onClick={onCall} >Call</Button>
                             <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
                             <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={onCompleted} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
                         </HStack>
-                        {/* <Box align='center' mt={"2%"}>
-                    <Text style={{cursor : "pointer", textDecoration:"underline"}} onClick={onOpen} >Add review</Text>
-                    </Box> */}
+                        <Box align='center' mt={"2%"}>
+                    <Text style={{cursor : "pointer", textDecoration:"underline"}} onClick={onPrevious} >Add review</Text>
+                    </Box>
                     </PopoverBody>
                 </PopoverContent>
             </Popover >

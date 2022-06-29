@@ -26,6 +26,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
+import { FullPageSpinner } from '../utils/spinner';
 
 export const TokenDetails = () => {
     let navigate = useNavigate()
@@ -150,15 +151,7 @@ export const TokenDetails = () => {
                 bg={"gray.100"}> 
                 <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
 
-               {isLoading ? <Box width="full" alignItems={"center"} height="full"> <Spinner
-                    thickness='4px'
-                    speed='0.65s'
-                    emptyColor='gray.200'
-                    color='blue.500'
-                    size="xl"
-                    ml={"40%"}
-                    mt="20%"
-                /> </Box> :
+               {isLoading ? <FullPageSpinner/> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
                         <Heading fontSize={'2xl'}>Book a Token</Heading>
                         <Box
