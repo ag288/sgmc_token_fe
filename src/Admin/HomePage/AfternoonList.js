@@ -18,6 +18,7 @@ import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 import { FaPhoneAlt } from 'react-icons/fa';
+import { useMediaQuery } from 'react-responsive'
 
 // List of staff profiles pending approval
 
@@ -25,6 +26,10 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
 
     //const [mornlist, setMornList] = useState([])
     const [showCompleted, setShowCompleted] = useState(false)
+    const isLaptop = useMediaQuery({
+        query: '(min-width: 1224px)'
+      })
+      const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
     const types = {
         "Review": "R",
         "First time": 'F',
@@ -71,13 +76,13 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                                 <Td width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
                                 <Td width="10%">{types[item.type]}</Td>
                                 <Td width={"25%"}>{item.name}</Td>
-                                <Td width={"10%"}>
+                                {isLaptop && <Td width={"10%"}>
                                     <VStack>
                                     <DetailsPopover current={current} setCurrent={setCurrent} item={item} />
                                     <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item}/>
                                     {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
                                     </VStack>
-                                </Td>
+                                </Td>}
                             </Tr>
                         )
                         }

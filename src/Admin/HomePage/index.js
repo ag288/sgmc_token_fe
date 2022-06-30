@@ -28,7 +28,7 @@ export const PatientList = (props) => {
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-
+  
 
   useEffect(() => {
 
@@ -69,8 +69,6 @@ export const PatientList = (props) => {
 
       <Flex
         minH={'100vh'}
-        width='100%'
-        height="full"
         overflow={"scroll"}
         bg={"gray.100"}>
 
