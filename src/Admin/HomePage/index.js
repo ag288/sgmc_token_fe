@@ -73,7 +73,7 @@ export const PatientList = (props) => {
         bg={"gray.100"}>
 
         {isLoading ? <FullPageSpinner/> :
-          <Stack spacing="2%" py={3} px={3} width={'auto'}>
+          <Stack spacing="2%" mx={"auto"} py={3} px={3} width={'auto'}>
             <Box>
               <Menu m="2%" closeOnBlur={true}>
                 <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />

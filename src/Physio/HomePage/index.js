@@ -51,6 +51,14 @@ export const PhysioList = () => {
     const { user, setUser } = useContext(AppContext)
 
     useEffect(() => {
+
+
+        setInterval(() => {
+            if (window.location.pathname == "/" || window.location.pathname == "/home")
+                window.location.reload()
+        }, 300000)
+
+
         setIsLoading(true)
         api.physio.fetchSlotsforPhysio().then((res) => {
             setIsLoading(false)
@@ -94,8 +102,8 @@ export const PhysioList = () => {
 
                 <Box m={6} width="full" rounded={"lg"} bg="white">
 
-                  {free ?  <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
-                   : null} <Heading size="lg" p={4}>Free Slots</Heading>
+                    {free ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
+                        : null} <Heading size="lg" p={4}>Free Slots</Heading>
                     <Accordion p={5} allowToggle>
                         {slotlist.map((slot, index) => <AccordionItem key={index}>
                             <h2>

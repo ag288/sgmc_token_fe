@@ -32,7 +32,6 @@ import api from '../../api';
 export const ReviewModal = (props) => {
 
     const { item, current, isOpen, onClose, isLoading, setIsLoading, origin } = props
-    console.log(current)
     const [info, setInfo] = useState({
         file: "",
         days: 0
