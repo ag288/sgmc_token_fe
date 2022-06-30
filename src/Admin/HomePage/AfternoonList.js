@@ -123,8 +123,8 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                                             <Td> {item.type}</Td>
                                             <Td>{item.phone.substring(2)}</Td>
                                             <Td>
-                                                <VStack>
-                                                    <Text>  {item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
+                                                <VStack alignItems={"baseline"}>
+                                                    <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                                                         .toLocaleTimeString('en-US',
                                                             { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                                                     </Text>

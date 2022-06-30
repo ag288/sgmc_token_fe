@@ -29,7 +29,7 @@ function App() {
       case 1:
         return <AuthenticatedUser />
       case 2:
-        return <ReceptionUser />
+        return <AuthenticatedUser />
       case 3:
         return <PhysioUser />
 
