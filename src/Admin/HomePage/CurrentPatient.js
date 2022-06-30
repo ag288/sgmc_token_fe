@@ -1,11 +1,12 @@
 import { HamburgerIcon, } from "@chakra-ui/icons";
 import { Box, Heading,  Text, HStack, VStack, Button } from "@chakra-ui/react"
 import { useEffect } from "react";
-
+import { useMediaQuery } from "react-responsive";
 
 
 export const CurrentPatient = ({ current}) => {
-    
+    const isLaptop = useMediaQuery({ query: '(min-width: 1224px)' })
+    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
 
     useEffect(() => {
 
@@ -18,7 +19,7 @@ export const CurrentPatient = ({ current}) => {
             <Box
                 borderWidth="1px"
                 borderRadius="lg"
-                width={"100%"}
+                width={isMobile? "100%" : "50%"}
                 height={{ sm: '476px', md: '9rem' }}
                 direction={{ base: 'column', md: 'row' }}
                 bg={'white'}

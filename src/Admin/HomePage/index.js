@@ -80,6 +80,7 @@ export const PatientList = (props) => {
                 <MenuList color={"black"}>
                   <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
                   <MenuItem onClick={() => navigate('/book')} >Book daily token</MenuItem>
+                {user.userID==2 && <MenuItem onClick={() => navigate('/book-review')} >Book a future token</MenuItem>}
                   <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
                 </MenuList>
               </Menu>
