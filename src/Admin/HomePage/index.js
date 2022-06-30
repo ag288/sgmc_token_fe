@@ -23,7 +23,7 @@ import { FullPageSpinner } from '../../utils/spinner';
 
 export const PatientList = (props) => {
 
-  const {user, setUser} = useContext(AppContext)
+  const { user, setUser } = useContext(AppContext)
   const [current, setCurrent] = useState(0)
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
@@ -72,15 +72,15 @@ export const PatientList = (props) => {
         overflow={"scroll"}
         bg={"gray.100"}>
 
-        {isLoading ? <FullPageSpinner/> :
-          <Stack spacing="2%" mx={"auto"} py={3} px={3} width={'auto'}>
+        {isLoading ? <FullPageSpinner /> :
+          <Stack spacing="2%" mx={"auto"} py={3} px={3} width={'fit-content'}>
             <Box>
               <Menu m="2%" closeOnBlur={true}>
                 <MenuButton isDisabled={isLoading} as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
                 <MenuList color={"black"}>
                   <MenuItem onClick={() => navigate('/settings')} >Settings</MenuItem>
                   <MenuItem onClick={() => navigate('/book')} >Book daily token</MenuItem>
-                  <MenuItem onClick={()=>logout(setUser)} >Logout</MenuItem>
+                  <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
                 </MenuList>
               </Menu>
             </Box>
