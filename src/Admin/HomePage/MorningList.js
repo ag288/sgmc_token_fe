@@ -62,10 +62,6 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                             <Th>Type</Th>
                             <Th>Name</Th>
                             <Th></Th>
-                            {/* <Th>File No.</Th>
-                                <Th>Type</Th>
-                                <Th>In</Th>
-                                <Th>Out</Th> */}
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -74,7 +70,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                 <Td width={"10%"}><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                 <Td width={"25%"} >{`${item.slot}-${item.tokenNumber}`}</Td>
                                 <Td width="10%">{types[item.type]}</Td>
-                                <Td width={"35%"}>{item.name}</Td>
+                                <Td width={"25%"}>{item.name}</Td>
                                 <Td width={"10%"}>
                                     <VStack>
                                     <DetailsPopover current={current} setCurrent={setCurrent} item={item} />

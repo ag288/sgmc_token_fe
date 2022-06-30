@@ -53,7 +53,9 @@ export const PatientList = (props) => {
         if (response[i].status == "current") {
           setCurrent(response[i])
         }
+      console.log(response)
       setAftList(response)
+
     })
 
   }, []);
