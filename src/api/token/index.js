@@ -13,8 +13,8 @@ export default function tokenApi(fetch, baseUrl) {
         fetchLastToken() {
             return fetch(`${baseUrl}/fetch_last`)
         },
-        fetchCurrent(data) {
-            return fetch.post(`${baseUrl}/fetch_current`,{data})
+        fetchCurrent() {
+            return fetch(`${baseUrl}/fetch_current`)
         },
         cancelToken(data) {
             return fetch.post(`${baseUrl}/cancel`,{data})

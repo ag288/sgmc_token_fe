@@ -23,25 +23,25 @@ import {
     IconButton,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FaHome } from 'react-icons/fa'
+import { FaBackward, FaHome } from 'react-icons/fa'
 import { useContext, useEffect, useState } from 'react'
-import api from '../api';
-import userApi from '../api/user';
-import { AppContext } from '../App';
-import { FullPageSpinner } from '../utils/spinner';
+import api from '../../api'
+import { AppContext } from '../../App'
+import { FullPageSpinner } from '../../utils/spinner'
+import { ArrowBackIcon } from '@chakra-ui/icons'
 
-export const TokenDetailsChooseToken = () => {
+export const PhysioTokenBooking = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
     const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { user } = useContext(AppContext)
-    const [reasons, setReasons] = useState([])
     const [settings, setSettings] = useState([])
+    let location = useLocation()
     const [token, setToken] = useState({
-        slot: "",
-        token: "",
-        reason: ""
+        slot: location.state.token.slot,
+        token: location.state.token.token,
+        reason: location.state.token.reason
     })
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
@@ -49,11 +49,6 @@ export const TokenDetailsChooseToken = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        api.settings.fetchReasons().then((res) => {
-            const response = JSON.parse(res.data).result
-            setReasons(response)
-        })
-
         api.settings.fetchSettings().then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
@@ -62,13 +57,17 @@ export const TokenDetailsChooseToken = () => {
         api.book.decideSlots().then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
-            console.log(response)
             setSlots(response)
+        })
+
+        api.book.fetchTokens({ slot: location.state.token.slot }).then((res) => {
+            setIsLoading(false)
+            const response = JSON.parse(res.data).result
+            setTokens(response)
         })
 
     }, [])
 
-    let location = useLocation()
 
     function handleSlotChange(e) {
         setIsLoading(true)
@@ -168,7 +167,7 @@ export const TokenDetailsChooseToken = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+                <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<ArrowBackIcon />} onClick={() => navigate(-1)}></IconButton>
 
                 {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
@@ -184,7 +183,7 @@ export const TokenDetailsChooseToken = () => {
                                     <FormLabel >Select slot</FormLabel>
                                     <RadioGroup name="slot" >
                                         <VStack align={"right"}>
-                                            {slots.map((slot) => <Radio bg={token.slot == slot.slotNumber ? "green" : "white"} value={slot.slotNumber} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
+                                            {slots.map((slot) => <Radio key={slot.slotID} bg={token.slot == slot.slotNumber ? "green" : "white"} value={slot.slotNumber} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
                                                 .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
                                                     .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
 
@@ -196,19 +195,11 @@ export const TokenDetailsChooseToken = () => {
                                     <FormLabel >Select token number</FormLabel>
                                     <RadioGroup name="token" >
                                         <VStack align={"right"}>
-                                            {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
+                                            {tokens.map((item) => <Radio key={item.tokenID} bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
                                             {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>
-                                </FormControl><FormControl id="reason">
-                                    <FormLabel>Select reason</FormLabel>
-                                    <RadioGroup name="reason" >
-                                        <VStack align={"right"}>
-                                            {reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
-                                            {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
-                                        </VStack>
-                                    </RadioGroup>
-                                </FormControl> 
+                                </FormControl>
                             </Stack>
                             <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                                 <ModalOverlay />

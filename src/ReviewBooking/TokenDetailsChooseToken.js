@@ -125,7 +125,7 @@ export const TokenDetailsForReviewChooseToken = () => {
             location.state.token.date = token.date
             location.state.token.token = token.token
             location.state.token.reason = user.userID == 3 ? 1 : token.reason
-            //location.state.token.id = location.state.id ? location.state.id : location.state.token.id
+            location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             location.state.token.creator = user.userID
             setIsLoading(true)
             api.review.generateTokenReview({ token: location.state.token }).then((res) => {

@@ -5,6 +5,7 @@ import { TokenDetailsChooseToken } from './TokenGeneration/TokenDetailsChooseTok
 import { PhysioList } from './Physio/HomePage';
 import { ReviewBooking } from './ReviewBooking';
 import { TokenGeneration } from './TokenGeneration';
+import { PhysioTokenBooking } from "./Physio/HomePage/PhysioTokenBooking";
 
 function PhysioUser() {
 
@@ -16,7 +17,7 @@ function PhysioUser() {
                 <Route path="/book-review" element={<ReviewBooking />} />
                 <Route path="/review-details" element={< TokenDetailsForReviewChooseToken />} />
                 <Route path="/book" element={<TokenGeneration />} />
-                <Route path="/token-details" element={<TokenDetailsChooseToken />} />
+                <Route path="/token-details" element={<PhysioTokenBooking />} />
                 <Route path="*" element={<PhysioList />} />
             </Routes>
         </BrowserRouter>

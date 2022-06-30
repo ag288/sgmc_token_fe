@@ -45,7 +45,7 @@ import { FullPageSpinner } from '../../utils/spinner';
 export const PhysioList = () => {
 
     const [slotlist, setSlotList] = useState([])
-
+    const [free, setFree] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const { user, setUser } = useContext(AppContext)
@@ -55,20 +55,27 @@ export const PhysioList = () => {
         api.physio.fetchSlotsforPhysio().then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
-            console.log(response)
             setSlotList(response)
+        })
+
+        api.token.fetchCurrent().then((res) => {
+            const response = JSON.parse(res.data).result
+            if (response.length == 0)
+                setFree(true)
         })
 
     }, []);
 
 
-    function handleChange(e, slotNumber) {
+    function handleChange(e, tokenNumber, timeInEst, slotNumber) {
         let token = {
             slot: slotNumber,
-            token: e.target.value,
+            tokenNumber: tokenNumber,
+            timeInEst: timeInEst,
+            token: parseInt(e.target.value),
             reason: 1
         }
-//navigate("/book")
+        navigate("/book", { state: { tokenObj: token } })
     }
 
     return (
@@ -83,32 +90,36 @@ export const PhysioList = () => {
                     </MenuList>
                 </Menu>
             </Box>
-            {isLoading ? <FullPageSpinner /> : <Box m={6} width="full" rounded={"lg"} bg="white">
+            {isLoading ? <FullPageSpinner /> :
 
-                <Heading p={2}>Free Slots</Heading>
-                <Accordion p={12} allowToggle>
-                    {slotlist.map((slot, index) => <AccordionItem>
-                        <h2>
-                            <AccordionButton>
-                                <Box flex='1' textAlign='left'>
-                                    {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
-                                </Box>
-                                <AccordionIcon />
-                            </AccordionButton>
-                        </h2>
-                        <AccordionPanel pb={4}>
-                            <RadioGroup>
-                                <VStack alignItems={"baseline"}>
-                                    {slotlist[index].tokens.map((token) => <Radio value={token.tokenID} onChange={(e) => handleChange(e, slotlist[index].slotNumber)}>{token.tokenNumber}</Radio>)}
-                                </VStack>
-                            </RadioGroup>
-                        </AccordionPanel>
+                <Box m={6} width="full" rounded={"lg"} bg="white">
 
-                    </AccordionItem>
-                    )}
+                  {free ?  <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
+                   : null} <Heading size="lg" p={4}>Free Slots</Heading>
+                    <Accordion p={5} allowToggle>
+                        {slotlist.map((slot, index) => <AccordionItem key={index}>
+                            <h2>
+                                <AccordionButton>
+                                    <Box flex='1' textAlign='left'>
+                                        {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
+                                    </Box>
+                                    <AccordionIcon />
+                                </AccordionButton>
+                            </h2>
+                            <AccordionPanel pb={4}>
+                                <RadioGroup>
+                                    <VStack alignItems={"baseline"}>
+                                        {slotlist[index].tokens.map((token) => <Radio key={token.tokenID} type={"number"} value={token.tokenID} onChange={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Radio>)}
+                                    </VStack>
+                                </RadioGroup>
+                            </AccordionPanel>
 
-                </Accordion>
-            </Box>}
+                        </AccordionItem>
+                        )}
+
+                    </Accordion>
+                </Box>
+            }
 
         </Flex>
     )
