@@ -22,7 +22,7 @@ import { useState, useEffect } from 'react'
 import api from '../../api';
 import { ButtonPopoverReception } from '../../Reception/Home/PopoverReception';
 import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
-import { useMediaQuery } from 'react-responsive'
+import { useMediaQuery } from '@chakra-ui/react'
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 
@@ -34,8 +34,7 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
     const [hideAfternoon, setHideAfternoon] = useState(
         new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getTime() > morningEnd.getTime() ?
             false : true)
-    const isLaptop = useMediaQuery({ query: '(min-width: 1224px)' })
-    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+    const [isLaptop, isMobile] = useMediaQuery('(min-width: 1224px)', '(max-width: 1224px)')
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
     const types = {
@@ -87,7 +86,7 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                     p={0}
                     width='auto'>
                     <TableContainer>
-                        <Table variant='striped'size={isMobile? "sm" : "md"} colorScheme='grey'>
+                        <Table variant='striped' size={isMobile ? "sm" : "md"} colorScheme='grey'>
                             <Thead>
                                 <Tr>
                                     <Th></Th>
@@ -109,7 +108,7 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                                     <Tr key={index} bg={findBg(item)}>
                                         <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
-                                       {isMobile && <Td>{types[item.type]}</Td>}
+                                        {isMobile && <Td>{types[item.type]}</Td>}
                                         <Td >{item.name}</Td>
                                         {isMobile && <Td>
                                             <VStack>

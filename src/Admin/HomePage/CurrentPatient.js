@@ -1,25 +1,24 @@
 import { HamburgerIcon, } from "@chakra-ui/icons";
-import { Box, Heading,  Text, HStack, VStack, Button } from "@chakra-ui/react"
+import { Box, Heading, Text, HStack, VStack, Button } from "@chakra-ui/react"
 import { useEffect } from "react";
-import { useMediaQuery } from "react-responsive";
+import { useMediaQuery } from "@chakra-ui/react";
 
 
-export const CurrentPatient = ({ current}) => {
-    const isLaptop = useMediaQuery({ query: '(min-width: 1224px)' })
-    const isMobile = useMediaQuery({ query: '(max-width: 1224px)' })
+export const CurrentPatient = ({ current }) => {
+    const [isLaptop, isMobile] = useMediaQuery('(min-width: 1224px)', '(max-width: 1224px)')
 
     useEffect(() => {
 
     }, [current]);
 
-   
+
 
     return (
         <VStack>
             <Box
                 borderWidth="1px"
                 borderRadius="lg"
-                width={isMobile? "100%" : "50%"}
+                width={isMobile ? "100%" : "50%"}
                 height={{ sm: '476px', md: '9rem' }}
                 direction={{ base: 'column', md: 'row' }}
                 bg={'white'}
