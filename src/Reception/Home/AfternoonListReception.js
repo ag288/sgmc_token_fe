@@ -107,12 +107,7 @@ export const AfternoonListReception = ({ isLoading, setIsLoading, aftlist, curre
                                         <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                         <Td>{types[item.type]}</Td>
                                         <Td >{item.name}</Td>
-                                        {/* <Td>
-                                <Editable onSubmit={(value) => editFileNumber(value,item.patientID)}  defaultValue={item.fileNumber ? item.fileNumber : "Add file"}>
-                            <EditablePreview />
-                            <EditableInput />
-                        </Editable>
-                        </Td> */}
+                                       
                                         <Td><Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                                         </Td>
                                         <Td> {item.type}</Td>

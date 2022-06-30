@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
     Button, Popover,
     PopoverTrigger,
@@ -15,6 +15,7 @@ import {
 import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../../api';
 import { ReviewModal } from './ReviewModal';
+import { AppContext } from '../../App';
 // confirm deletion of staff profile
 
 
@@ -24,6 +25,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const [origin, setOrigin] = useState("")
     const open = () => setOpened(!opened)
     const close = () => setOpened(false)
+    const {user} = useContext(AppContext)
     const toast = useToast()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -117,13 +119,13 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                 <PopoverContent>
                     <PopoverArrow />
                     <PopoverBody>
-                        <HStack>
+                       { user.userID==1? <HStack>
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
                             <Button width={"sm"} isDisabled={item.status=="current" || item.status=="completed"} colorScheme={"green"} onClick={onCall} >Call</Button>
                             <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
                             <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={onCompleted} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
-                        </HStack>
+                        </HStack> : null}
                         <Box align='center' mt={"2%"}>
                     <Text style={{cursor : "pointer", textDecoration:"underline"}} onClick={onPrevious} >Add review</Text>
                     </Box>
