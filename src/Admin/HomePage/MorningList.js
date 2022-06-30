@@ -30,7 +30,7 @@ import { ButtonPopover } from './Popover';
 
 export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCurrent }) => {
 
-    const [isLaptop, isMobile] = useMediaQuery('(min-width: 1224px)', '(max-width: 1224px)')
+    const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
     const types = {

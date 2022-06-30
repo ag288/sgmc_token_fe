@@ -5,7 +5,7 @@ import { useMediaQuery } from "@chakra-ui/react";
 
 
 export const CurrentPatient = ({ current }) => {
-    const [isLaptop, isMobile] = useMediaQuery('(min-width: 1224px)', '(max-width: 1224px)')
+    const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
 
     useEffect(() => {
 
