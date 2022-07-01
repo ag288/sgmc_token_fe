@@ -4,9 +4,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Settings } from './Settings';
 import { TokenGeneration } from './TokenGeneration';
 import { TokenDetailsChooseToken } from './TokenGeneration/TokenDetailsChooseTokens';
+import { ReviewBooking } from './ReviewBooking';
+import { ReviewList } from './ReviewBooking/ReviewList';
+import { TokenDetailsForReviewChooseToken } from './ReviewBooking/TokenDetailsChooseToken';
+import { useContext } from 'react';
+import { AppContext } from './App';
 
 function AuthenticatedUser() {
 
+  const {user}=useContext(AppContext)
   return (
     <BrowserRouter>
       <Routes>
@@ -15,7 +21,10 @@ function AuthenticatedUser() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/book" element={<TokenGeneration />} />
         <Route path="/token-details" element={<TokenDetailsChooseToken />} />
-        <Route path="*" element={<PatientList />} />
+    {user.userID==2 &&  <> <Route path="/book-review" element={< ReviewBooking />} />
+        <Route path="/review-list" element={< ReviewList/>} />
+        <Route path="/review-details" element={< TokenDetailsForReviewChooseToken/>} />
+        <Route path="*" element={<PatientList />} /></> }
       </Routes>
     </BrowserRouter>
 

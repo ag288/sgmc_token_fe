@@ -28,7 +28,7 @@ export function DiffMinutes({ time1, time2, item }) {
     const start = new Date("2020-01-01 " + time1)
     const end = new Date("2020-01-01 " + time2)
     let difference, color, sign
-    if (end.getTime() > start.getTime()) {
+    if (end.getTime() > start.getTime() || end.getTime() == start.getTime()) {
         difference = end.getTime() - start.getTime();
         color = "green"
     }

@@ -107,7 +107,7 @@ export const TokenDetailsChooseToken = () => {
                 const response = JSON.parse(res.data)
                 if (response.message != "") {
                     setIsLoading(false)
-                    alert("All tokens are full for today. Please try again later")
+                    alert(response.message)
                     navigate("/home")
                 }
                 else {

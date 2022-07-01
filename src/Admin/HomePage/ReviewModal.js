@@ -56,7 +56,7 @@ export const ReviewModal = (props) => {
             position: "top"
         })
         setIsLoading(true)
-        api.token.callNewToken({ item }).then((res) => {
+        api.token.callNewToken({ item, current }).then((res) => {
             // setCurrent(item)
             setIsLoading(false)
             window.location.reload()
