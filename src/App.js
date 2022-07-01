@@ -26,8 +26,7 @@ function App() {
     return <UnauthenticatedUser/>
     else{
     switch (user?.userID) {
-      case 1:
-        return <AuthenticatedUser />
+      case 1 :
       case 2:
         return <AuthenticatedUser />
       case 3:

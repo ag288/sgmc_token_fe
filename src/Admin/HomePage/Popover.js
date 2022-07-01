@@ -16,6 +16,7 @@ import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../../api';
 import { ReviewModal } from './ReviewModal';
 import { AppContext } from '../../App';
+import { CancelModal } from './CancelModal';
 // confirm deletion of staff profile
 
 
@@ -25,15 +26,15 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const [origin, setOrigin] = useState("")
     const open = () => setOpened(!opened)
     const close = () => setOpened(false)
-    const {user} = useContext(AppContext)
+    const { user } = useContext(AppContext)
     const toast = useToast()
-    const { isOpen, onOpen, onClose } = useDisclosure()
-
+    const { isOpen:isOpenReview, onOpen:onOpenReview, onClose:onCloseReview } = useDisclosure()
+    const { isOpen:isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
 
     function onCall() {
-        if (current){
+        if (current) {
             setOrigin("call")
-            onOpen()
+            onOpenReview()
         }
         else {
             const confirm = window.confirm(`You are going to call ${item.name}`)
@@ -66,16 +67,16 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
         })
     }
 
-    function onCompleted(){
+    function onCompleted() {
         setOrigin("completed")
-        onOpen()
+        onOpenReview()
     }
 
-    function onPrevious(){
+    function onPrevious() {
         setOrigin("previous")
-        onOpen()
+        onOpenReview()
     }
-    
+
     function cancel() {
         let flag = window.confirm(`WARNING!!\n\nYou are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`)
         if (flag) {
@@ -119,21 +120,22 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                 <PopoverContent>
                     <PopoverArrow />
                     <PopoverBody>
-                       { user.userID==1? <HStack>
+                        {user.userID == 1 ? <HStack>
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
-                            <Button width={"sm"} isDisabled={item.status=="current" || item.status=="completed"} colorScheme={"green"} onClick={onCall} >Call</Button>
-                            <Button width={"sm"} colorScheme={"red"} onClick={cancel} >Cancel</Button>
+                            <Button width={"sm"} isDisabled={item.status != "new"} colorScheme={"green"} onClick={onCall} >Call</Button>
+                            <Button width={"sm"} isDisabled={item.status != "new"} colorScheme={"red"} onClick={onOpenCancel} >Cancel</Button>
                             <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={onCompleted} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
                         </HStack> : null}
                         <Box align='center' mt={"2%"}>
-                    <Text style={{cursor : "pointer", textDecoration:"underline"}} onClick={onPrevious} >Add review</Text>
-                    </Box>
+                            <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={onPrevious} >Add review</Text>
+                        </Box>
                     </PopoverBody>
                 </PopoverContent>
             </Popover >
-            <ReviewModal isOpen={isOpen} onClose={onClose} item={item} current={current} isLoading={isLoading}
-                setIsLoading={setIsLoading}  origin={origin} />
+            <ReviewModal isOpen={isOpenReview} onClose={onCloseReview} item={item} current={current} isLoading={isLoading}
+                setIsLoading={setIsLoading} origin={origin} />
+            <CancelModal isOpen={isOpenCancel} onClose={onCloseCancel} item={item} setIsLoading={setIsLoading}/>
         </>
     )
 

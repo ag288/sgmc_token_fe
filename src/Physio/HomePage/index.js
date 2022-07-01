@@ -56,7 +56,7 @@ export const PhysioList = () => {
         setInterval(() => {
             if (window.location.pathname == "/" || window.location.pathname == "/home")
                 window.location.reload()
-        }, 300000)
+        }, 180000)
 
 
         setIsLoading(true)
