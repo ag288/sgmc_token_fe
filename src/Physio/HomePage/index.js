@@ -112,10 +112,10 @@ export const PhysioList = () => {
                     <Box p={5} >
                         {slotlist.map((slot, index) => <Box key={index}>
                          
-                                    <Box flex='1' textAlign='left'>
+                                    <Box flex='1' textAlign='left' my={5} fontWeight={"bold"}>
                                         {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
                                     </Box>
-                           <Grid templateRows={'repeat(2, 1fr)'} gap={2} templateColumns={'repeat(3, 1fr)'}>
+                           <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
                             
                            {slotlist[index].tokens.map((token) => <GridItem><Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button></GridItem>)}
                                     
