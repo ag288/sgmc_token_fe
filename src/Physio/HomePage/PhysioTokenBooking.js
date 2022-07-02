@@ -36,8 +36,9 @@ export const PhysioTokenBooking = () => {
     const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { user } = useContext(AppContext)
-    const [settings, setSettings] = useState([])
+   // const [settings, setSettings] = useState([])
     let location = useLocation()
+    let settings=location && location.state ? location.state.settings : {}
     const [token, setToken] = useState({
         slot: location.state.token.slot,
         token: location.state.token.token,
@@ -49,10 +50,10 @@ export const PhysioTokenBooking = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        api.settings.fetchSettings().then((res) => {
-            const response = JSON.parse(res.data).result
-            setSettings(response[0])
-        })
+        // api.settings.fetchSettings().then((res) => {
+        //     const response = JSON.parse(res.data).result
+        //     setSettings(response[0])
+        // })
 
         api.book.decideSlots().then((res) => {
             setIsLoading(false)

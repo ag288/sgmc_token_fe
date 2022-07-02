@@ -29,6 +29,8 @@ export const PatientDetails = (props) => {
     let location = useLocation()
     const { availability, navigateTo } = props
     const [patients, setPatients] = useState([])
+    const [settings, setSettings] = useState([])
+    const [reasons, setReasons] = useState([])
     let obj = {
         id: "",
         phone: "",
@@ -39,7 +41,22 @@ export const PatientDetails = (props) => {
     const [token, setToken] = useState(location.state && location.state.tokenObj ? { ...obj, ...location.state.tokenObj }
         : obj)
 
+        useEffect(() => {
 
+
+
+            api.settings.fetchSettings().then((res) => {
+                const response = JSON.parse(res.data).result
+                setSettings(response[0])
+             //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
+            })
+    
+            api.settings.fetchReasons().then((res) => {
+                const response = JSON.parse(res.data).result
+                setReasons(response)
+            })
+
+        })
 
 
     function handleNameChange(e) {
@@ -81,14 +98,16 @@ export const PatientDetails = (props) => {
         else {
             if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != "")) {
                 if (token.new_name == "") {
-                    navigate(navigateTo, { state: { token } })
+
+                    
+                    navigate(navigateTo, { state: { token,settings,reasons } })
                 }
                 else {
                     api.book.createPatient({ token }).then((res) => {
                         const response = JSON.parse(res.data).result
                         console.log(response)
                         setToken(prev => ({ ...prev, "id": response }))
-                        navigate(navigateTo, { state: { token, id: response } })
+                        navigate(navigateTo, { state: { token, id: response,settings,reasons } })
                     })
                 }
             }

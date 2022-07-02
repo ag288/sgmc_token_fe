@@ -22,9 +22,11 @@ import {
     Text,
     VStack,
     useDisclosure,
+    ModalCloseButton,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../api'
+import { FullPageSpinner } from '../utils/spinner'
 
 
 
@@ -34,7 +36,11 @@ export const Holidays = () => {
     const [isGeneralHoliday, setIsGeneralHoliday] = useState("")
     const [date, setDate] = useState("")
     const { isOpen, onOpen, onClose } = useDisclosure()
-
+    const [holidayInfo, setHolidayInfo]= useState({
+        isGeneralHoliday : "",
+        duration : "",
+        slot : ""
+    })
     const toast = useToast()
 
     useEffect(() => {
@@ -51,16 +57,21 @@ export const Holidays = () => {
         onOpen()
     }
 
-    function handleRadioChange(e) {
-        console.log(e.target.value)
-        setIsGeneralHoliday(e.target.value)
+    function handleTypeChange(e) {
+        setHolidayInfo(prev=>({...prev, "isGeneralHoliday":e.target.value}))
+    }
+    function handleDurationChange(e) {
+        setHolidayInfo(prev=>({...prev, "duration":e.target.value}))
+    }
+    function handleSlotChange(e) {
+        setHolidayInfo(prev=>({...prev, "slot":e.target.value}))
     }
 
     function updateHolidays() {
         onClose()
-        if (date != "") {
+        if (date!= "" && holidayInfo.isGeneralHoliday!="")  {
             setIsLoading(true)
-            api.settings.updateHolidays({ date, isGeneralHoliday }).then((res) => {
+            api.settings.updateHolidays({ date, holidayInfo }).then((res) => {
                 setIsLoading(false)
                 setHolidays(prev => ([...prev, { "date": new Date(date) }]))
             }).catch((err) => {
@@ -126,10 +137,10 @@ export const Holidays = () => {
                         </Box>
                     </Box>
                     <Box mt="2%" align={"right"}>
-                        <Button isLoading={isLoading} colorScheme="blue" onClick={chooseType}>Add</Button>
+                        <Button isDisabled={isLoading} colorScheme="blue" onClick={chooseType}>Add</Button>
                     </Box>
                 </HStack>
-                <Box rounded={'lg'}
+               {isLoading? <FullPageSpinner/> : <Box rounded={'lg'}
                     bg={'gray.300'}
                     boxShadow={'lg'}
                     p={8}
@@ -141,26 +152,42 @@ export const Holidays = () => {
                             <HStack width="50%" spacing="auto" alignItems={"baseline"}>
                                 <ListItem mb="2%" fontWeight={"bold"}>{new Date(day.date).toDateString()}</ListItem>
 
-                                <IconButton isLoading={isLoading} onClick={() => deleteHoliday(day)} bg="transparent" icon={<DeleteIcon />}></IconButton>
+                                <IconButton isDisabled={isLoading} onClick={() => deleteHoliday(day)} bg="transparent" icon={<DeleteIcon />}></IconButton>
 
                             </HStack>
                         )}
                     </UnorderedList>
-                </Box>
+                </Box>}
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
                     <ModalContent>
                         <ModalHeader>Choose leave type</ModalHeader>
+                        <ModalCloseButton/>
                         <ModalBody>
-                            <VStack>
-                                <Text>Choose the appropriate leave type</Text>
+                        <FormControl mt={5}><FormLabel>Choose leave duration</FormLabel>
                                 <RadioGroup>
-                                    <VStack>
-                                        <Radio onChange={handleRadioChange} value={true}>Clinic holiday</Radio>
-                                        <Radio onChange={handleRadioChange} value={false}>Doctor leave</Radio>
-                                    </VStack>
+                                    <HStack>
+                                        <Radio onChange={handleTypeChange} value={"true"}>Clinic holiday</Radio>
+                                        <Radio onChange={handleTypeChange} value={"false"}>Doctor leave</Radio>
+                                    </HStack>
                                 </RadioGroup>
-                            </VStack>
+                            </FormControl>
+                            {/* <FormControl mt={5}><FormLabel>Choose leave duration</FormLabel>
+                                <RadioGroup>
+                                    <HStack>
+                                        <Radio onChange={handleDurationChange} value={"H"}>Half Day</Radio>
+                                        <Radio onChange={handleDurationChange} value={"F"}>Full Day</Radio>
+                                    </HStack>
+                                </RadioGroup>
+                            </FormControl>
+                          { holidayInfo.duration=="H" && <FormControl mt={5}><FormLabel>Choose leave slot</FormLabel>
+                                <RadioGroup>
+                                    <HStack>
+                                        <Radio onChange={handleSlotChange} value={"A"}>Morning</Radio>
+                                        <Radio onChange={handleSlotChange} value={"B"}>Evening</Radio>
+                                    </HStack>
+                                </RadioGroup>
+                            </FormControl>} */}
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={updateHolidays}>Ok</Button>

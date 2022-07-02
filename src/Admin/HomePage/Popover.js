@@ -28,19 +28,19 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const close = () => setOpened(false)
     const { user } = useContext(AppContext)
     const toast = useToast()
-    const { isOpen:isOpenReview, onOpen:onOpenReview, onClose:onCloseReview } = useDisclosure()
-    const { isOpen:isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
+    const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
+    const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
 
     function onCall() {
-        if (current) {
-            setOrigin("call")
-            onOpenReview()
-        }
-        else {
-            const confirm = window.confirm(`You are going to call ${item.name}`)
-            if (confirm)
-                call()
-        }
+        // if (current) {
+        //     setOrigin("call")
+        //     onOpenReview()
+        // }
+        // else {
+        const confirm = window.confirm(`You are going to call ${item.name}`)
+        if (confirm)
+            call()
+        // }
     }
 
     function call() {
@@ -68,8 +68,23 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     }
 
     function onCompleted() {
-        setOrigin("completed")
-        onOpenReview()
+        const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
+        if (confirm) {
+            completed()
+            // setOrigin("completed")
+            // onOpenReview()
+        }
+    }
+
+    function completed() {
+
+        setIsLoading(true)
+        api.token.setAsCompleted().then((res) => {
+            setIsLoading(false)
+            window.location.reload()
+        }
+        )
+
     }
 
     function onPrevious() {
@@ -127,15 +142,15 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                             <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={onCompleted} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
                         </HStack> : null}
-                        <Box align='center' mt={"2%"}>
+                        {/* <Box align='center' mt={"2%"}>
                             <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={onPrevious} >Add review</Text>
-                        </Box>
+                        </Box> */}
                     </PopoverBody>
                 </PopoverContent>
             </Popover >
             <ReviewModal isOpen={isOpenReview} onClose={onCloseReview} item={item} current={current} isLoading={isLoading}
                 setIsLoading={setIsLoading} origin={origin} />
-            <CancelModal isOpen={isOpenCancel} onClose={onCloseCancel} item={item} setIsLoading={setIsLoading}/>
+            <CancelModal isOpen={isOpenCancel} onClose={onCloseCancel} item={item} setIsLoading={setIsLoading} />
         </>
     )
 

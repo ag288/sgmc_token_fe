@@ -34,9 +34,10 @@ export const TokenDetailsForReviewChooseToken = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
     const [tokens, setTokens] = useState([])
-    const [reasons, setReasons] = useState([])
+    // const [reasons, setReasons] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     let location = useLocation()
+    const settings = location && location.state ? location.state.settings : {}
     const [token, setToken] = useState({
         date: "",
         slot: "",
@@ -44,39 +45,40 @@ export const TokenDetailsForReviewChooseToken = () => {
         reason: ""
     })
     const [tokenNo, setTokenNo] = useState("")
-    const [maxdate, setMaxDate] = useState("")
-    const [time, setTime] = useState({ start: "", end: "" })
-    const { isOpen, onOpen, onClose } = useDisclosure()
+
     const today = new Date()
     const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
+    const [maxdate, setMaxDate] = useState(new Date(today.setDate(today.getDate() + parseInt(location.state?.settings.review_date_limit))).toISOString().split('T')[0])
+    const [time, setTime] = useState({ start: "", end: "" })
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const { user } = useContext(AppContext)
     //let maxdate=30
     useEffect(() => {
 
 
 
-        api.settings.fetchSettings().then((res) => {
-            const response = JSON.parse(res.data).result
-            setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
-        })
-
-        api.settings.fetchReasons().then((res) => {
-            const response = JSON.parse(res.data).result
-            setReasons(response)
-        })
-
-        // api.review.reviewExists({ id: location.state.token.id }).then((res) => {
+        // api.settings.fetchSettings().then((res) => {
         //     const response = JSON.parse(res.data).result
-        //     console.log(response)
-        //     if (response.length != 0) {
-        //         let update = window.confirm(`A review already exists for ${location.state.token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
-        //         if (!update) {
-        //             navigate("/home")
+        //     setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
+        // })
 
-        //         }
+        // api.settings.fetchReasons().then((res) => {
+        //     const response = JSON.parse(res.data).result
+        //     setReasons(response)
+        // })
 
-        //     }
-        //     })
+        api.review.reviewExists({ id: location.state.token.id }).then((res) => {
+            const response = JSON.parse(res.data).result
+            console.log(response)
+            if (response.length != 0) {
+                let update = window.confirm(`A review already exists for ${location.state.token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
+                if (!update) {
+                    navigate("/home")
+
+                }
+
+            }
+        })
     }, [])
 
 
@@ -104,9 +106,9 @@ export const TokenDetailsForReviewChooseToken = () => {
     function handleDateChange(e) {
 
         const dateValue = e.target.value
-        setIsLoading(true)
+        // setIsLoading(true)
         api.review.decideSlotsReview({ date: e.target.value }).then((res) => {
-            setIsLoading(false)
+            //  setIsLoading(false)
             const response = JSON.parse(res.data)
             if (!response.result) {
                 alert(response.message)
@@ -193,7 +195,7 @@ export const TokenDetailsForReviewChooseToken = () => {
                                     <FormLabel>Select reason</FormLabel>
                                     <RadioGroup name="reason" >
                                         <VStack align={"right"}>
-                                            {reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
+                                            {location?.state.reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
                                             {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>
