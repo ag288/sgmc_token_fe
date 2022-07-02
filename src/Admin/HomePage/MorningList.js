@@ -18,13 +18,15 @@ import {
     VStack,
     InputGroup
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import api from '../../api';
 import { ButtonPopoverReception } from '../../Reception/Home/PopoverReception';
 import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
 import { useMediaQuery } from '@chakra-ui/react'
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
+import userApi from '../../api/user';
+import { AppContext } from '../../App';
 
 // List of staff profiles pending approval
 
@@ -38,14 +40,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
         "First time": 'F',
         "Other": "O"
     }
-
-
-    useEffect(() => {
-
-
-    }, []);
-
-
+const {user} = useContext(AppContext)
 
 
     function handleChange() {

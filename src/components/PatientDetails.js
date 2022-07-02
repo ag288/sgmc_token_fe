@@ -43,20 +43,20 @@ export const PatientDetails = (props) => {
 
         useEffect(() => {
 
-
-
             api.settings.fetchSettings().then((res) => {
                 const response = JSON.parse(res.data).result
                 setSettings(response[0])
+                console.log(response[0])
              //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
             })
     
             api.settings.fetchReasons().then((res) => {
                 const response = JSON.parse(res.data).result
                 setReasons(response)
+                console.log(response)
             })
 
-        })
+        },[])
 
 
     function handleNameChange(e) {
@@ -99,7 +99,7 @@ export const PatientDetails = (props) => {
             if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != "")) {
                 if (token.new_name == "") {
 
-                    
+
                     navigate(navigateTo, { state: { token,settings,reasons } })
                 }
                 else {

@@ -68,6 +68,7 @@ export const PhysioList = () => {
 
         api.token.fetchCurrent().then((res) => {
             const response = JSON.parse(res.data).result
+            console.log(response)
             if (response.length == 0)
                 setFree(true)
         })

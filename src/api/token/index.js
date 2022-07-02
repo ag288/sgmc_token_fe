@@ -26,6 +26,7 @@ export default function tokenApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/arrived`,{data})
         },
         callNewToken(data) {
+            console.log(data)
             return fetch.post(`${baseUrl}/call`,{data})
         },
         callNextToken(data) {

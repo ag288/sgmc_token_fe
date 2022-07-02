@@ -129,7 +129,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
             <Popover trigger="click" placement="bottom-end" isOpen={opened} onClose={close} preventOverflow={true}
                 flip={true}  >
                 <PopoverTrigger>
-                    <IconButton bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                    <IconButton bg="transparent" isDisabled={user.userID==2}  icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                     </IconButton>
                 </PopoverTrigger >
                 <PopoverContent>
