@@ -20,7 +20,7 @@ export default function Login() {
     const user = useContext(AppContext)
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
-
+    const [isLoading, setIsLoading] = useState(false)
     function handleUsername(e) {
         setUsername(e.target.value)
     }
@@ -31,7 +31,9 @@ export default function Login() {
     }
 
     function handleSubmit() {
+        setIsLoading(true)
         api.user.verifyUser({ username, password }).then((res) => {
+            setIsLoading(false)
             const response = JSON.parse(res.data).result
             console.log(response)
             if (response) {
@@ -73,6 +75,8 @@ export default function Login() {
                             <Input value={password} onChange={handlePassword} type="password" />
                         </FormControl>
                         <Button
+                        isLoading={isLoading}
+                        //isDisabled={isLoading}
                             type="submit"
                             onClick={handleSubmit}
                             bg={'blue.400'}

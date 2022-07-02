@@ -29,6 +29,9 @@ import {
     AccordionIcon,
     RadioGroup,
     Radio,
+    Button,
+    Grid,
+    GridItem,
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import { ArrowBackIcon, DeleteIcon } from '@chakra-ui/icons';
@@ -77,11 +80,12 @@ export const PhysioList = () => {
 
 
     function handleChange(e, tokenNumber, timeInEst, slotNumber) {
+        console.log("hi")
         let token = {
             slot: slotNumber,
             tokenNumber: tokenNumber,
             timeInEst: timeInEst,
-            token: parseInt(e.target.value),
+            token: parseInt(e.target.id),
             reason: 1
         }
         navigate("/book", { state: { tokenObj: token } })
@@ -105,29 +109,24 @@ export const PhysioList = () => {
 
                     {free ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
                         : null} <Heading size="lg" p={4}>Free Slots</Heading>
-                    <Accordion p={5} allowToggle>
-                        {slotlist.map((slot, index) => <AccordionItem key={index}>
-                            <h2>
-                                <AccordionButton>
+                    <Box p={5} >
+                        {slotlist.map((slot, index) => <Box key={index}>
+                         
                                     <Box flex='1' textAlign='left'>
                                         {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
                                     </Box>
-                                    <AccordionIcon />
-                                </AccordionButton>
-                            </h2>
-                            <AccordionPanel pb={4}>
-                                <RadioGroup>
-                                    <VStack alignItems={"baseline"}>
-                                        {slotlist[index].tokens.map((token) => <Radio key={token.tokenID} type={"number"} value={token.tokenID} onChange={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Radio>)}
-                                    </VStack>
-                                </RadioGroup>
-                            </AccordionPanel>
+                           <Grid templateRows={'repeat(2, 1fr)'} gap={2} templateColumns={'repeat(3, 1fr)'}>
+                            
+                           {slotlist[index].tokens.map((token) => <GridItem><Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button></GridItem>)}
+                                    
+                           </Grid>
+                                    {/* <VStack alignItems={"baseline"}>
+                                       </VStack>
+                                */}
+                        </Box>)}
 
-                        </AccordionItem>
-                        )}
-
-                    </Accordion>
-                </Box>
+                    </Box>
+                </Box> 
             }
 
         </Flex>

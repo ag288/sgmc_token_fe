@@ -7,7 +7,7 @@ import tokenApi from "./token"
 import userApi from "./user";
 export const fetch = axios.create({
     baseURL: "https://special-amenable-foundation.glitch.me",
-   // baseURL: "https://token.vinoosamuel.com",
+  // baseURL: "https://token.vinoosamuel.com",
     timeout: 8000,
     headers: {
         common: {

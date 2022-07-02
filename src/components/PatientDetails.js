@@ -46,14 +46,12 @@ export const PatientDetails = (props) => {
             api.settings.fetchSettings().then((res) => {
                 const response = JSON.parse(res.data).result
                 setSettings(response[0])
-                console.log(response[0])
              //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
             })
     
             api.settings.fetchReasons().then((res) => {
                 const response = JSON.parse(res.data).result
                 setReasons(response)
-                console.log(response)
             })
 
         },[])
