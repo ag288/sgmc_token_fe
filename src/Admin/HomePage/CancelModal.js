@@ -68,9 +68,7 @@ export const CancelModal = (props) => {
                 })
             })
         }
-        else {
-            alert("Please enter a reason for cancellation!")
-        }
+       
     }
 
 
@@ -94,7 +92,9 @@ export const CancelModal = (props) => {
                     <Button colorScheme='blue' mr={3} onClick={cancel}>
                         Ok
                     </Button>
-
+                    <Button variant="outline" colorScheme='blue' mr={3} onClick={onClose}>
+                        Skip
+                    </Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

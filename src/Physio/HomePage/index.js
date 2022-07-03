@@ -110,9 +110,9 @@ export const PhysioList = () => {
                     {free ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
                         : null} <Heading size="lg" p={4}>Free Slots</Heading>
                     <Box p={5} >
-                        {slotlist.map((slot, index) => <Box key={index}>
+                        {slotlist.map((slot, index) => <Box align={"center"} key={index}>
                          
-                                    <Box flex='1' textAlign='left' my={5} fontWeight={"bold"}>
+                                    <Box my={5} fontWeight={"bold"}>
                                         {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
                                     </Box>
                            <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
