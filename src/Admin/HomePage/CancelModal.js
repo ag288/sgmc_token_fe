@@ -46,7 +46,6 @@ export const CancelModal = (props) => {
 
 
     function cancel() {
-       if(reason!=""){
             setIsLoading(true)
             api.token.cancelToken({ item, reason }).then((res) => {
                 setIsLoading(false)
@@ -67,7 +66,7 @@ export const CancelModal = (props) => {
                     position: "top"
                 })
             })
-        }
+        
        
     }
 
@@ -91,9 +90,6 @@ export const CancelModal = (props) => {
                 <ModalFooter>
                     <Button colorScheme='blue' mr={3} onClick={cancel}>
                         Ok
-                    </Button>
-                    <Button variant="outline" colorScheme='blue' mr={3} onClick={onClose}>
-                        Skip
                     </Button>
                 </ModalFooter>
             </ModalContent>
