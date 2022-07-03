@@ -108,7 +108,7 @@ export const PhysioList = () => {
                 <Box m={6} width="full" rounded={"lg"} bg="white">
 
                     {free ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
-                        : null} <Heading size="lg" p={4}>Free Slots</Heading>
+                        : <Box rounded="lg" m={2} textAlign={"center"} bg="red.100"><Text p={2} fontSize={"lg"}>The Doctor is busy!</Text></Box>} 
                     <Box p={5} >
                         {slotlist.map((slot, index) => <Box align={"center"} key={index}>
                          
