@@ -65,6 +65,7 @@ export const PhysioList = () => {
         api.physio.fetchSlotsforPhysio().then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
+            console.log(response)
             setSlotList(response)
         })
 

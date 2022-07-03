@@ -65,7 +65,7 @@ export const ReviewList = () => {
                                 <Th>Token</Th>
                                 <Th>Type</Th>
                                 <Th>Est. Time</Th>
-                                <Th></Th>
+                                {/* <Th></Th> */}
                             </Tr>
                         </Thead>
                         <Tbody>
@@ -74,9 +74,9 @@ export const ReviewList = () => {
                                     <Td >{item.name}</Td>
                                     <Td >{new Date(item.date).toDateString()}</Td>
                                     <Td >{item.tokenNumber}</Td>
-                                    <Td>{item.reason}</Td>
+                                    <Td>{item.type}</Td>
                                     <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US',{ timeZone: 'Asia/Kolkata',  hour:'numeric', minute:"numeric" })}</Td>
-                                    <Td><IconButton bg="transparent" icon={<DeleteIcon/>}></IconButton></Td>
+                                    {/* <Td><IconButton bg="transparent" icon={<DeleteIcon/>}></IconButton></Td> */}
                                 </Tr>
                             )
                             }
