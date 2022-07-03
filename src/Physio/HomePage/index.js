@@ -32,16 +32,15 @@ import {
     Button,
     Grid,
     GridItem,
+    useMediaQuery
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
-import { ArrowBackIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 import { FaEllipsisV } from 'react-icons/fa';
 import { logout } from '../../utils/tokenFunctions';
 import { AppContext } from '../../App';
 import { FullPageSpinner } from '../../utils/spinner';
-
 
 // List of staff profiles pending approval
 
@@ -52,7 +51,7 @@ export const PhysioList = () => {
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const { user, setUser } = useContext(AppContext)
-
+    const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     useEffect(() => {
 
 
@@ -108,21 +107,23 @@ export const PhysioList = () => {
                 <Box m={6} width="full" rounded={"lg"} bg="white">
 
                     {free ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
-                        : <Box rounded="lg" m={2} textAlign={"center"} bg="red.100"><Text p={2} fontSize={"lg"}>The Doctor is busy!</Text></Box>} 
+                        : <Box rounded="lg" m={2} textAlign={"center"} bg="red.300"><Text p={2} fontSize={"lg"}>The Doctor is busy!</Text></Box>} 
                     <Box p={5} >
                         {slotlist.map((slot, index) => <Box align={"center"} key={index}>
                          
                                     <Box my={5} fontWeight={"bold"}>
                                         {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
                                     </Box>
-                           <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
+                          {isMobile && <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
                             
                            {slotlist[index].tokens.map((token) => <GridItem><Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button></GridItem>)}
                                     
-                           </Grid>
-                                    {/* <VStack alignItems={"baseline"}>
-                                       </VStack>
-                                */}
+                           </Grid>}
+
+                           {isLaptop &&<VStack> <HStack alignItems="center">
+                            {slotlist[index].tokens.map((token) => <Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button>)}
+                            </HStack> </VStack>           
+                        }
                         </Box>)}
 
                     </Box>
