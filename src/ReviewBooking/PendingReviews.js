@@ -1,5 +1,5 @@
-import { HamburgerIcon, } from "@chakra-ui/icons";
-import { Box, Heading, Text, useMediaQuery, HStack, VStack, IconButton, Table, Thead, Tr, Th, Tbody, Td, Button, Stack, Flex } from "@chakra-ui/react"
+import { ArrowForwardIcon, ExternalLinkIcon, HamburgerIcon, } from "@chakra-ui/icons";
+import { Box, Heading, Text, useMediaQuery, HStack, VStack, IconButton, Table, Thead, Tr, Th, Tbody, Td, Button, Stack, Flex, Icon } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -42,7 +42,7 @@ export const PendingReviews = () => {
                     mx="auto"
                     boxShadow={'2xl'}
                     padding={0}>
-                    {reviewlist.length == 0 ? <Heading size="md">No pending reviews today</Heading> :
+                    {reviewlist.length == 0 ? <Heading size="md" p={6}>No pending reviews today</Heading> :
                         <> <Heading size={"sm"} p={4}>The following reviews were not generated:</Heading>
 
                             <Table variant='striped' colorScheme='grey' size={isLaptop ? "md" : "sm"}>
@@ -63,8 +63,11 @@ export const PendingReviews = () => {
                                             </Td>
                                             <Td>{types[item.type]}</Td>
                                             <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
-                                            <Td> <Button onClick={() => navigate("/book-review", { state: { item } })}>Book Token</Button></Td>
-                                        </Tr>
+                                            <Td>
+                                                { isLaptop && <Button onClick={() => navigate("/book", { state: { item } })}>Book Token</Button>}
+                                                { isMobile && <ExternalLinkIcon onClick={() => navigate("/book", { state: { item } })}/>}
+                                                </Td>
+  </Tr>
                                     )
                                     }
                                 </Tbody>
