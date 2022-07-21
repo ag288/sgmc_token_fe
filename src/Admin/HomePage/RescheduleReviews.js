@@ -25,7 +25,7 @@ export const RescheduleReviews = () => {
             <Box
                 borderWidth="1px"
                 borderRadius="lg"
-                width={"full"}
+                width={"auto"}
                 bg={'white'}
                 mx="auto"
                 boxShadow={'2xl'}
@@ -38,7 +38,6 @@ export const RescheduleReviews = () => {
                                 <Tr>
                                     <Th>Name</Th>
                                     <Th>Phone</Th>
-                                    <Th>Date</Th>
                                     <Th>Token</Th>
                                     <Th>Type</Th>
                                     <Th>Est. Time</Th>
@@ -50,7 +49,6 @@ export const RescheduleReviews = () => {
                                         <Td >{item.name}</Td>
                                         <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
                                         </Td>
-                                        <Td >{new Date(item.date).toDateString()}</Td>
                                         <Td >{item.tokenNumber}</Td>
                                         <Td>{item.type}</Td>
                                         <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
