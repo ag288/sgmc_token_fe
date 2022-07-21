@@ -21,6 +21,7 @@ import {
     useToast,
     Button,
     Icon,
+    Divider,
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react'
 import api from '../api';
@@ -97,34 +98,40 @@ export const ReviewList = () => {
                                 boxShadow={'lg'}
                                 p={3}
                                 width='auto'>
-                                <Table variant='striped' colorScheme='grey'>
-                                    <Thead>
-                                        <Tr>
-                                            <Th>Name</Th>
-                                            <Th>Phone</Th>
-                                            <Th>Date</Th>
-                                            <Th>Token</Th>
-                                            <Th>Type</Th>
-                                            <Th>Est. Time</Th>
-                                            <Th></Th>
-                                        </Tr>
-                                    </Thead>
-                                    <Tbody>
-                                        {reviewlist.map((item, index) =>
-                                            <Tr key={index}>
-                                                <Td >{item.name}</Td>
-                                                <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
-                                                </Td>
-                                                <Td >{new Date(item.date).toDateString()}</Td>
-                                                <Td >{item.tokenNumber}</Td>
-                                                <Td>{item.type}</Td>
-                                                <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
-                                                <Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
+
+                                {reviewlist.map((review, index) => <>
+                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString()}</Heading>
+
+                                    <Divider orientation='horizontal'></Divider>
+                                    <Table variant='striped' colorScheme='grey'>
+                                        <Thead>
+                                            <Tr>
+                                                <Th>Name</Th>
+                                                <Th>Phone</Th>
+                                                <Th>Token</Th>
+                                                <Th>Type</Th>
+                                                <Th>Date</Th>
+                                                <Th>Est. Time</Th>
+                                                <Th></Th>
                                             </Tr>
-                                        )
-                                        }
-                                    </Tbody>
-                                </Table>
+                                        </Thead>
+                                        <Tbody>
+                                            {reviewlist[index].reviews.map((item) =>
+                                                <Tr key={index}>
+                                                    <Td >{item.name}</Td>
+                                                    <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
+                                                    </Td>
+                                                    <Td >{item.tokenNumber}</Td>
+                                                    <Td>{item.type}</Td>
+                                                    <Td >{new Date(item.date).toDateString()}</Td>
+                                                    <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
+                                                    <Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
+                                                </Tr>
+                                            )
+                                            }
+                                        </Tbody>
+                                    </Table></>
+                                )}
                             </Box>
                         </Stack>
                     </>}
@@ -132,24 +139,28 @@ export const ReviewList = () => {
                         <Stack width="full" alignItems="baseline" py={2} mx="2">
                             <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
                             <Heading size="md">Booked Tokens</Heading>
-                            {reviewlist.map((review) => <Box
-                                rounded={'lg'}
-                                bg={'white'}
-                                boxShadow={'lg'}
-                                p={3}
-                                width='full'>
-                                <VStack spacing={2} width="full" alignItems={"baseline"}>
-                                    <HStack width="full" spacing="auto">
-                                        <HStack ><Heading size={"md"}>{review.name}</Heading>
-                                            <IconButton icon={<FaPhoneAlt />} href={`tel:+${review.phone}`} as="a" bg="transparent"></IconButton>
+                            {reviewlist.map((item, index) =>
+                                <><Heading size="md" color="red" py={5}>{new Date(item.date).toDateString()}</Heading>
+                                    {reviewlist[index].reviews.map((review) => <Box
+                                        rounded={'lg'}
+                                        bg={'white'}
+                                        boxShadow={'lg'}
+                                        p={3}
+                                        m={5}
+                                        width='full'>
+                                        <VStack spacing={2} width="full" alignItems={"baseline"}>
+                                            <HStack width="full" spacing="auto">
+                                                <HStack ><Heading size={"md"}>{review.name}</Heading>
+                                                    <IconButton icon={<FaPhoneAlt />} href={`tel:+${review.phone}`} as="a" bg="transparent"></IconButton>
 
-                                        </HStack>
-                                        <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
-                                    </HStack>
-                                    <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
+                                                </HStack>
+                                                <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                            </HStack>
+                                            <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
 
-                                </VStack>
-                            </Box>)}
+                                        </VStack>
+                                    </Box>)
+                                    }</>)}
                         </Stack>
                     }
 

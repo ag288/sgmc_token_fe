@@ -9,10 +9,11 @@ import { ReviewList } from './ReviewBooking/ReviewList';
 import { TokenDetailsForReviewChooseToken } from './ReviewBooking/TokenDetailsChooseToken';
 import { useContext } from 'react';
 import { AppContext } from './App';
+import { PendingReviews } from './ReviewBooking/PendingReviews';
 
 function AuthenticatedUser() {
 
-  const {user}=useContext(AppContext)
+  const { user } = useContext(AppContext)
   return (
     <BrowserRouter>
       <Routes>
@@ -21,10 +22,11 @@ function AuthenticatedUser() {
         <Route path="/settings" element={<Settings />} />
         <Route path="/book" element={<TokenGeneration />} />
         <Route path="/token-details" element={<TokenDetailsChooseToken />} />
-    {user.userID==2 &&  <> <Route path="/book-review" element={< ReviewBooking />} />
-        <Route path="/review-list" element={< ReviewList/>} />
-        <Route path="/review-details" element={< TokenDetailsForReviewChooseToken/>} />
-        <Route path="*" element={<PatientList />} /></> }
+        {user.userID == 2 && <> <Route path="/book-review" element={< ReviewBooking />} />
+          <Route path="/pending-reviews" element={<PendingReviews />}></Route>
+          <Route path="/review-list" element={< ReviewList />} />
+          <Route path="/review-details" element={< TokenDetailsForReviewChooseToken />} />
+          <Route path="*" element={<PatientList />} /></>}
       </Routes>
     </BrowserRouter>
 
