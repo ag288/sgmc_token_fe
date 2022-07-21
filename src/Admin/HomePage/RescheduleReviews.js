@@ -7,7 +7,11 @@ import api from "../../api";
 export const RescheduleReviews = () => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [reviewlist, setReviewList] = useState([])
-
+    const types = {
+        "Review": "R",
+        "First time": 'F',
+        "Other": "O"
+    }
     useEffect(() => {
 
         api.review.fetchRescheduleReviewList().then((res) => {
@@ -33,12 +37,11 @@ export const RescheduleReviews = () => {
                    
                             <Heading size={"sm"} mb={2}>The following reviews were not generated:</Heading>
                            
-                        <Table variant='striped' colorScheme='grey'>
+                        <Table variant='striped' colorScheme='grey' size={isLaptop? "md" : "sm"}>
                             <Thead>
                                 <Tr>
                                     <Th>Name</Th>
                                     <Th>Phone</Th>
-                                    <Th>Token</Th>
                                     <Th>Type</Th>
                                     <Th>Est. Time</Th>
                                 </Tr>
@@ -49,8 +52,7 @@ export const RescheduleReviews = () => {
                                         <Td >{item.name}</Td>
                                         <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
                                         </Td>
-                                        <Td >{item.tokenNumber}</Td>
-                                        <Td>{item.type}</Td>
+                                        <Td>{types[item.type]}</Td>
                                         <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
                                          </Tr>
                                 )
