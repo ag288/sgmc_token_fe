@@ -32,7 +32,7 @@ export const PendingReviews = () => {
             minH={'100vh'}
             overflow={"scroll"}
             bg={"gray.100"}>
-            <IconButton icon={<FaHome />} onClick={()=>navigate("/home")}></IconButton>
+            <IconButton icon={<FaHome />} onClick={() => navigate("/home")}></IconButton>
             <Stack spacing="2%" mx={"auto"} py={3} px={3} width={'full'}>
                 <Box
                     borderWidth="1px"
@@ -41,9 +41,9 @@ export const PendingReviews = () => {
                     bg={'white'}
                     mx="auto"
                     boxShadow={'2xl'}
-                    padding={4}>
+                    padding={0}>
                     {reviewlist.length == 0 ? <Heading size="md">No pending reviews today</Heading> :
-                        <> <Heading size={"sm"} mb={2}>The following reviews were not generated:</Heading>
+                        <> <Heading size={"sm"} p={4}>The following reviews were not generated:</Heading>
 
                             <Table variant='striped' colorScheme='grey' size={isLaptop ? "md" : "sm"}>
                                 <Thead>
@@ -52,6 +52,7 @@ export const PendingReviews = () => {
                                         <Th>Phone</Th>
                                         <Th>Type</Th>
                                         <Th>Est. Time</Th>
+                                        <Th></Th>
                                     </Tr>
                                 </Thead>
                                 <Tbody>
@@ -62,6 +63,7 @@ export const PendingReviews = () => {
                                             </Td>
                                             <Td>{types[item.type]}</Td>
                                             <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
+                                            <Td> <Button onClick={() => navigate("/book-review", { state: { item } })}>Book Token</Button></Td>
                                         </Tr>
                                     )
                                     }

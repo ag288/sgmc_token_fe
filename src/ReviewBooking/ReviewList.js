@@ -140,7 +140,7 @@ export const ReviewList = () => {
                             <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
                             <Heading size="md">Booked Tokens</Heading>
                             {reviewlist.map((item, index) =>
-                                <><Heading size="md" color="red" py={5}>{new Date(item.date).toDateString()}</Heading>
+                                <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()}</Heading>
                                     {reviewlist[index].reviews.map((review) => <Box
                                         rounded={'lg'}
                                         bg={'white'}
