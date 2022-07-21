@@ -17,6 +17,7 @@ import api from '../../api';
 import { ReviewModal } from './ReviewModal';
 import { AppContext } from '../../App';
 import { CancelModal } from './CancelModal';
+import { useNavigate } from 'react-router-dom';
 // confirm deletion of staff profile
 
 
@@ -28,6 +29,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const close = () => setOpened(false)
     const { user } = useContext(AppContext)
     const toast = useToast()
+    const navigate = useNavigate()
     const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
     const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
 
@@ -129,7 +131,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
             <Popover trigger="click" placement="bottom-end" isOpen={opened} onClose={close} preventOverflow={true}
                 flip={true}  >
                 <PopoverTrigger>
-                    <IconButton bg="transparent" isDisabled={user.userID==2}  icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                    <IconButton bg="transparent"   icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                     </IconButton>
                 </PopoverTrigger >
                 <PopoverContent>
@@ -145,6 +147,9 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                         {/* <Box align='center' mt={"2%"}>
                             <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={onPrevious} >Add review</Text>
                         </Box> */}
+                        {user.userID==2 && <Box align='center' mt={"2%"}>
+                            <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={()=>navigate("/book-review",{state : {item}})} >Add review</Text>
+                        </Box>}
                     </PopoverBody>
                 </PopoverContent>
             </Popover >

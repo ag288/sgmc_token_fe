@@ -32,29 +32,38 @@ export const PatientDetails = (props) => {
     const [settings, setSettings] = useState([])
     const [reasons, setReasons] = useState([])
     let obj = {
-        id: "",
-        phone: "",
+        id: location.state && location.state.item ? location.state.item.patientID : "",
+        phone: location.state && location.state.item ? location.state.item.phone.substring(2) : "",
         new_name: "",
-        name: "",
-        fileNumber: ""
+        name: location.state && location.state.item ? location.state.item.name : "",
+        fileNumber: location.state && location.state.item ? location.state.item.fileNumber : ""
     }
     const [token, setToken] = useState(location.state && location.state.tokenObj ? { ...obj, ...location.state.tokenObj }
         : obj)
 
-        useEffect(() => {
+    useEffect(() => {
 
-            api.settings.fetchSettings().then((res) => {
-                const response = JSON.parse(res.data).result
-                setSettings(response[0])
-             //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
-            })
-    
-            api.settings.fetchReasons().then((res) => {
-                const response = JSON.parse(res.data).result
-                setReasons(response)
-            })
+        api.settings.fetchSettings().then((res) => {
+            const response = JSON.parse(res.data).result
+            setSettings(response[0])
+            //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
+        })
 
-        },[])
+        api.settings.fetchReasons().then((res) => {
+            const response = JSON.parse(res.data).result
+            setReasons(response)
+        })
+
+        if (location.state && location.state.item) {
+
+            api.book.fetchPatients(location.state.item.phone).then((res) => {
+                const response = JSON.parse(res.data).result
+                console.log(response)
+                setPatients(response)
+            })
+        }
+
+        }, [])
 
 
     function handleNameChange(e) {
@@ -98,14 +107,14 @@ export const PatientDetails = (props) => {
                 if (token.new_name == "") {
 
 
-                    navigate(navigateTo, { state: { token,settings,reasons } })
+                    navigate(navigateTo, { state: { token, settings, reasons } })
                 }
                 else {
                     api.book.createPatient({ token }).then((res) => {
                         const response = JSON.parse(res.data).result
                         console.log(response)
                         setToken(prev => ({ ...prev, "id": response }))
-                        navigate(navigateTo, { state: { token, id: response,settings,reasons } })
+                        navigate(navigateTo, { state: { token, id: response, settings, reasons } })
                     })
                 }
             }

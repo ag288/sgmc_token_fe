@@ -22,6 +22,9 @@ export const GeneralSettings = () => {
     const [settings, setSettings] = useState({})
     const [max, setMax] = useState([])
     const toast = useToast()
+    const tokensEnd = new Date(new Date().setHours(20, 0, 0));  // disable update settings button till 8pm in evening
+    const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update settings button after 6am in morning
+
 
     useEffect(() => {
 
@@ -29,7 +32,7 @@ export const GeneralSettings = () => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
-
+        //setSettings(setting)
         api.token.fetchLastToken().then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
@@ -50,18 +53,18 @@ export const GeneralSettings = () => {
 
     function handleChange(e) {
         switch (e.target.id) {
-            case "1":
-                setSettings(prev => ({ ...prev, ["working_start_time_1"]: e.target.value }));
-                break;
-            case "2":
-                setSettings(prev => ({ ...prev, ["working_end_time_1"]: e.target.value }));
-                break;
-            case "3":
-                setSettings(prev => ({ ...prev, ["working_start_time_2"]: e.target.value }));
-                break;
-            case "4":
-                setSettings(prev => ({ ...prev, ["working_end_time_2"]: e.target.value }));
-                break;
+            // case "1":
+            //     setSettings(prev => ({ ...prev, ["working_start_time_1"]: e.target.value }));
+            //     break;
+            // case "2":
+            //     setSettings(prev => ({ ...prev, ["working_end_time_1"]: e.target.value }));
+            //     break;
+            // case "3":
+            //     setSettings(prev => ({ ...prev, ["working_start_time_2"]: e.target.value }));
+            //     break;
+            // case "4":
+            //     setSettings(prev => ({ ...prev, ["working_end_time_2"]: e.target.value }));
+            //     break;
             case "5":
                 setSettings(prev => ({ ...prev, ["working_start_day"]: e.target.value }));
                 break;
@@ -112,6 +115,7 @@ export const GeneralSettings = () => {
                     isClosable: false,
                     position: "top"
                 })
+                window.location.reload()
             }).catch((err) => {
                 setIsLoading(false)
                 toast({
@@ -122,6 +126,7 @@ export const GeneralSettings = () => {
                     isClosable: false,
                     position: "top"
                 })
+                window.location.reload()
             })
         }
     }
@@ -138,7 +143,7 @@ export const GeneralSettings = () => {
                 width='full'>
                 <Heading size="lg">Settings</Heading>
                 <VStack width="full">
-                    <VStack width="full" alignItems={"baseline"} p={4}>
+                    {/* <VStack width="full" alignItems={"baseline"} p={4}>
                         <Text fontWeight={"bold"}>Working hours - Morning</Text>
                         <HStack >
                             <Input type="time" id={"1"} onChange={handleChange} value={settings?.working_start_time_1}></Input>
@@ -154,8 +159,8 @@ export const GeneralSettings = () => {
                             <Text>to</Text>
                             <Input type="time" id={"4"} onChange={handleChange} value={settings?.working_end_time_2}></Input>
                         </HStack>
-                    </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    </VStack> 
+                    <Divider borderColor={"gray"} orientation='horizontal' />*/}
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Working days</Text>
                         <HStack >
@@ -165,7 +170,7 @@ export const GeneralSettings = () => {
                         </HStack>
                     </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
-                    <VStack p={4} width="full" alignItems={"baseline"}>
+                    {/* <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Maximum tokens - Morning</Text>
                         <Input type="number" id={"7"} onChange={handleChange} value={settings?.morn_max_tokens}></Input>
                         {max.find(item => item.slot == "A") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "A").tokenNumber})`}</Text>
@@ -178,7 +183,7 @@ export const GeneralSettings = () => {
                         {max.find(item => item.slot == "B") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "B").tokenNumber})`}</Text>
                             : null}
                     </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <Divider borderColor={"gray"} orientation='horizontal' /> */}
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Notify before</Text>
                         <Input type="number" id={"9"} onChange={handleChange} value={settings?.gap}></Input>
@@ -211,7 +216,8 @@ export const GeneralSettings = () => {
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>
-                    <Button isLoading={isLoading} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
+                {/* isDisabled={new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getTime() < tokensEnd.getTime()} */}
+                    <Button isLoading={isLoading}  colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
             </Box>
         </>

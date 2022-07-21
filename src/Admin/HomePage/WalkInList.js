@@ -30,7 +30,7 @@ import { AppContext } from '../../App';
 
 // List of staff profiles pending approval
 
-export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCurrent }) => {
+export const WalkInList = ({ isLoading, setIsLoading, walklist, current, setCurrent }) => {
 
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [showCompleted, setShowCompleted] = useState(false)
@@ -66,7 +66,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
         <>
 
             <HStack spacing={"auto"}>
-                <Heading size="md">Morning </Heading>
+                <Heading size="md">Walk In Tokens </Heading>
                 <Checkbox onChange={handleChange} colorScheme={"blue"} borderColor={"black"} size={"md"}>Show all</Checkbox>
             </HStack>
             <Box
@@ -94,7 +94,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {filterList(mornlist, showCompleted).map((item, index) =>
+                            {filterList(walklist, showCompleted).map((item, index) =>
                                 <Tr key={index} bg={findBg(item)}>
                                     <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                     <Td >{`${item.slot}-${item.tokenNumber}`}</Td>

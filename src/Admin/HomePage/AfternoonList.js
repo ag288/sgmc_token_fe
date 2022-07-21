@@ -35,7 +35,6 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
         new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getTime() > morningEnd.getTime() ?
             false : true)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
-    console.log(isMobile)
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
     const types = {

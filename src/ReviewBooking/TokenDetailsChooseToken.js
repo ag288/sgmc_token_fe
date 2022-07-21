@@ -67,7 +67,7 @@ export const TokenDetailsForReviewChooseToken = () => {
         //     setReasons(response)
         // })
 
-        api.review.reviewExists({ id: location.state.token.id }).then((res) => {
+        api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id }).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             if (response.length != 0) {

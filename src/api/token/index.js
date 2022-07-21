@@ -3,6 +3,10 @@
 export default function tokenApi(fetch, baseUrl) {
 
     return {
+        fetchDataForExcel() {
+            return fetch(`${baseUrl}/excel`)
+        },
+
         fetchMorningList() {
             return fetch(`${baseUrl}/fetch_morning`)
         },
@@ -10,6 +14,11 @@ export default function tokenApi(fetch, baseUrl) {
         fetchAfternoonList() {
             return fetch(`${baseUrl}/fetch_afternoon`)
         },
+
+        fetchWalkInList() {
+            return fetch(`${baseUrl}/fetch_walk_in`)
+        },
+
         fetchLastToken() {
             return fetch(`${baseUrl}/fetch_last`)
         },
