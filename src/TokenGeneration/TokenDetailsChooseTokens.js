@@ -21,6 +21,7 @@ import {
     HStack,
     Spinner,
     IconButton,
+    useToast,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
@@ -33,6 +34,7 @@ import { FullPageSpinner } from '../utils/spinner';
 export const TokenDetailsChooseToken = () => {
     let navigate = useNavigate()
     const [slots, setSlots] = useState([])
+    const toast = useToast()
     const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { user } = useContext(AppContext)
@@ -71,14 +73,18 @@ export const TokenDetailsChooseToken = () => {
     let location = useLocation()
 
     function handleSlotChange(e) {
-        setIsLoading(true)
-        setToken(prev => ({ ...prev, "slot": e.target.value }))
-        api.book.fetchTokens({ slot: e.target.value }).then((res) => {
-            setIsLoading(false)
-            const response = JSON.parse(res.data).result
-            setTokens(response)
-        })
-
+        if (e.target.value != "W") {
+            setIsLoading(true)
+            setToken(prev => ({ ...prev, "slot": e.target.value }))
+            api.book.fetchTokens({ slot: e.target.value }).then((res) => {
+                setIsLoading(false)
+                const response = JSON.parse(res.data).result
+                console.log(response)
+                setTokens(response)
+            })
+        }
+        else
+            setToken(prev => ({ ...prev, "slot": e.target.value }))
     }
 
     function handleTokenChange(e) {
@@ -96,7 +102,8 @@ export const TokenDetailsChooseToken = () => {
     function handleSubmit() {
         if (user.userID == 3)
             token.reason = 1
-        if (token.slot != "" && token.reason != "" && token.token != "") {
+        console.log(token)
+        if ((token.slot != "" && token.reason != "" && token.token != "") || (token.slot == "W" && token.token == "")) {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
             location.state.token.token = token.token
@@ -113,48 +120,62 @@ export const TokenDetailsChooseToken = () => {
                 else {
                     setIsLoading(false)
                     setTokenNo(`${response.slot}-${response.tokenNo}`)
-                    const start = new Date(), end = new Date()
-                    console.log(response.time)
-                    if (response.slot == "A" && response.tokenNo == settings.morn_token_start) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_1);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 10);
+                    if (token.slot != "W") {
+                        const start = new Date(), end = new Date()
+
+                        if (response.slot == "A" && response.tokenNo == settings.morn_token_start) {
+                            const morn = new Date("2022-01-01 " + settings.working_start_time_1);
+                            start.setHours(morn.getHours());
+                            start.setMinutes(morn.getMinutes() - 15);
+                            end.setHours(morn.getHours());
+                            end.setMinutes(morn.getMinutes() + 10);
+                        }
+                        else if (response.slot == "A" && response.tokenNo == settings.morn_token_start + 1) {
+                            const morn = new Date("2022-01-01 " + settings.working_start_time_1);
+                            start.setHours(morn.getHours());
+                            start.setMinutes(morn.getMinutes() - 15);
+                            end.setHours(morn.getHours());
+                            end.setMinutes(morn.getMinutes() + 30);
+                        }
+                        else if (response.slot == "B" && response.tokenNo == settings.aft_token_start) {
+                            const morn = new Date("2022-01-01 " + settings.working_start_time_2);
+                            start.setHours(morn.getHours());
+                            start.setMinutes(morn.getMinutes() - 15);
+                            end.setHours(morn.getHours());
+                            end.setMinutes(morn.getMinutes() + 10);
+                        }
+                        else if (response.slot == "B" && response.tokenNo == settings.aft_token_start + 1) {
+                            const morn = new Date("2022-01-01 " + settings.working_start_time_2);
+                            start.setHours(morn.getHours());
+                            start.setMinutes(morn.getMinutes() - 15);
+                            end.setHours(morn.getHours());
+                            end.setMinutes(morn.getMinutes() + 30);
+                        }
+                        else {
+                            var coeff = 1000 * 60 * 5;
+                            console.log(new Date(response.time))
+                            var rounded = new Date(Math.round(new Date(response.time) / coeff) * coeff)
+                            console.log(Math.round(new Date(response.time) / coeff) * coeff)
+                            start.setHours(rounded.getHours())
+                            start.setMinutes(rounded.getMinutes() - 15)
+                            end.setHours(rounded.getHours())
+                            end.setMinutes(rounded.getMinutes() + 15)
+                        }
+                        setTime({ start: start, end: end })
+
+                        onOpen()
                     }
-                    else if (response.slot == "A" && response.tokenNo == settings.morn_token_start + 1) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_1);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 30);
-                    }
-                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_2);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 10);
-                    }
-                    else if (response.slot == "B" && response.tokenNo == settings.aft_token_start + 1) {
-                        const morn = new Date("2022-01-01 " + settings.working_start_time_2);
-                        start.setHours(morn.getHours());
-                        start.setMinutes(morn.getMinutes() - 15);
-                        end.setHours(morn.getHours());
-                        end.setMinutes(morn.getMinutes() + 30);
-                    }
+
                     else {
-                        var coeff = 1000 * 60 * 5;
-                        console.log(new Date(response.time))
-                        var rounded = new Date(Math.round(new Date(response.time) / coeff) * coeff)
-                        console.log(Math.round(new Date(response.time) / coeff) * coeff)
-                        start.setHours(rounded.getHours())
-                        start.setMinutes(rounded.getMinutes() - 15)
-                        end.setHours(rounded.getHours())
-                        end.setMinutes(rounded.getMinutes() + 15)
+                        toast({
+                            title: 'Token generated',
+                            status: 'success',
+                            duration: 3000,
+                            isClosable: false,
+                            position: "top"
+                        })
+                        navigate("/home")
                     }
-                    setTime({ start: start, end: end })
-                    onOpen()
                 }
             })
         }
@@ -187,6 +208,7 @@ export const TokenDetailsChooseToken = () => {
                                             {slots.map((slot) => <Radio bg={token.slot == slot.slotNumber ? "green" : "white"} value={slot.slotNumber} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
                                                 .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
                                                     .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
+                                            {<Radio value={"W"} onChange={handleSlotChange}>Walk-in token</Radio>}
 
                                         </VStack>
                                     </RadioGroup>
@@ -197,7 +219,6 @@ export const TokenDetailsChooseToken = () => {
                                     <RadioGroup name="token" >
                                         <VStack align={"right"}>
                                             {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
-                                            {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl><FormControl id="reason">
@@ -208,7 +229,7 @@ export const TokenDetailsChooseToken = () => {
                                             {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>
-                                </FormControl> 
+                                </FormControl>
                             </Stack>
                             <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                                 <ModalOverlay />

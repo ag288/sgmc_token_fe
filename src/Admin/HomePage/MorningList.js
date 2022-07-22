@@ -112,13 +112,13 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                         <Td> {item.type}</Td>
                                         <Td>{item.phone.substring(2)}</Td>
                                         <Td>
-                                            <VStack alignItems={"baseline"}>
+                                           { item.timeInEst && <VStack alignItems={"baseline"}>
                                                 <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                                                     .toLocaleTimeString('en-US',
                                                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                                                 </Text>
                                                 <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
-                                            </VStack>
+                                            </VStack>}
                                         </Td>
                                         <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                                             .toLocaleTimeString('en-US',

@@ -126,10 +126,10 @@ export const PatientDetails = (props) => {
 
     return (
         <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-            {availability != "" ?
+            {/* {availability != "" ?
                 <Heading size="md">{availability}</Heading>
                 :
-                <>
+                <> */}
                     <Heading color="red" fontSize={'2xl'}>Book a Token</Heading>
                     <Box
                         rounded={'lg'}
@@ -175,8 +175,8 @@ export const PatientDetails = (props) => {
                             Next
                         </Button>
                     </Box>
-                </>
-            }
+                {/* </>
+            } */}
         </Stack>
     )
 }

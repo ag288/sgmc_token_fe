@@ -66,7 +66,6 @@ export const WalkInList = ({ isLoading, setIsLoading, walklist, current, setCurr
         <>
 
             <HStack spacing={"auto"}>
-                <Heading size="md">Walk In Tokens </Heading>
                 <Checkbox onChange={handleChange} colorScheme={"blue"} borderColor={"black"} size={"md"}>Show all</Checkbox>
             </HStack>
             <Box
@@ -100,7 +99,7 @@ export const WalkInList = ({ isLoading, setIsLoading, walklist, current, setCurr
                                     <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                     {isMobile && <Td>{types[item.type]}</Td>}
                                     <Td >{item.name}</Td>
-                                    {isMobile && <Td>
+                                    {isMobile && item.timeInEst && <Td>
                                         <VStack>
                                             <DetailsPopover current={current} setCurrent={setCurrent} item={item} />
                                             <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />

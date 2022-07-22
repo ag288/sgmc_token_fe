@@ -83,15 +83,15 @@ export const PatientList = (props) => {
 
     // })
 
-    api.token.fetchWalkInList().then((res) => {
-      const response = JSON.parse(res.data).result
-      for (var i = 0; i < response.length; i++)
-        if (response[i].status == "current") {
-          setCurrent(response[i])
-        }
-      setWalkList(response)
+    // api.token.fetchWalkInList().then((res) => {
+    //   const response = JSON.parse(res.data).result
+    //   for (var i = 0; i < response.length; i++)
+    //     if (response[i].status == "current") {
+    //       setCurrent(response[i])
+    //     }
+    //   setWalkList(response)
 
-    })
+    //})
 
 
   }, []);
@@ -125,13 +125,15 @@ export const PatientList = (props) => {
                   </MenuList>
                 </Menu>
               </Box>
-             {user.userID==2 && <BellWithBadge onClick={viewPendingReviews} count={data} />}
+              {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={data} />}
             </HStack>
             <CurrentPatient current={current} setCurrent={setCurrent} />
             <MorningList loading={isLoading} setIsLoading={setIsLoading} mornlist={mornlist} current={current} setCurrent={setCurrent} />
+            
             <AfternoonList loading={isLoading} setIsLoading={setIsLoading} aftlist={aftlist} current={current} setCurrent={setCurrent} />
-            {/* <WalkInList loading={isLoading} setIsLoading={setIsLoading} walklist={walklist} current={current} setCurrent={setCurrent}/> */}
-          </Stack>
+            {/* <WalkInList loading={isLoading} setIsLoading={setIsLoading} walklist={walklist} current={current} setCurrent={setCurrent} /> */}
+
+            </Stack>
         }
 
       </Flex>

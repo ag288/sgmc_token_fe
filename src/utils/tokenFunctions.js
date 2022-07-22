@@ -7,7 +7,11 @@ export function findBg(item) {
         return "red.200"
     else if (item.status == "current")
         return "green.100"
-    else return "white"
+    else {
+        if (item.slot.includes("W"))
+            return "yellow.100"
+        else return "white"
+    }
 }
 
 export function filterList(list, showCompleted) {
