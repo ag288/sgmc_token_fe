@@ -24,7 +24,7 @@ export const GeneralSettings = () => {
     const toast = useToast()
     const tokensEnd = new Date(new Date().setHours(20, 0, 0));  // disable update settings button till 8pm in evening
     const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update settings button after 6am in morning
-
+    const today=new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
 
     useEffect(() => {
 
@@ -216,8 +216,8 @@ export const GeneralSettings = () => {
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>
-                {/* isDisabled={new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getTime() < tokensEnd.getTime()} */}
-                    <Button isLoading={isLoading}  colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
+                
+                    <Button isLoading={isLoading} isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
             </Box>
         </>

@@ -172,7 +172,7 @@ export const Holidays = () => {
                                     </HStack>
                                 </RadioGroup>
                             </FormControl>
-                            {/* <FormControl mt={5}><FormLabel>Choose leave duration</FormLabel>
+                            <FormControl mt={5}><FormLabel>Choose leave duration</FormLabel>
                                 <RadioGroup>
                                     <HStack>
                                         <Radio onChange={handleDurationChange} value={"H"}>Half Day</Radio>
@@ -187,7 +187,7 @@ export const Holidays = () => {
                                         <Radio onChange={handleSlotChange} value={"B"}>Evening</Radio>
                                     </HStack>
                                 </RadioGroup>
-                            </FormControl>} */}
+                            </FormControl>}
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={updateHolidays}>Ok</Button>

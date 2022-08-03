@@ -47,18 +47,27 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
         setShowCompleted(!showCompleted)
     }
 
-    function handleDoubleClick(id) {
+    function handleDoubleClickForFile(id) {
         let fileNo = window.prompt("Enter the file number")
         if (fileNo != null)
-            editFileNumber(fileNo, id)
-    }
-
-
-    function editFileNumber(value, id) {
-        api.token.editFileNumber({ value, id }).then((res) => {
+          //  editFileNumber(fileNo, id)
+          api.token.editFileNumber({ fileNo, id }).then((res) => {
             const response = JSON.parse(res.data).result
             window.location.reload()
         })
+    }
+
+    function handleDoubleClickForName(id) {
+        let name = window.prompt("Enter the patient's name")
+        if (name != null)
+        api.token.editName({ name, id }).then((res) => {
+            const response = JSON.parse(res.data).result
+            window.location.reload()
+        })
+    }
+
+    function editFileNumber(value, id) {
+      
     }
 
 
@@ -99,7 +108,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                     <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                     <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
                                     {isMobile && <Td>{types[item.type]}</Td>}
-                                    <Td >{item.name}</Td>
+                                    <Td style={{cursor : "pointer"}} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
                                     {isMobile && <Td>
                                         <VStack>
                                             <DetailsPopover current={current} setCurrent={setCurrent} item={item} />
@@ -107,7 +116,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                             {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
                                         </VStack>
                                     </Td>}
-                                    {isLaptop && <><Td><Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+                                    {isLaptop && <><Td><Text placeholder='Add file' style={{cursor : "pointer"}} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                                     </Td>
                                         <Td> {item.type}</Td>
                                         <Td>{item.phone.substring(2)}</Td>

@@ -34,6 +34,7 @@ export const WorkingHourSettings = () => {
     const tokensEnd = new Date(new Date().setHours(20, 0, 0));  // disable update button till 8pm in evening
     const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update button after 6am in morning
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
 
     useEffect(() => {
         api.settings.fetchSettings().then((res) => {
@@ -126,8 +127,7 @@ export const WorkingHourSettings = () => {
                     <Divider borderColor={"gray"} orientation='horizontal' />
                 </VStack>
                 <Box mt="2%" align={"right"}>
-                    {/* isDisabled={new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).getTime() < tokensEnd.getTime()} */}
-                    <Button isLoading={isLoading} colorScheme="blue" onClick={onOpen}>Update</Button>
+                    <Button isLoading={isLoading} colorScheme="blue" isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} onClick={onOpen}>Update</Button>
                 </Box>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />

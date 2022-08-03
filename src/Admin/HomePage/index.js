@@ -9,6 +9,7 @@ import {
   MenuItem,
   MenuList,
   Stack,
+  Select
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import api from '../../api';
@@ -127,6 +128,11 @@ export const PatientList = (props) => {
               </Box>
               {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={data} />}
             </HStack>
+            {/* <Box align='center'>
+            <Select width="30%" bg="white">
+              <option>Dr. Achamma Mathappan</option>
+              <option>Dr. Thomas M. George</option>
+            </Select></Box> */}
             <CurrentPatient current={current} setCurrent={setCurrent} />
             <MorningList loading={isLoading} setIsLoading={setIsLoading} mornlist={mornlist} current={current} setCurrent={setCurrent} />
             

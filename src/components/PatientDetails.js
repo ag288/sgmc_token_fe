@@ -126,10 +126,10 @@ export const PatientDetails = (props) => {
 
     return (
         <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-            {/* {availability != "" ?
+            {availability != "" ?
                 <Heading size="md">{availability}</Heading>
                 :
-                <> */}
+                <>
                     <Heading color="red" fontSize={'2xl'}>Book a Token</Heading>
                     <Box
                         rounded={'lg'}
@@ -150,7 +150,7 @@ export const PatientDetails = (props) => {
                                 <FormLabel>Name</FormLabel>
                                 <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
                                     {patients.map((patient) => <option key={patient.patientID}>{`${patient.name}`}</option>)}
-                                    <option>Add new</option>
+                                    {patients.length==0 ? null : <option>Add new</option>}
                                 </Select>
                             </FormControl>
                             {
@@ -175,8 +175,8 @@ export const PatientDetails = (props) => {
                             Next
                         </Button>
                     </Box>
-                {/* </>
-            } */}
+                </>
+            }
         </Stack>
     )
 }

@@ -88,6 +88,13 @@ export const ReviewModal = (props) => {
         if (!(info.file == "" && info.days == 0)) {
             api.token.saveReview({ id: id, info }).then((res) => {
                 //window.location.reload()
+                toast({
+                    title: "Review saved",
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
             }).catch(err => {
                 toast({
                     title: "An error occured",
@@ -114,7 +121,7 @@ export const ReviewModal = (props) => {
                 <ModalHeader>{origin == "previous" ? item.name : current.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    {origin == "previous" && item.fileNumber == null || origin != "previous" && current.fileNumber == null ? <FormControl>
+                    {origin == "previous" && (item.fileNumber == null|| item.fileNumber=="N") || origin != "previous" && (current.fileNumber == null || current.fileNumber=="N")? <FormControl>
                         <FormLabel>File number</FormLabel>
                         <Input type="text" value={info.file} onChange={handleFileChange}></Input>
                     </FormControl> : null}
