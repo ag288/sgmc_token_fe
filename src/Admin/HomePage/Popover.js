@@ -34,15 +34,15 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
 
     function onCall() {
-       // if (current) {
-          //  setOrigin("call")
-           // onOpenReview()
-       // }
-      //  else {
+       if (current) {
+           setOrigin("call")
+           onOpenReview()
+       }
+       else {
         const confirm = window.confirm(`You are going to call ${item.name}`)
         if (confirm)
             call()
-      //  }
+       }
     }
 
     function call() {
@@ -73,8 +73,8 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
         const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
         if (confirm) {
              completed()
-            // setOrigin("completed")
-            // onOpenReview()
+            setOrigin("completed")
+            onOpenReview()
         }
     }
 
