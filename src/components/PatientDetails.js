@@ -59,6 +59,7 @@ export const PatientDetails = (props) => {
             api.book.fetchPatients(location.state.item.phone).then((res) => {
                 const response = JSON.parse(res.data).result
                 console.log(response)
+                //response.push({})
                 setPatients(response)
             })
         }
@@ -93,6 +94,7 @@ export const PatientDetails = (props) => {
 
         api.book.fetchPatients(`91${token.phone}`).then((res) => {
             const response = JSON.parse(res.data).result
+            response.push({patientID:0, name:"Add new"})
             setPatients(response)
         })
     }
@@ -150,7 +152,7 @@ export const PatientDetails = (props) => {
                                 <FormLabel>Name</FormLabel>
                                 <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
                                     {patients.map((patient) => <option key={patient.patientID}>{`${patient.name}`}</option>)}
-                                    {patients.length==0 ? null : <option>Add new</option>}
+                                  { /* {patients.length==0 ? null : <option>Add new</option>}*/}
                                 </Select>
                             </FormControl>
                             {

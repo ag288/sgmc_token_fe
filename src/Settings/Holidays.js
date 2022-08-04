@@ -47,6 +47,7 @@ export const Holidays = () => {
 
         api.settings.fetchHolidays().then((res) => {
             const response = JSON.parse(res.data).result
+            console.log(response)
             setHolidays(response)
         })
 
@@ -90,10 +91,11 @@ export const Holidays = () => {
 
 
     function deleteHoliday(day) {
+       // console.log(day.leaveID)
         setIsLoading(true)
-        api.settings.deleteHolidays({ date: day.date }).then((res) => {
+        api.settings.deleteHolidays( {leave : day.leaveID} ).then((res) => {
             setIsLoading(false)
-            setHolidays(holidays.filter(item => item.date != day.date))
+            setHolidays(holidays.filter(item => item.leaveID != day.leaveID))
         }).catch((err) => {
             setIsLoading(false)
             toast({

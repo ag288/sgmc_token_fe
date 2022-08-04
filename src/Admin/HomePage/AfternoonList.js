@@ -59,21 +59,23 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
 
     function handleDoubleClickForFile(id) {
         let fileNo = window.prompt("Enter the file number")
-        if (fileNo != null)
+        if (fileNo != null){
           //  editFileNumber(fileNo, id)
           api.token.editFileNumber({ fileNo, id }).then((res) => {
             const response = JSON.parse(res.data).result
             window.location.reload()
         })
     }
+    }
 
     function handleDoubleClickForName(id) {
         let name = window.prompt("Enter the patient's name")
-        if (name != null)
+        if (name != null){
         api.token.editName({ name, id }).then((res) => {
             const response = JSON.parse(res.data).result
             window.location.reload()
         })
+    }
     }
 
     function editFileNumber(value, id) {
