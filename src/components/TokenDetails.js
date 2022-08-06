@@ -24,9 +24,10 @@ import {
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import { FullPageSpinner } from '../utils/spinner';
+import { AppContext } from '../App';
 
 export const TokenDetails = () => {
     let navigate = useNavigate()
@@ -41,6 +42,7 @@ export const TokenDetails = () => {
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
+   const {doctor} = useContext(AppContext)
 
     useEffect(() => {
 
@@ -49,12 +51,12 @@ export const TokenDetails = () => {
             setReasons(response)
         })
 
-        api.settings.fetchSettings().then((res) => {
+        api.settings.fetchSettings({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
 
-        api.book.decideSlots().then((res) => {
+        api.book.decideSlots({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             setSlots(response)
         })

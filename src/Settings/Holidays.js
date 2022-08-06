@@ -24,8 +24,9 @@ import {
     useDisclosure,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import api from '../api'
+import { AppContext } from '../App'
 import { FullPageSpinner } from '../utils/spinner'
 
 
@@ -41,17 +42,18 @@ export const Holidays = () => {
         duration : "",
         slot : ""
     })
+    const {doctor} = useContext(AppContext)
     const toast = useToast()
 
     useEffect(() => {
 
-        api.settings.fetchHolidays().then((res) => {
+        api.settings.fetchHolidays({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             setHolidays(response)
         })
 
-    }, []);
+    }, [doctor]);
 
 
     function chooseType() {
@@ -72,7 +74,7 @@ export const Holidays = () => {
         onClose()
         if (date!= "" && holidayInfo.isGeneralHoliday!="")  {
             setIsLoading(true)
-            api.settings.updateHolidays({ date, holidayInfo }).then((res) => {
+            api.settings.updateHolidays({ date, holidayInfo, doctor }).then((res) => {
                 setIsLoading(false)
                 setHolidays(prev => ([...prev, { "date": new Date(date) }]))
             }).catch((err) => {
@@ -93,7 +95,7 @@ export const Holidays = () => {
     function deleteHoliday(day) {
        // console.log(day.leaveID)
         setIsLoading(true)
-        api.settings.deleteHolidays( {leave : day.leaveID} ).then((res) => {
+        api.settings.deleteHolidays( {leave : day.leaveID, doctor} ).then((res) => {
             setIsLoading(false)
             setHolidays(holidays.filter(item => item.leaveID != day.leaveID))
         }).catch((err) => {

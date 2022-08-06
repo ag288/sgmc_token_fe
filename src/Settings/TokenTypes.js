@@ -17,8 +17,9 @@ import {
     EditablePreview,
     EditableInput
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import api from '../api'
+import { AppContext } from '../App'
 
 
 
@@ -27,6 +28,7 @@ export const TokenTypes = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [reasons, setReasons] = useState([])
     const toast = useToast()
+    const {doctor} = useContext(AppContext)
 
     useEffect(() => {
 
@@ -34,7 +36,7 @@ export const TokenTypes = () => {
             const response = JSON.parse(res.data).result
             setReasons(response)
         })
-    }, []);
+    }, [doctor]);
 
 
     function handleChange(e, reason) {

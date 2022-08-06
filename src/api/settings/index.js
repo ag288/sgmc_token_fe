@@ -3,8 +3,8 @@
 export default function settingsApi(fetch, baseUrl) {
 
     return {
-        fetchSettings() {
-            return fetch(`${baseUrl}/fetch`)
+        fetchSettings(data) {
+            return fetch.post(`${baseUrl}/fetch`,{data})
         },
         fetchReasons() {
             return fetch(`${baseUrl}/reasons`)
@@ -20,8 +20,8 @@ export default function settingsApi(fetch, baseUrl) {
         updateReasons(data) {
             return fetch.post(`${baseUrl}/update-reasons`, { data })
         },
-        fetchHolidays() {
-            return fetch(`${baseUrl}/holidays`)
+        fetchHolidays(data) {
+            return fetch.post(`${baseUrl}/holidays`,{data})
         },
         updateHolidays(data) {
             return fetch.post(`${baseUrl}/update-holidays`,{data})
@@ -29,8 +29,8 @@ export default function settingsApi(fetch, baseUrl) {
         deleteHolidays(data) {
             return fetch.post(`${baseUrl}/delete-holidays`,{data})
         },
-        checkAvailability() {
-            return fetch(`${baseUrl}/check`)
+        checkAvailability(data) {
+            return fetch.post(`${baseUrl}/check`, {data})
         }
     }
 }

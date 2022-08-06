@@ -35,7 +35,7 @@ import { AppContext } from '../App';
 
 // List of staff profiles pending approval
 
-export const ReviewList = () => {
+export const DuplicatePatients = () => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [reviewlist, setReviewList] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -45,7 +45,7 @@ export const ReviewList = () => {
 
     useEffect(() => {
 
-        api.review.fetchReviewList({doctor}).then((res) => {
+        api.token.fetchDuplicatePatients().then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             setReviewList(response)
@@ -97,51 +97,48 @@ export const ReviewList = () => {
 
                         <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
 
-                        <Stack py={12} px={2} mx="auto" width="auto">
+                        <Stack py={12} px={2} mx="auto" width="full">
                         <Box align='center'>
                         <Select width="30%" size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box>
-                            <Heading size="md">Booked Tokens</Heading>
+                            <Heading size="md">Duplicate Patients</Heading>
                             <Box
                                 rounded={'lg'}
                                 bg={'white'}
                                 boxShadow={'lg'}
                                 p={3}
-                                width='auto'>
+                                width='full'>
 
                                 {reviewlist.map((review, index) => <>
-                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString()}</Heading>
+                                
+                                    <Divider mt={2} orientation='horizontal'></Divider>
+                                    <Heading m={8} size="md" color="red">{`File Number: ${review.fileNumber}`}</Heading>
 
-                                    <Divider orientation='horizontal'></Divider>
-                                    <Table variant='striped' colorScheme='grey'>
+                                    <Table  variant='striped' colorScheme='grey'>
                                         <Thead>
                                             <Tr>
                                                 <Th>Name</Th>
                                                 <Th>Phone</Th>
-                                                <Th>Token</Th>
-                                                <Th>Type</Th>
-                                                <Th>Date</Th>
-                                                <Th>Est. Time</Th>
-                                                <Th></Th>
+                                                <Th>File Number</Th>
+                                                
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            {reviewlist[index].reviews.map((item) =>
+                                            {reviewlist[index].patients.map((item) =>
                                                 <Tr key={index}>
                                                     <Td >{item.name}</Td>
                                                     <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
                                                     </Td>
-                                                    <Td >{item.tokenNumber}</Td>
-                                                    <Td>{item.type}</Td>
-                                                    <Td >{new Date(item.date).toDateString()}</Td>
-                                                    <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
-                                                    <Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
+                                                    <Td>{item.fileNumber}</Td>
                                                 </Tr>
                                             )
                                             }
                                         </Tbody>
-                                    </Table></>
+                                    </Table>
+                                    <HStack mt={2}>
+                                    <Button colorScheme={"blue"}>Merge</Button>
+                                    <Button colorScheme={"blue"}>Keep separate</Button></HStack></>
                                 )}
                             </Box>
                         </Stack>
@@ -151,8 +148,8 @@ export const ReviewList = () => {
                             <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
                             <Heading size="md">Booked Tokens</Heading>
                             {reviewlist.map((item, index) =>
-                                <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()}</Heading>
-                                    {reviewlist[index].reviews.map((review) => <Box
+                                <><Heading size="md" color="red" pt={3}>{item.fileNumber}</Heading>
+                                    {reviewlist[index].patients.map((review) => <Box
                                         rounded={'lg'}
                                         bg={'white'}
                                         boxShadow={'lg'}
@@ -167,8 +164,7 @@ export const ReviewList = () => {
                                                 </HStack>
                                                 <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
                                             </HStack>
-                                            <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
-
+                                           
                                         </VStack>
                                     </Box>)
                                     }</>)}

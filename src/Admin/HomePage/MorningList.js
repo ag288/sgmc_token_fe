@@ -106,7 +106,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                             {filterList(mornlist, showCompleted).map((item, index) =>
                                 <Tr key={index} bg={findBg(item)}>
                                     <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                    <Td >{`${item.slot}-${item.tokenNumber}`}</Td>
+                                    <Td >{`${item.initials}-${item.tokenNumber}`}</Td>
                                     {isMobile && <Td>{types[item.type]}</Td>}
                                     <Td style={{cursor : "pointer"}} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
                                     {isMobile && <Td>

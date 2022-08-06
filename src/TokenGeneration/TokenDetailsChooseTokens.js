@@ -37,7 +37,7 @@ export const TokenDetailsChooseToken = () => {
     const toast = useToast()
     const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const { user } = useContext(AppContext)
+    const { user,doctors,doctor } = useContext(AppContext)
     const [reasons, setReasons] = useState([])
     const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
@@ -56,12 +56,12 @@ export const TokenDetailsChooseToken = () => {
             setReasons(response)
         })
 
-        api.settings.fetchSettings().then((res) => {
+        api.settings.fetchSettings({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
 
-        api.book.decideSlots().then((res) => {
+        api.book.decideSlots({doctor}).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             console.log(response)
@@ -76,7 +76,7 @@ export const TokenDetailsChooseToken = () => {
         if (e.target.value != "W") {
             setIsLoading(true)
             setToken(prev => ({ ...prev, "slot": e.target.value }))
-            api.book.fetchTokens({ slot: e.target.value }).then((res) => {
+            api.book.fetchTokens({ slot: e.target.value, doctor }).then((res) => {
                 setIsLoading(false)
                 const response = JSON.parse(res.data).result
                 console.log(response)
@@ -110,7 +110,7 @@ export const TokenDetailsChooseToken = () => {
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             console.log(token)
             setIsLoading(true)
-            api.book.generateToken({ token: location.state.token }).then((res) => {
+            api.book.generateToken({ token: location.state.token, doctors }).then((res) => {
                 const response = JSON.parse(res.data)
                 if (response.message != "") {
                     setIsLoading(false)
@@ -119,7 +119,7 @@ export const TokenDetailsChooseToken = () => {
                 }
                 else {
                     setIsLoading(false)
-                    setTokenNo(`${response.slot}-${response.tokenNo}`)
+                    setTokenNo(`${response.initials}-${response.tokenNo}`)
                     if (token.slot != "W") {
                         const start = new Date(), end = new Date()
 
@@ -193,7 +193,8 @@ export const TokenDetailsChooseToken = () => {
 
                 {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                        <Heading fontSize={'2xl'}>Book a Token</Heading>
+                         <Heading m={2} size={"md"}>{doctors.find((doc)=>doc.doctorID==doctor).name}</Heading>
+                        <Heading fontSize={'2xl'} color="red">Book a Token</Heading>
                         <Box
                             rounded={'lg'}
                             bg={'white'}

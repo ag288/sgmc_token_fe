@@ -13,8 +13,9 @@ import {
     Input,
     Text,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import api from '../../api';
+import { AppContext } from '../../App';
 //ask for file number and no of days after which review is required
 
 
@@ -24,7 +25,7 @@ export const CancelModal = (props) => {
     const { item, isOpen, onClose, setIsLoading } = props
     const [reason, setReason] = useState("")
     const toast = useToast()
-
+    const {doctor} = useContext(AppContext)
 
   
 
@@ -36,7 +37,7 @@ export const CancelModal = (props) => {
 
     function cancel() {
             setIsLoading(true)
-            api.token.cancelToken({ item, reason }).then((res) => {
+            api.token.cancelToken({ item, reason, doctor }).then((res) => {
                 setIsLoading(false)
                 toast({
                     title: 'Cancelled token successfully',
@@ -69,7 +70,7 @@ export const CancelModal = (props) => {
                 <ModalHeader>Warning!</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                  <Text mb={4} fontSize={"lg"}>{`You are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`}</Text>
+                  <Text mb={4} fontSize={"lg"}>{`You are going to cancel token ${item.initials}-${item.tokenNumber} of ${item.name}`}</Text>
                     <FormControl>
                         <FormLabel>Reason for cancellation</FormLabel>
                             <Input type="text" value={reason} onChange={handleReasonChange} />

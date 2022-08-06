@@ -3,12 +3,20 @@
 export default function tokenApi(fetch, baseUrl) {
 
     return {
-        fetchDataForExcel() {
-            return fetch(`${baseUrl}/excel`)
+        fetchDataForExcel(data) {
+            return fetch.post(`${baseUrl}/excel`,{data})
         },
 
-        fetchMorningList() {
-            return fetch(`${baseUrl}/fetch_morning`)
+        fetchDoctors() {
+            return fetch(`${baseUrl}/doctors`)
+        },
+
+        fetchDuplicatePatients() {
+            return fetch(`${baseUrl}/duplicate-patients`)
+        },
+
+        fetchMorningList(data) {
+            return fetch.post(`${baseUrl}/fetch_morning`,{data})
         },
 
         fetchAfternoonList() {
@@ -22,14 +30,14 @@ export default function tokenApi(fetch, baseUrl) {
         fetchLastToken() {
             return fetch(`${baseUrl}/fetch_last`)
         },
-        fetchCurrent() {
-            return fetch(`${baseUrl}/fetch_current`)
+        fetchCurrent(data) {
+            return fetch.post(`${baseUrl}/fetch_current`,{data})
         },
         cancelToken(data) {
             return fetch.post(`${baseUrl}/cancel`,{data})
         },
-        setAsCompleted() {
-            return fetch.post(`${baseUrl}/completed`)
+        setAsCompleted(data) {
+            return fetch.post(`${baseUrl}/completed`,{data})
         },
         setAsArrived(data) {
             return fetch.post(`${baseUrl}/arrived`,{data})

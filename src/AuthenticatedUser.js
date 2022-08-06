@@ -10,6 +10,7 @@ import { TokenDetailsForReviewChooseToken } from './ReviewBooking/TokenDetailsCh
 import { useContext } from 'react';
 import { AppContext } from './App';
 import { PendingReviews } from './ReviewBooking/PendingReviews';
+import { DuplicatePatients } from './DuplicatePatients';
 
 function AuthenticatedUser() {
 
@@ -26,6 +27,7 @@ function AuthenticatedUser() {
           <Route path="/pending-reviews" element={<PendingReviews />}></Route>
           <Route path="/review-list" element={< ReviewList />} />
           <Route path="/review-details" element={< TokenDetailsForReviewChooseToken />} />
+          <Route path="/duplicates" element={<DuplicatePatients />} />
           <Route path="*" element={<PatientList />} /></>}
       </Routes>
     </BrowserRouter>

@@ -10,9 +10,10 @@ import {
     useToast,
     Divider
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { scryRenderedComponentsWithType } from 'react-dom/test-utils'
 import api from '../api'
+import { AppContext } from '../App'
 
 
 
@@ -20,35 +21,35 @@ export const GeneralSettings = () => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [settings, setSettings] = useState({})
-    const [max, setMax] = useState([])
+   // const [max, setMax] = useState([])
     const toast = useToast()
     const tokensEnd = new Date(new Date().setHours(20, 0, 0));  // disable update settings button till 8pm in evening
     const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update settings button after 6am in morning
-    const today=new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
-
+    const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
+    const { doctor } = useContext(AppContext)
     useEffect(() => {
 
-        api.settings.fetchSettings().then((res) => {
+        api.settings.fetchSettings({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
         //setSettings(setting)
-        api.token.fetchLastToken().then((res) => {
-            const response = JSON.parse(res.data).result
-            console.log(response)
-            setMax(response)
-            if (response.length == 0)
-                setMax([{ slot: "A", tokenNumber: 0 }, { slot: "B", tokenNumber: 0 }])
-            else if (response.length == 1) {
-                if (response[0].slot == "A")
-                    setMax(prev => ([...prev, { slot: "B", tokenNumber: 0 }]))
-                else
-                    setMax(prev => ([...prev, { slot: "A", tokenNumber: 0 }]))
-            }
-            //  console.log()
-        })
+        // api.token.fetchLastToken().then((res) => {
+        //     const response = JSON.parse(res.data).result
+        //     console.log(response)
+        //     setMax(response)
+        //     if (response.length == 0)
+        //         setMax([{ slot: "A", tokenNumber: 0 }, { slot: "B", tokenNumber: 0 }])
+        //     else if (response.length == 1) {
+        //         if (response[0].slot == "A")
+        //             setMax(prev => ([...prev, { slot: "B", tokenNumber: 0 }]))
+        //         else
+        //             setMax(prev => ([...prev, { slot: "A", tokenNumber: 0 }]))
+        //     }
+        //     //  console.log()
+        // })
 
-    }, []);
+    }, [doctor]);
 
 
     function handleChange(e) {
@@ -100,13 +101,13 @@ export const GeneralSettings = () => {
     }
 
     function updateSettings() {
-        if (settings.morn_max_tokens < max.find(item => item.slot == "A").tokenNumber)
-            alert("Please enter the correct value for maximum morning tokens!")
-        else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber)
-            alert("Please enter the correct value for maximum afternoon tokens!")
-        else {
+        // if (settings.morn_max_tokens < max.find(item => item.slot == "A").tokenNumber)
+        //     alert("Please enter the correct value for maximum morning tokens!")
+        // else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber)
+        //     alert("Please enter the correct value for maximum afternoon tokens!")
+        // else {
             setIsLoading(true)
-            api.settings.updateSettings({ settings }).then((res) => {
+            api.settings.updateSettings({ settings, doctor }).then((res) => {
                 setIsLoading(false)
                 toast({
                     title: 'Updated settings successfully',
@@ -128,7 +129,7 @@ export const GeneralSettings = () => {
                 })
                 window.location.reload()
             })
-        }
+      //  }
     }
 
 
@@ -216,8 +217,8 @@ export const GeneralSettings = () => {
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>
-                
-                    <Button isLoading={isLoading} isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
+
+                    <Button isLoading={isLoading} /*isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())}*/ colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
             </Box>
         </>

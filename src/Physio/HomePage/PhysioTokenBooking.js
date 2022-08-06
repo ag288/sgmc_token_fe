@@ -44,6 +44,7 @@ export const PhysioTokenBooking = () => {
         token: location.state.token.token,
         reason: location.state.token.reason
     })
+    const {doctor} = useContext(AppContext)
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -55,13 +56,13 @@ export const PhysioTokenBooking = () => {
         //     setSettings(response[0])
         // })
 
-        api.book.decideSlots().then((res) => {
+        api.book.decideSlots({doctor}).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             setSlots(response)
         })
 
-        api.book.fetchTokens({ slot: location.state.token.slot }).then((res) => {
+        api.book.fetchTokens({ slot: location.state.token.slot, doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             setTokens(response)
@@ -73,7 +74,7 @@ export const PhysioTokenBooking = () => {
     function handleSlotChange(e) {
         setIsLoading(true)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
-        api.book.fetchTokens({ slot: e.target.value }).then((res) => {
+        api.book.fetchTokens({ slot: e.target.value, doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             setTokens(response)

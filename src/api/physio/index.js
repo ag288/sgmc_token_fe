@@ -4,8 +4,8 @@ export default function physioApi(fetch, baseUrl) {
 
     return {
 
-        fetchSlotsforPhysio() {
-            return fetch(`${baseUrl}/list`)
+        fetchSlotsforPhysio(data) {
+            return fetch.post(`${baseUrl}/list`,{data})
         },
 
     }

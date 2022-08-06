@@ -51,7 +51,7 @@ export const TokenDetailsForReviewChooseToken = () => {
     const [maxdate, setMaxDate] = useState(new Date(today.setDate(today.getDate() + parseInt(location.state?.settings.review_date_limit))).toISOString().split('T')[0])
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { user } = useContext(AppContext)
+    const { user, doctor,doctors } = useContext(AppContext)
     //let maxdate=30
     useEffect(() => {
 
@@ -67,7 +67,7 @@ export const TokenDetailsForReviewChooseToken = () => {
         //     setReasons(response)
         // })
 
-        api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id }).then((res) => {
+        api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id, doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             if (response.length != 0) {
@@ -85,7 +85,7 @@ export const TokenDetailsForReviewChooseToken = () => {
     function handleSlotChange(e) {
         setIsLoading(true)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
-        api.review.fetchTokensReview({ slot: e.target.value, date: token.date }).then((res) => {
+        api.review.fetchTokensReview({ slot: e.target.value, date: token.date, doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             setTokens(response)
@@ -107,7 +107,7 @@ export const TokenDetailsForReviewChooseToken = () => {
 
         const dateValue = e.target.value
         // setIsLoading(true)
-        api.review.decideSlotsReview({ date: e.target.value }).then((res) => {
+        api.review.decideSlotsReview({ date: e.target.value, doctor }).then((res) => {
             //  setIsLoading(false)
             const response = JSON.parse(res.data)
             if (!response.result) {
@@ -136,7 +136,7 @@ export const TokenDetailsForReviewChooseToken = () => {
                     alert(response.error)
                 else {
                     setIsLoading(false)
-                    setTokenNo(`${response.slot}-${response.tokenNo}`)
+                    setTokenNo(`${response.initials}-${response.tokenNo}`)
                     setTime(response.time)
                     onOpen()
                 }
@@ -157,6 +157,7 @@ export const TokenDetailsForReviewChooseToken = () => {
 
                 {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
+                        <Heading m={2} size={"md"}>{doctors.find((doc)=>doc.doctorID==doctor).name}</Heading>
                         <Heading color="crimson" fontSize={'2xl'}>Book a Future Review</Heading>
                         <Box
                             rounded={'lg'}

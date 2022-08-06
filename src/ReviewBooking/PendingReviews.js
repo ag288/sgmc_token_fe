@@ -1,9 +1,10 @@
 import { ArrowForwardIcon, ExternalLinkIcon, HamburgerIcon, } from "@chakra-ui/icons";
 import { Box, Heading, Text, useMediaQuery, HStack, VStack, IconButton, Table, Thead, Tr, Th, Tbody, Td, Button, Stack, Flex, Icon } from "@chakra-ui/react"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
+import { AppContext } from "../App";
 
 
 export const PendingReviews = () => {
@@ -15,6 +16,7 @@ export const PendingReviews = () => {
         "Other": "O"
     }
     const navigate = useNavigate()
+    const { doctor, setDoctor } = useContext(AppContext)
     useEffect(() => {
 
         api.review.fetchRescheduleReviewList().then((res) => {
@@ -25,7 +27,11 @@ export const PendingReviews = () => {
 
     }, []);
 
-
+    function handleClick(item) {
+        setDoctor(item.doctorID)
+        localStorage.setItem("doctor", item.doctorID)
+        navigate("/book", { state: { item } })
+    }
     return (
 
         <Flex
@@ -50,6 +56,7 @@ export const PendingReviews = () => {
                                     <Tr>
                                         <Th>Name</Th>
                                         <Th>Phone</Th>
+                                        <Th>Doctor</Th>
                                         <Th>Type</Th>
                                         <Th>Est. Time</Th>
                                         <Th></Th>
@@ -61,13 +68,14 @@ export const PendingReviews = () => {
                                             <Td >{item.name}</Td>
                                             <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
                                             </Td>
+                                            <Td>{item.doctor}</Td>
                                             <Td>{types[item.type]}</Td>
                                             <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
                                             <Td>
-                                                { isLaptop && <Button onClick={() => navigate("/book", { state: { item } })}>Book Token</Button>}
-                                                { isMobile && <ExternalLinkIcon onClick={() => navigate("/book", { state: { item } })}/>}
-                                                </Td>
-  </Tr>
+                                                {isLaptop && <Button onClick={() => handleClick(item)}>Book Token</Button>}
+                                                {isMobile && <ExternalLinkIcon onClick={() => handleClick(item)} />}
+                                            </Td>
+                                        </Tr>
                                     )
                                     }
                                 </Tbody>

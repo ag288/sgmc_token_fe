@@ -31,7 +31,7 @@ import { BellWithBadge } from '../../components/BellWithBadge';
 
 export const PatientList = (props) => {
 
-  const { user, setUser } = useContext(AppContext)
+  const { user, setUser, setDoctor, doctor, doctors } = useContext(AppContext)
   const [current, setCurrent] = useState(0)
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
@@ -50,7 +50,7 @@ export const PatientList = (props) => {
     let flag = 0
 
 
-    api.token.fetchMorningList().then((res) => {
+    api.token.fetchMorningList({doctor}).then((res) => {
       const response = JSON.parse(res.data).result
 
       for (var i = 0; i < response[0].length; i++) {
@@ -95,13 +95,22 @@ export const PatientList = (props) => {
     //})
 
 
-  }, []);
+  }, [doctor]);
 
 
   let navigate = useNavigate()
 
   function viewPendingReviews() {
     navigate("/pending-reviews")
+  }
+
+  function viewDuplicatePatients() {
+    navigate("/duplicates")
+  }
+
+  function handleChange(e){
+setDoctor(e.target.value)
+localStorage.setItem("doctor", e.target.value)
   }
 
   return (
@@ -127,19 +136,20 @@ export const PatientList = (props) => {
                 </Menu>
               </Box>
               {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={data} />}
+              {user.userID == 2 && <BellWithBadge onClick={viewDuplicatePatients} count={1} />}
             </HStack>
-            {/* <Box align='center'>
-            <Select width="30%" bg="white">
-              <option>Dr. Achamma Mathappan</option>
-              <option>Dr. Thomas M. George</option>
-            </Select></Box> */}
+            <Box align='center'>
+              <Select size={"lg"} value={doctor} onChange={handleChange} width="30%" bg="white">
+                {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
+       
+              </Select></Box>
             <CurrentPatient current={current} setCurrent={setCurrent} />
             <MorningList loading={isLoading} setIsLoading={setIsLoading} mornlist={mornlist} current={current} setCurrent={setCurrent} />
-            
+
             <AfternoonList loading={isLoading} setIsLoading={setIsLoading} aftlist={aftlist} current={current} setCurrent={setCurrent} />
             {/* <WalkInList loading={isLoading} setIsLoading={setIsLoading} walklist={walklist} current={current} setCurrent={setCurrent} /> */}
 
-            </Stack>
+          </Stack>
         }
 
       </Flex>

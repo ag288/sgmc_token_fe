@@ -20,9 +20,10 @@ import {
     RadioGroup,
     Radio
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import { scryRenderedComponentsWithType } from 'react-dom/test-utils'
 import api from '../api'
+import { AppContext } from '../App'
 
 
 
@@ -35,13 +36,14 @@ export const WorkingHourSettings = () => {
     const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update button after 6am in morning
     const { isOpen, onOpen, onClose } = useDisclosure()
     const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
+    const {doctor} = useContext(AppContext)
 
     useEffect(() => {
-        api.settings.fetchSettings().then((res) => {
+        api.settings.fetchSettings({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
-    }, []);
+    }, [doctor]);
 
 
     function handleFreqChange(e) {
@@ -70,7 +72,7 @@ export const WorkingHourSettings = () => {
     function updateSettings() {
         onClose()
         setIsLoading(true)
-        api.settings.updateHours({ settings }).then((res) => {
+        api.settings.updateHours({ settings, doctor }).then((res) => {
             setIsLoading(false)
             toast({
                 title: 'Updated settings successfully',
@@ -127,7 +129,7 @@ export const WorkingHourSettings = () => {
                     <Divider borderColor={"gray"} orientation='horizontal' />
                 </VStack>
                 <Box mt="2%" align={"right"}>
-                    <Button isLoading={isLoading} colorScheme="blue" isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} onClick={onOpen}>Update</Button>
+                    <Button isLoading={isLoading} colorScheme="blue" /*isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())}*/ onClick={onOpen}>Update</Button>
                 </Box>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />

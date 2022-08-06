@@ -31,19 +31,21 @@ export const PatientDetails = (props) => {
     const [patients, setPatients] = useState([])
     const [settings, setSettings] = useState([])
     const [reasons, setReasons] = useState([])
+    const { doctor, setDoctor, doctors,user } = useContext(AppContext)
     let obj = {
         id: location.state && location.state.item ? location.state.item.patientID : "",
         phone: location.state && location.state.item ? location.state.item.phone.substring(2) : "",
         new_name: "",
         name: location.state && location.state.item ? location.state.item.name : "",
-        fileNumber: location.state && location.state.item ? location.state.item.fileNumber : ""
+        fileNumber: location.state && location.state.item ? location.state.item.fileNumber : "",
+        doctor: doctor
     }
     const [token, setToken] = useState(location.state && location.state.tokenObj ? { ...obj, ...location.state.tokenObj }
         : obj)
 
     useEffect(() => {
 
-        api.settings.fetchSettings().then((res) => {
+        api.settings.fetchSettings({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
             //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
@@ -64,7 +66,7 @@ export const PatientDetails = (props) => {
             })
         }
 
-        }, [])
+    }, [doctor])
 
 
     function handleNameChange(e) {
@@ -90,13 +92,28 @@ export const PatientDetails = (props) => {
 
     }
 
+    function handleDoctorChange(e) {
+        console.log(e.target.value)
+        setDoctor(e.target.value)
+        localStorage.setItem("doctor",e.target.value)
+        setToken(prev => ({ ...prev, "doctor": e.target.value }))
+    }
+
     function fetchPatients() {
 
         api.book.fetchPatients(`91${token.phone}`).then((res) => {
             const response = JSON.parse(res.data).result
-            response.push({patientID:0, name:"Add new"})
+            response.push({ patientID: 0, name: "Add new" })
             setPatients(response)
         })
+    }
+
+    function filter(doctors){
+
+        if(user.userID==3){
+            return doctors.filter((doc)=>doc.department=="Orthopedics")
+        }
+        else return doctors
     }
 
     function handleSubmit() {
@@ -128,11 +145,17 @@ export const PatientDetails = (props) => {
 
     return (
         <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
+             <Box align='center'>
+                        <Select size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
+                        {filter(doctors).map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
+                        </Select></Box>
             {availability != "" ?
                 <Heading size="md">{availability}</Heading>
                 :
                 <>
+                   
                     <Heading color="red" fontSize={'2xl'}>Book a Token</Heading>
+
                     <Box
                         rounded={'lg'}
                         bg={'white'}
@@ -152,7 +175,7 @@ export const PatientDetails = (props) => {
                                 <FormLabel>Name</FormLabel>
                                 <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
                                     {patients.map((patient) => <option key={patient.patientID}>{`${patient.name}`}</option>)}
-                                  { /* {patients.length==0 ? null : <option>Add new</option>}*/}
+                                    { /* {patients.length==0 ? null : <option>Add new</option>}*/}
                                 </Select>
                             </FormControl>
                             {

@@ -14,8 +14,8 @@ export default function bookApi(fetch, baseUrl) {
         },
 
 
-        decideSlots() {
-            return fetch(`${baseUrl}/slot`)
+        decideSlots(data) {
+            return fetch.post(`${baseUrl}/slot`, {data})
         },
 
         fetchTokens(data) {

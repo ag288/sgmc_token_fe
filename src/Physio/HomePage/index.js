@@ -17,6 +17,7 @@ import {
     Text,
     Flex,
     Stack,
+    Select,
     IconButton,
     Accordion,
     AccordionItem,
@@ -49,8 +50,9 @@ export const PhysioList = () => {
     const [slotlist, setSlotList] = useState([])
     const [free, setFree] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [availability, setAvailability] = useState("")
     const navigate = useNavigate()
-    const { user, setUser } = useContext(AppContext)
+    const { user, setUser, doctor, doctors, setDoctor } = useContext(AppContext)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     useEffect(() => {
 
@@ -62,21 +64,26 @@ export const PhysioList = () => {
 
 
         setIsLoading(true)
-        api.physio.fetchSlotsforPhysio().then((res) => {
+        api.physio.fetchSlotsforPhysio({doctor}).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data)
-            if(!(response.message))
-            setSlotList(response.result)
+            if (!(response.message))
+                setSlotList(response.result)
         })
 
-        api.token.fetchCurrent().then((res) => {
+        api.token.fetchCurrent({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             if (response.length == 0)
                 setFree(true)
         })
 
-    }, []);
+        api.settings.checkAvailability({doctor}).then((res) => {
+            const response = JSON.parse(res.data).result
+            setAvailability(response)
+        })
+
+    }, [doctor]);
 
 
     function handleChange(e, tokenNumber, timeInEst, slotNumber) {
@@ -89,6 +96,11 @@ export const PhysioList = () => {
             reason: 1
         }
         navigate("/book", { state: { tokenObj: token } })
+    }
+
+    function handleDoctorChange(e){
+setDoctor(e.target.value)
+localStorage.setItem("doctor", e.target.value)
     }
 
     return (
@@ -106,30 +118,34 @@ export const PhysioList = () => {
             {isLoading ? <FullPageSpinner /> :
 
                 <Box m={6} width="full" rounded={"lg"} bg="white">
+                    <Box m={3} align='center'>
+                        <Select width="30%" size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
+                            {doctors.filter((item)=>item.department=="Orthopedics").map((doctor) => <option value={doctor.doctorID} >{doctor.name}</option>)}
+                        </Select></Box>
+                    {free && availability =="" ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
+                        : <Box rounded="lg" m={2} textAlign={"center"} bg="red.300"><Text p={2} fontSize={"lg"}>The Doctor is not available!</Text></Box>}
+                   { availability == "" ? <Box p={5} >
+                       {slotlist.map((slot, index) => <Box align={"center"} key={index}>
 
-                    {free ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
-                        : <Box rounded="lg" m={2} textAlign={"center"} bg="red.300"><Text p={2} fontSize={"lg"}>The Doctor is busy!</Text></Box>} 
-                    <Box p={5} >
-                        {slotlist.map((slot, index) => <Box align={"center"} key={index}>
-                         
-                                    <Box my={5} fontWeight={"bold"}>
-                                        {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
-                                    </Box>
-                          {isMobile && <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
-                            
-                           {slotlist[index].tokens.map((token) => <GridItem><Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button></GridItem>)}
-                                    
-                           </Grid>}
+                            <Box my={5} fontWeight={"bold"}>
+                                {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
+                            </Box>
+                            {isMobile && <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
 
-                           {isLaptop &&<VStack> <HStack alignItems="center">
-                            {slotlist[index].tokens.map((token) => <Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button>)}
-                            </HStack> </VStack>           
+                                {slotlist[index].tokens.map((token) => <GridItem><Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button></GridItem>)}
+
+                            </Grid>}
+
+                            {isLaptop && <VStack> <HStack alignItems="center">
+                                {slotlist[index].tokens.map((token) => <Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button>)}
+                            </HStack> </VStack>
+                            }
+                        </Box>)} 
+
+                    </Box> : null}
+
+                </Box>
                         }
-                        </Box>)}
-
-                    </Box>
-                </Box> 
-            }
 
         </Flex>
     )

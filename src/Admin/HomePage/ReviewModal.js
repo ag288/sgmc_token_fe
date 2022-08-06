@@ -23,8 +23,9 @@ import {
     InputGroup,
     InputRightAddon,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import api from '../../api';
+import { AppContext } from '../../App';
 //ask for file number and no of days after which review is required
 
 
@@ -37,7 +38,7 @@ export const ReviewModal = (props) => {
         days: 0
     })
     const toast = useToast()
-
+    const {doctor} = useContext(AppContext)
 
     function handleFileChange(e) {
         setInfo(prev => ({ ...prev, "file": e.target.value }))
@@ -56,7 +57,7 @@ export const ReviewModal = (props) => {
             position: "top"
         })
         setIsLoading(true)
-        api.token.callNewToken({ item, current }).then((res) => {
+        api.token.callNewToken({ item, current,doctor }).then((res) => {
             // setCurrent(item)
             setIsLoading(false)
             window.location.reload()
@@ -74,7 +75,7 @@ export const ReviewModal = (props) => {
     function completed() {
 
         setIsLoading(true)
-        api.token.setAsCompleted().then((res) => {
+        api.token.setAsCompleted({doctor}).then((res) => {
             setIsLoading(false)
             window.location.reload()
         }
@@ -84,9 +85,9 @@ export const ReviewModal = (props) => {
 
     function saveReview() {
         onClose()
-        let id = origin == "previous" ? item.patientID : current.patientID
+        let id = origin == "previous" ? item : current
         if (!(info.file == "" && info.days == 0)) {
-            api.token.saveReview({ id: id, info }).then((res) => {
+            api.token.saveReview({ id: id, info, doctor }).then((res) => {
                 //window.location.reload()
                 toast({
                     title: "Review saved",

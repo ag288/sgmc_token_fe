@@ -22,12 +22,13 @@ import {
 import firebase from '../utils/firebase'
 import { useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import api from '../api';
 import {
     Timer
 } from '../utils/timer'
+import { AppContext } from '../App'
 export const BookingWithOtp = () => {
     let navigate = useNavigate()
     const [otp, setOtp] = useState("")
@@ -37,10 +38,11 @@ export const BookingWithOtp = () => {
     const [token, setToken] = useState({
         phone: ""
     })
+    const {doctor} = useContext(AppContext)
 
     useEffect(() => {
 
-        api.settings.checkAvailability().then((res) => {
+        api.settings.checkAvailability({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             setSettings(response)

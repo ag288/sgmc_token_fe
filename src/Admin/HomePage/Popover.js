@@ -27,7 +27,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const [origin, setOrigin] = useState("")
     const open = () => setOpened(!opened)
     const close = () => setOpened(false)
-    const { user } = useContext(AppContext)
+    const { user,doctor } = useContext(AppContext)
     const toast = useToast()
     const navigate = useNavigate()
     const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
@@ -54,7 +54,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
             position: "top"
         })
         setIsLoading(true)
-        api.token.callNewToken({ current, item }).then((res) => {
+        api.token.callNewToken({ current, item,doctor }).then((res) => {
             // setCurrent(item)
             setIsLoading(false)
             window.location.reload()
@@ -72,7 +72,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     function onCompleted() {
         const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
         if (confirm) {
-             completed()
+            // completed()
             setOrigin("completed")
             onOpenReview()
         }
@@ -92,37 +92,6 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     function onPrevious() {
         setOrigin("previous")
         onOpenReview()
-    }
-
-    function cancel() {
-        let flag = window.confirm(`WARNING!!\n\nYou are going to cancel token ${item.slot}-${item.tokenNumber} of ${item.name}`)
-        if (flag) {
-            setIsLoading(true)
-            api.token.cancelToken({ item }).then((res) => {
-                const response = JSON.parse(res.data)
-                setIsLoading(false)
-                toast({
-                    title: 'Cancelled token successfully',
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: false,
-                    position: "top"
-                })
-                window.location.reload()
-            }).catch((err) => {
-                toast({
-                    title: 'Something went wrong',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: false,
-                    position: "top"
-                })
-            })
-        }
-
-        else {
-            close()
-        }
     }
 
 
