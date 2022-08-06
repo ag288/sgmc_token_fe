@@ -25,7 +25,7 @@ import { logout } from '../../utils/tokenFunctions';
 import { FullPageSpinner } from '../../utils/spinner';
 import { ExportToExcel } from './ExportToExcel';
 import { WalkInList } from './WalkInList';
-import { BellWithBadge } from '../../components/BellWithBadge';
+import { BellWithBadge, DuplicatePatientsNotif } from '../../components/BellWithBadge';
 
 // List of staff profiles pending approval
 
@@ -136,7 +136,7 @@ localStorage.setItem("doctor", e.target.value)
                 </Menu>
               </Box>
               {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={data} />}
-              {user.userID == 2 && <BellWithBadge onClick={viewDuplicatePatients} count={1} />}
+              {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={1} />}
             </HStack>
             <Box align='center'>
               <Select size={"lg"} value={doctor} onChange={handleChange} width="30%" bg="white">
