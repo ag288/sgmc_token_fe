@@ -95,7 +95,7 @@ export const DuplicatePatients = () => {
                 <>
                     {isLaptop && <>
 
-                        <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
+                        <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton>
 
                         <Stack py={12} px={2} mx="auto" width="full">
                         <Box align='center'>
@@ -145,8 +145,8 @@ export const DuplicatePatients = () => {
                     </>}
                     {isMobile &&
                         <Stack width="full" alignItems="baseline" py={2} mx="2">
-                            <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
-                            <Heading size="md">Booked Tokens</Heading>
+                            <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton>
+                            <Heading size="md">Duplicate Patients</Heading>
                             {reviewlist.map((item, index) =>
                                 <><Heading size="md" color="red" pt={3}>{item.fileNumber}</Heading>
                                     {reviewlist[index].patients.map((review) => <Box
