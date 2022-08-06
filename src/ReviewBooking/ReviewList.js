@@ -99,7 +99,7 @@ export const ReviewList = () => {
 
                         <Stack py={12} px={2} mx="auto" width="auto">
                         <Box align='center'>
-                        <Select width="30%" size={"lg"} value={doctor} onChange={handleChange} bg="white">
+                        <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box>
                             <Heading size="md">Booked Tokens</Heading>

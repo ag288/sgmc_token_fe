@@ -2,6 +2,7 @@ import {
     Flex,
     IconButton,
     Stack,
+    useMediaQuery,
 Box, Select
 } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
@@ -19,7 +20,7 @@ export const Settings = () => {
 
     let navigate = useNavigate()
     const {doctor,doctors, setDoctor} = useContext(AppContext)
-
+    const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     function handleChange(e){
         setDoctor(e.target.value)
         localStorage.setItem("doctor", e.target.value)
@@ -31,7 +32,7 @@ export const Settings = () => {
                 <Stack mx={'auto'} spacing="2%" px={3} width="full">
                     <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
                     <Box align='center'>
-                        <Select width="30%" size={"lg"} value={doctor} onChange={handleChange} bg="white">
+                        <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box>
                     <WorkingHourSettings />
