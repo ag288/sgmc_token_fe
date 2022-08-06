@@ -164,10 +164,12 @@ export const DuplicatePatients = () => {
                                                 </HStack>
                                                 <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
                                             </HStack>
-                                           
                                         </VStack>
                                     </Box>)
-                                    }</>)}
+                                    }
+                                    <HStack mt={2}>
+                            <Button colorScheme={"blue"}>Merge</Button>
+                            <Button colorScheme={"blue"}>Keep separate</Button></HStack></>)}
                         </Stack>
                     }
 
