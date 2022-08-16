@@ -16,9 +16,10 @@ import {
     EditableInput,
     Text,
     VStack,
-    InputGroup
+    InputGroup,
+    IconButton
 } from '@chakra-ui/react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import api from '../../api';
 import { ButtonPopoverReception } from '../../Reception/Home/PopoverReception';
 import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
@@ -26,10 +27,13 @@ import { useMediaQuery } from '@chakra-ui/react'
 import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 import { isContentEditable } from '@testing-library/user-event/dist/utils';
+import { FaPrint } from 'react-icons/fa';
+import { ComponentToPrint } from './TokenPrint';
+import ReactToPrint from 'react-to-print'
 
 // List of staff profiles pending approval
 
-export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCurrent }) => {
+export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCurrent, doctor }) => {
 
     const morningEnd = new Date(new Date().setHours(14, 0, 0));
     const [hideAfternoon, setHideAfternoon] = useState(
@@ -43,7 +47,7 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
         "First time": 'F',
         "Other": "O"
     }
-
+let componentRef= useRef()
 
     useEffect(() => {
 
@@ -115,19 +119,20 @@ console.log(aftlist)
                                         <Th>Phone</Th>
                                         <Th>Token Time</Th>
                                         <Th>In</Th>
-                                        <Th>Out</Th></>}
+                                        <Th>Out</Th>
+                                        <Th></Th></>}
                                 </Tr>
                             </Thead>
                             <Tbody>
                                 {filterList(aftlist, showCompleted).map((item, index) =>
                                     <Tr key={index} bg={findBg(item)}>
-                                        <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
+                                        <Td><ButtonPopover doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                         <Td >{`${item.initials}-${item.tokenNumber}`}</Td>
                                         {isMobile && <Td>{types[item.type]}</Td>}
                                         <Td style={{cursor : "pointer"}} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
                                         {isMobile && <Td>
                                             <VStack>
-                                                <DetailsPopover current={current} setCurrent={setCurrent} item={item} />
+                                                <DetailsPopover doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
                                                 <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
                                                 {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
                                             </VStack>
@@ -152,8 +157,14 @@ console.log(aftlist)
                                             <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
                                                 .toLocaleTimeString('en-US',
                                                     { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                            </Td></>}
-
+                                            </Td>  <Td>  <ReactToPrint
+                                        trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
+                                        content={() => componentRef}
+                                    />
+                                        <div style={{ display: "none" }}>
+                                            <ComponentToPrint ref={(el) => (componentRef = el)} item={item} />
+                                        </div></Td></>}
+                                          
                                     </Tr>
                                 )
                                 }

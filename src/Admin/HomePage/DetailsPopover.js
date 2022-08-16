@@ -18,7 +18,7 @@ import { diffMinutes } from '../../utils/tokenFunctions';
 // confirm deletion of staff profile
 
 
-export const DetailsPopover = ({ item, current, setCurrent }) => {
+export const DetailsPopover = ({ item, current, setCurrent, doctor }) => {
 
     const [isOpen, setIsOpen] = useState(false)
     //const [file, setFile] = useState(item.fileNumber)

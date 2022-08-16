@@ -23,8 +23,8 @@ export default function reviewApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/list`,{data})
         },
 
-        fetchRescheduleReviewList() {
-            return fetch(`${baseUrl}/reschedule-list`)
+        fetchRescheduleReviewList(data) {
+            return fetch.post(`${baseUrl}/reschedule-list`,{data})
         },
 
         deleteReview(data) {

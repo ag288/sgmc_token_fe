@@ -64,6 +64,8 @@ export default function tokenApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/save-review`,{data})
         },
 
-        
+        fetchAlerts(){
+            return fetch(`${baseUrl}/alerts`)
+        }
     }
 }

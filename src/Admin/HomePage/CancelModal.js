@@ -22,10 +22,10 @@ import { AppContext } from '../../App';
 
 export const CancelModal = (props) => {
 
-    const { item, isOpen, onClose, setIsLoading } = props
+    const { item, isOpen, onClose, setIsLoading,doctor } = props
     const [reason, setReason] = useState("")
     const toast = useToast()
-    const {doctor} = useContext(AppContext)
+   // const {doctor} = useContext(AppContext)
 
   
 

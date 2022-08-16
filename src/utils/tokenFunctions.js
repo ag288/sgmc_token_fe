@@ -27,6 +27,24 @@ export function filterList(list, showCompleted) {
     })
 }
 
+export function filterDoctor(list, user) {
+    console.log(list)
+    return list.filter(item => {
+        if (user == 1) {
+            if(item.doctorID == 1)
+            return true
+        }
+        else {
+            if (user == 3) {
+                return item.department == "Orthopedics"
+            }
+
+            else return true
+        }
+
+    })
+}
+
 export function DiffMinutes({ time1, time2, item }) {
 
     const start = new Date("2020-01-01 " + time1)

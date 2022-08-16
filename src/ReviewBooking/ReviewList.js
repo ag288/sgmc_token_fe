@@ -22,7 +22,12 @@ import {
     Button,
     Icon,
     Divider,
-    Select
+    Select,
+    Tabs,
+    TabList,
+    TabPanels,
+    TabPanel,
+    Tab
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import api from '../api';
@@ -32,6 +37,7 @@ import { FullPageSpinner } from '../utils/spinner';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { useMediaQuery } from '@chakra-ui/react'
 import { AppContext } from '../App';
+import { filterDoctor } from '../utils/tokenFunctions';
 
 // List of staff profiles pending approval
 
@@ -41,7 +47,7 @@ export const ReviewList = () => {
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const toast = useToast()
-    const {doctor, doctors, setDoctor} = useContext(AppContext)
+    const {doctor, doctors, setDoctor, user, index, setIndex} = useContext(AppContext)
 
     useEffect(() => {
 
@@ -98,10 +104,20 @@ export const ReviewList = () => {
                         <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
 
                         <Stack py={12} px={2} mx="auto" width="auto">
-                        <Box align='center'>
+                        {/* <Box align='center'>
                         <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
-                        </Select></Box>
+                        </Select></Box> */}
+                          <Tabs m={2} defaultIndex={index} onChange={(index) => {setDoctor(doctors[index].doctorID)
+                        setIndex(index)}} variant="solid-rounded">
+                        <TabList>
+                            {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
+                        </TabList>
+
+                        <TabPanels>
+                            {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+                                <> 
+
                             <Heading size="md">Booked Tokens</Heading>
                             <Box
                                 rounded={'lg'}
@@ -143,7 +159,10 @@ export const ReviewList = () => {
                                         </Tbody>
                                     </Table></>
                                 )}
-                            </Box>
+                            </Box></>
+                            </TabPanel>)}
+                        </TabPanels>
+                    </Tabs>
                         </Stack>
                     </>}
                     {isMobile &&

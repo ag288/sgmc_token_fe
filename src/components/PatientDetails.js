@@ -22,30 +22,30 @@ import { FaEllipsisV, FaHome } from 'react-icons/fa'
 import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import { AppContext } from '../App';
-import { logout } from '../utils/tokenFunctions';
+import { filterDoctor, logout } from '../utils/tokenFunctions';
 
 export const PatientDetails = (props) => {
     let navigate = useNavigate()
     let location = useLocation()
-    const { availability, navigateTo } = props
+    const { availability, navigateTo, doctor } = props
     const [patients, setPatients] = useState([])
     const [settings, setSettings] = useState([])
     const [reasons, setReasons] = useState([])
-    const { doctor, setDoctor, doctors,user } = useContext(AppContext)
+    const { setDoctor, doctors,user } = useContext(AppContext)
     let obj = {
         id: location.state && location.state.item ? location.state.item.patientID : "",
         phone: location.state && location.state.item ? location.state.item.phone.substring(2) : "",
         new_name: "",
         name: location.state && location.state.item ? location.state.item.name : "",
         fileNumber: location.state && location.state.item ? location.state.item.fileNumber : "",
-        doctor: doctor
+        doctor: doctor.doctorID
     }
     const [token, setToken] = useState(location.state && location.state.tokenObj ? { ...obj, ...location.state.tokenObj }
         : obj)
 
     useEffect(() => {
 
-        api.settings.fetchSettings({doctor}).then((res) => {
+        api.settings.fetchSettings({doctor : doctor.doctorID}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
             //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
@@ -108,13 +108,13 @@ export const PatientDetails = (props) => {
         })
     }
 
-    function filter(doctors){
+    // function filter(doctors){
 
-        if(user.userID==3){
-            return doctors.filter((doc)=>doc.department=="Orthopedics")
-        }
-        else return doctors
-    }
+    //     if(user.userID==3){
+    //         return doctors.filter((doc)=>doc.department=="Orthopedics")
+    //     }
+    //     else return doctors
+    // }
 
     function handleSubmit() {
         console.log(token)
@@ -122,7 +122,7 @@ export const PatientDetails = (props) => {
             alert("Phone number must be 10 digits!!")
         }
         else {
-            if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != "")) {
+            if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != null && token.fileNumber != "" )) {
                 if (token.new_name == "") {
 
 
@@ -131,9 +131,21 @@ export const PatientDetails = (props) => {
                 else {
                     api.book.createPatient({ token }).then((res) => {
                         const response = JSON.parse(res.data).result
+                        const message = JSON.parse(res.data).message
                         console.log(response)
+                        if(response.message==""){
                         setToken(prev => ({ ...prev, "id": response }))
                         navigate(navigateTo, { state: { token, id: response, settings, reasons } })
+                        }
+                        else 
+                        {
+                            let msg=`${message}\nThe following patients were found with this file number:\n`
+                            for(var i=0;i<response.length;i++){
+                                msg+=`${i+1}. ${response[i].name}\n}`
+                            }
+                            msg+="\n Do you want to merge the following patients?"
+                            const merge = window.confirm(msg)
+                        }
                     })
                 }
             }
@@ -144,11 +156,11 @@ export const PatientDetails = (props) => {
     }
 
     return (
-        <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-             <Box align='center'>
+        <Stack mx={'auto'} width="full" spacing="2%" py={12} px={6} >
+             {/* <Box align='center'>
                         <Select size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
-                        {filter(doctors).map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
-                        </Select></Box>
+                        {filterDoctor(doctors, user.userID).map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
+                        </Select></Box> */}
             {availability != "" ?
                 <Heading size="md">{availability}</Heading>
                 :

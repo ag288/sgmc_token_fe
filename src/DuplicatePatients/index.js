@@ -22,7 +22,8 @@ import {
     Button,
     Icon,
     Divider,
-    Select
+    Select,
+    useDisclosure
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import api from '../api';
@@ -32,6 +33,7 @@ import { FullPageSpinner } from '../utils/spinner';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { useMediaQuery } from '@chakra-ui/react'
 import { AppContext } from '../App';
+import { DuplicatesModal } from './DuplicatesModal';
 
 // List of staff profiles pending approval
 
@@ -42,6 +44,7 @@ export const DuplicatePatients = () => {
     const navigate = useNavigate()
     const toast = useToast()
     const {doctor, doctors, setDoctor} = useContext(AppContext)
+    const {isOpen, onOpen, onClose} = useDisclosure()
 
     useEffect(() => {
 
@@ -95,13 +98,13 @@ export const DuplicatePatients = () => {
                 <>
                     {isLaptop && <>
 
-                        <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton>
+                        {/* <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton> */}
 
                         <Stack py={12} px={2} mx="auto" width="full">
-                        <Box align='center'>
+                        {/* <Box align='center'>
                         <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
-                        </Select></Box>
+                        </Select></Box> */}
                             <Heading size="md">Duplicate Patients</Heading>
                             <Box
                                 rounded={'lg'}
@@ -134,11 +137,14 @@ export const DuplicatePatients = () => {
                                                 </Tr>
                                             )
                                             }
+                                              <DuplicatesModal isOpen={isOpen} onClose={onClose} item={reviewlist[index].patients}/>
+                                   
                                         </Tbody>
                                     </Table>
                                     <HStack mt={2}>
-                                    <Button colorScheme={"blue"}>Merge</Button>
-                                    <Button colorScheme={"blue"}>Keep separate</Button></HStack></>
+                                    <Button colorScheme={"blue"} onClick={onOpen}>Merge</Button>
+                                    <Button colorScheme={"blue"}>Keep separate</Button></HStack>
+                                   </>
                                 )}
                             </Box>
                         </Stack>
@@ -169,7 +175,10 @@ export const DuplicatePatients = () => {
                                     }
                                     <HStack mt={2}>
                             <Button colorScheme={"blue"}>Merge</Button>
-                            <Button colorScheme={"blue"}>Keep separate</Button></HStack></>)}
+                            <Button colorScheme={"blue"}>Keep separate</Button></HStack>
+                            {/* <DuplicatesModal isOpen={isOpen} onClose={onClose} item={reviewlist[index].patients}/>
+                             */}
+                           </> )}
                         </Stack>
                     }
 

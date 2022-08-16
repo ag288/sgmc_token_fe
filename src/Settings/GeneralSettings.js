@@ -17,7 +17,7 @@ import { AppContext } from '../App'
 
 
 
-export const GeneralSettings = () => {
+export const GeneralSettings = ({doctor}) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [settings, setSettings] = useState({})
@@ -26,10 +26,10 @@ export const GeneralSettings = () => {
     const tokensEnd = new Date(new Date().setHours(20, 0, 0));  // disable update settings button till 8pm in evening
     const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update settings button after 6am in morning
     const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
-    const { doctor } = useContext(AppContext)
+  //  const { doctor } = useContext(AppContext)
     useEffect(() => {
 
-        api.settings.fetchSettings({doctor}).then((res) => {
+        api.settings.fetchSettings({doctor:doctor.doctorID}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
@@ -107,7 +107,7 @@ export const GeneralSettings = () => {
         //     alert("Please enter the correct value for maximum afternoon tokens!")
         // else {
             setIsLoading(true)
-            api.settings.updateSettings({ settings, doctor }).then((res) => {
+            api.settings.updateSettings({ settings, doctor:doctor.doctorID }).then((res) => {
                 setIsLoading(false)
                 toast({
                     title: 'Updated settings successfully',

@@ -6,11 +6,13 @@ import { PhysioList } from './Physio/HomePage';
 import { ReviewBooking } from './ReviewBooking';
 import { TokenGeneration } from './TokenGeneration';
 import { PhysioTokenBooking } from "./Physio/HomePage/PhysioTokenBooking";
+import Simple from "./components/Navbar";
 
 function PhysioUser() {
 
     return (
         <BrowserRouter>
+        <Simple/>
             <Routes>
                 <Route path="/" element={<PhysioList />} />
                 <Route path="/home" element={<PhysioList/>} />

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import {
     Button, Popover,
     PopoverTrigger,
@@ -18,31 +18,35 @@ import { ReviewModal } from './ReviewModal';
 import { AppContext } from '../../App';
 import { CancelModal } from './CancelModal';
 import { useNavigate } from 'react-router-dom';
+import { FaPrint } from 'react-icons/fa';
+import { ComponentToPrint } from './TokenPrint';
+import ReactToPrint from 'react-to-print';
 // confirm deletion of staff profile
 
 
-export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurrent }) => {
+export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurrent, doctor }) => {
 
     const [opened, setOpened] = useState(false)
     const [origin, setOrigin] = useState("")
     const open = () => setOpened(!opened)
     const close = () => setOpened(false)
-    const { user,doctor } = useContext(AppContext)
+    const { user } = useContext(AppContext)
     const toast = useToast()
     const navigate = useNavigate()
     const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
     const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
+    let componentRef = useRef(); 
 
     function onCall() {
-       if (current) {
-           setOrigin("call")
-           onOpenReview()
-       }
-       else {
-        const confirm = window.confirm(`You are going to call ${item.name}`)
-        if (confirm)
-            call()
-       }
+        if (current) {
+            setOrigin("call")
+            onOpenReview()
+        }
+        else {
+            const confirm = window.confirm(`You are going to call ${item.name}`)
+            if (confirm)
+                call()
+        }
     }
 
     function call() {
@@ -54,7 +58,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
             position: "top"
         })
         setIsLoading(true)
-        api.token.callNewToken({ current, item,doctor }).then((res) => {
+        api.token.callNewToken({ current, item, doctor }).then((res) => {
             // setCurrent(item)
             setIsLoading(false)
             window.location.reload()
@@ -100,31 +104,38 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
             <Popover trigger="click" placement="bottom-end" isOpen={opened} onClose={close} preventOverflow={true}
                 flip={true}  >
                 <PopoverTrigger>
-                    <IconButton bg="transparent"   icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
+                    <IconButton bg="transparent" icon={<HamburgerIcon />} style={{ cursor: "pointer" }} onClick={open}>
                     </IconButton>
                 </PopoverTrigger >
                 <PopoverContent>
                     <PopoverArrow />
                     <PopoverBody>
-                        {user.userID == 1 ? <HStack>
+                        <HStack>
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
                             <Button width={"sm"} isDisabled={item.status != "new"} colorScheme={"green"} onClick={onCall} >Call</Button>
                             <Button width={"sm"} isDisabled={item.status != "new"} colorScheme={"red"} onClick={onOpenCancel} >Cancel</Button>
                             <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={onCompleted} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
-                        </HStack> : null}
+                            {/* <ReactToPrint
+                            trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
+                            content={() => componentRef}
+                        />
+                         <div style={{ display: "none" }}>
+                            <ComponentToPrint ref={(el) => (componentRef = el)} item={item} />
+                        </div> */}
+                        </HStack>
                         {/* <Box align='center' mt={"2%"}>
                             <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={onPrevious} >Add review</Text>
                         </Box> */}
-                        {user.userID==2 && <Box align='center' mt={"2%"}>
-                            <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={()=>navigate("/book-review",{state : {item}})} >Add review</Text>
+                        {user.userID == 2 && <Box align='center' mt={"2%"}>
+                            <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => navigate("/book-review", { state: { item } })} >Add review</Text>
                         </Box>}
                     </PopoverBody>
                 </PopoverContent>
             </Popover >
-            <ReviewModal isOpen={isOpenReview} onClose={onCloseReview} item={item} current={current} isLoading={isLoading}
+            <ReviewModal isOpen={isOpenReview} onClose={onCloseReview} item={item} doctor={doctor} current={current} isLoading={isLoading}
                 setIsLoading={setIsLoading} origin={origin} />
-            <CancelModal isOpen={isOpenCancel} onClose={onCloseCancel} item={item} setIsLoading={setIsLoading} />
+            <CancelModal isOpen={isOpenCancel} onClose={onCloseCancel} doctor={doctor} item={item} setIsLoading={setIsLoading} />
         </>
     )
 

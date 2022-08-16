@@ -16,9 +16,10 @@ import {
     EditableInput,
     Text,
     VStack,
-    InputGroup
+    InputGroup,
+    IconButton
 } from '@chakra-ui/react'
-import { useState, useEffect, useContext } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import api from '../../api';
 import { ButtonPopoverReception } from '../../Reception/Home/PopoverReception';
 import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
@@ -27,10 +28,13 @@ import { DetailsPopover } from './DetailsPopover';
 import { ButtonPopover } from './Popover';
 import userApi from '../../api/user';
 import { AppContext } from '../../App';
+import { FaPrint } from 'react-icons/fa';
+import { ComponentToPrint } from './TokenPrint';
+import ReactToPrint from 'react-to-print'
 
 // List of staff profiles pending approval
 
-export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCurrent }) => {
+export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCurrent, doctor }) => {
 
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [showCompleted, setShowCompleted] = useState(false)
@@ -40,8 +44,8 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
         "First time": 'F',
         "Other": "O"
     }
-    const { user } = useContext(AppContext)
-
+   // const { user } = useContext(AppContext)
+    let componentRef = useRef(); 
 
     function handleChange() {
         setShowCompleted(!showCompleted)
@@ -50,24 +54,24 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
     function handleDoubleClickForFile(id) {
         let fileNo = window.prompt("Enter the file number")
         if (fileNo != null)
-          //  editFileNumber(fileNo, id)
-          api.token.editFileNumber({ fileNo, id }).then((res) => {
-            const response = JSON.parse(res.data).result
-            window.location.reload()
-        })
+            //  editFileNumber(fileNo, id)
+            api.token.editFileNumber({ fileNo, id }).then((res) => {
+                const response = JSON.parse(res.data).result
+                window.location.reload()
+            })
     }
 
     function handleDoubleClickForName(id) {
         let name = window.prompt("Enter the patient's name")
         if (name != null)
-        api.token.editName({ name, id }).then((res) => {
-            const response = JSON.parse(res.data).result
-            window.location.reload()
-        })
+            api.token.editName({ name, id }).then((res) => {
+                const response = JSON.parse(res.data).result
+                window.location.reload()
+            })
     }
 
     function editFileNumber(value, id) {
-      
+
     }
 
 
@@ -99,29 +103,30 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                     <Th>Phone</Th>
                                     <Th>Token Time</Th>
                                     <Th>In</Th>
-                                    <Th>Out</Th></>}
+                                    <Th>Out</Th>
+                                    <Th></Th></>}
                             </Tr>
                         </Thead>
                         <Tbody>
                             {filterList(mornlist, showCompleted).map((item, index) =>
                                 <Tr key={index} bg={findBg(item)}>
-                                    <Td><ButtonPopover loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    <Td><ButtonPopover doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                                     <Td >{`${item.initials}-${item.tokenNumber}`}</Td>
                                     {isMobile && <Td>{types[item.type]}</Td>}
-                                    <Td style={{cursor : "pointer"}} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
+                                    <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
                                     {isMobile && <Td>
                                         <VStack>
-                                            <DetailsPopover current={current} setCurrent={setCurrent} item={item} />
+                                            <DetailsPopover doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
                                             <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
                                             {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
                                         </VStack>
                                     </Td>}
-                                    {isLaptop && <><Td><Text placeholder='Add file' style={{cursor : "pointer"}} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+                                    {isLaptop && <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                                     </Td>
                                         <Td> {item.type}</Td>
                                         <Td>{item.phone.substring(2)}</Td>
                                         <Td>
-                                           { item.timeInEst && <VStack alignItems={"baseline"}>
+                                            {item.timeInEst && <VStack alignItems={"baseline"}>
                                                 <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                                                     .toLocaleTimeString('en-US',
                                                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
@@ -136,8 +141,14 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                         <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
                                             .toLocaleTimeString('en-US',
                                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                        </Td></>}
-
+                                        </Td> <Td>  <ReactToPrint
+                                        trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
+                                        content={() => componentRef}
+                                    />
+                                        <div style={{ display: "none" }}>
+                                            <ComponentToPrint ref={(el) => (componentRef = el)} item={item} />
+                                        </div></Td></>}
+                                   
                                 </Tr>
                             )
                             }

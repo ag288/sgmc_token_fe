@@ -169,7 +169,7 @@ export const PhysioTokenBooking = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<ArrowBackIcon />} onClick={() => navigate(-1)}></IconButton>
+                {/* <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<ArrowBackIcon />} onClick={() => navigate(-1)}></IconButton> */}
 
                 {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>

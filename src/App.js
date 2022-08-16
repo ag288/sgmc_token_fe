@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import api from './api';
 import AuthenticatedUser from './AuthenticatedUser';
+import Simple from './components/Navbar';
 import PhysioUser from './PhysioUser';
 import ReceptionUser from './ReceptionUser';
 import UnauthenticatedUser from './UnauthenticatedUser';
@@ -9,10 +10,11 @@ export const AppContext = createContext(null);
 
 function App() {
   const [doctors,setDoctors] = useState([])
+  const [index, setIndex] = useState(0)
   const [user, setUser] = useState(localStorage.getItem("currentUser") ? JSON.parse(localStorage.getItem("currentUser")) : null)
   const [doctor, setDoctor] = useState(localStorage.getItem("doctor") ? JSON.parse(localStorage.getItem("doctor")) : 1)
  
-  const userObject = { user, doctor, doctors, setUser, setDoctor }
+  const userObject = { user, doctor, doctors, index, setUser, setDoctor, setIndex }
 
   useEffect(() => {
 
@@ -44,6 +46,7 @@ setDoctors(response)
     <AppContext.Provider
       value={userObject}>
       {/* {user?.userID == 1 ? <AuthenticatedUser /> : (user?.userID == 2 ? <ReceptionUser /> : <UnauthenticatedUser />)} */}
+    
      {selectView()}
     </AppContext.Provider>
 

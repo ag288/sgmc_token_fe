@@ -31,7 +31,7 @@ import { FullPageSpinner } from '../utils/spinner'
 
 
 
-export const Holidays = () => {
+export const Holidays = ({doctor}) => {
     const [holidays, setHolidays] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [isGeneralHoliday, setIsGeneralHoliday] = useState("")
@@ -42,12 +42,12 @@ export const Holidays = () => {
         duration : "",
         slot : ""
     })
-    const {doctor} = useContext(AppContext)
+  //  const {doctor} = useContext(AppContext)
     const toast = useToast()
 
     useEffect(() => {
 
-        api.settings.fetchHolidays({doctor}).then((res) => {
+        api.settings.fetchHolidays({doctor:doctor.doctorID}).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             setHolidays(response)
@@ -74,7 +74,7 @@ export const Holidays = () => {
         onClose()
         if (date!= "" && holidayInfo.isGeneralHoliday!="")  {
             setIsLoading(true)
-            api.settings.updateHolidays({ date, holidayInfo, doctor }).then((res) => {
+            api.settings.updateHolidays({ date, holidayInfo, doctor:doctor.doctorID }).then((res) => {
                 setIsLoading(false)
                 setHolidays(prev => ([...prev, { "date": new Date(date) }]))
             }).catch((err) => {
@@ -95,7 +95,7 @@ export const Holidays = () => {
     function deleteHoliday(day) {
        // console.log(day.leaveID)
         setIsLoading(true)
-        api.settings.deleteHolidays( {leave : day.leaveID, doctor} ).then((res) => {
+        api.settings.deleteHolidays( {leave : day.leaveID, doctor:doctor.doctorID} ).then((res) => {
             setIsLoading(false)
             setHolidays(holidays.filter(item => item.leaveID != day.leaveID))
         }).catch((err) => {

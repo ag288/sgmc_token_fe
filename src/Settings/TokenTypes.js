@@ -23,12 +23,12 @@ import { AppContext } from '../App'
 
 
 
-export const TokenTypes = () => {
+export const TokenTypes = ({doctor}) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [reasons, setReasons] = useState([])
     const toast = useToast()
-    const {doctor} = useContext(AppContext)
+   // const {doctor} = useContext(AppContext)
 
     useEffect(() => {
 

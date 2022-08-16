@@ -33,13 +33,18 @@ import {
     Button,
     Grid,
     GridItem,
-    useMediaQuery
+    useMediaQuery,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import api from '../../api';
 import { FaEllipsisV } from 'react-icons/fa';
-import { logout } from '../../utils/tokenFunctions';
+import { filterDoctor, logout } from '../../utils/tokenFunctions';
 import { AppContext } from '../../App';
 import { FullPageSpinner } from '../../utils/spinner';
 
@@ -52,7 +57,7 @@ export const PhysioList = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [availability, setAvailability] = useState("")
     const navigate = useNavigate()
-    const { user, setUser, doctor, doctors, setDoctor } = useContext(AppContext)
+    const { user, setUser, doctor, doctors, setDoctor, index, setIndex } = useContext(AppContext)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     useEffect(() => {
 
@@ -106,7 +111,7 @@ localStorage.setItem("doctor", e.target.value)
     return (
         <Flex bg="gray.100"
             minH={"100vh"}>
-            <Box>
+            {/* <Box>
                 <Menu m="2%" closeOnBlur={true}>
                     <MenuButton as={IconButton} icon={<FaEllipsisV />} backgroundColor="transparent" />
                     <MenuList color={"black"}>
@@ -114,14 +119,24 @@ localStorage.setItem("doctor", e.target.value)
                         <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
                     </MenuList>
                 </Menu>
-            </Box>
+            </Box> */}
             {isLoading ? <FullPageSpinner /> :
 
                 <Box m={6} width="full" rounded={"lg"} bg="white">
-                    <Box m={3} align='center'>
+                    {/* <Box m={3} align='center'>
                         <Select width="30%" size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
-                            {doctors.filter((item)=>item.department=="Orthopedics").map((doctor) => <option value={doctor.doctorID} >{doctor.name}</option>)}
-                        </Select></Box>
+                            {filterDoctor(doctors).map((doctor) => <option value={doctor.doctorID} >{doctor.name}</option>)}
+                        </Select></Box> */}
+                         <Tabs m={2} defaultIndex={index} onChange={(index) => {setDoctor(doctors[index].doctorID)
+                    setIndex(index)}} variant="solid-rounded">
+                        <TabList>
+                            {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
+                        </TabList>
+
+                        <TabPanels>
+                            {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+                         
+                    <>
                     {free && availability =="" ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
                         : <Box rounded="lg" m={2} textAlign={"center"} bg="red.300"><Text p={2} fontSize={"lg"}>The Doctor is not available!</Text></Box>}
                    { availability == "" ? <Box p={5} >
@@ -143,7 +158,10 @@ localStorage.setItem("doctor", e.target.value)
                         </Box>)} 
 
                     </Box> : null}
-
+                    </>      
+                            </TabPanel>)}
+                        </TabPanels>
+                    </Tabs>
                 </Box>
                         }
 

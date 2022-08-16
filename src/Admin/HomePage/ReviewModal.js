@@ -32,13 +32,13 @@ import { AppContext } from '../../App';
 
 export const ReviewModal = (props) => {
 
-    const { item, current, isOpen, onClose, isLoading, setIsLoading, origin } = props
+    const { item, current, isOpen, onClose, isLoading, setIsLoading, origin, doctor } = props
     const [info, setInfo] = useState({
         file: "",
         days: 0
     })
     const toast = useToast()
-    const {doctor} = useContext(AppContext)
+   // const {doctor} = useContext(AppContext)
 
     function handleFileChange(e) {
         setInfo(prev => ({ ...prev, "file": e.target.value }))

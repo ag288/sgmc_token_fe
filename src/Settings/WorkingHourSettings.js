@@ -27,20 +27,22 @@ import { AppContext } from '../App'
 
 
 
-export const WorkingHourSettings = () => {
+export const WorkingHourSettings = ({doctor}) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [settings, setSettings] = useState({})
     const toast = useToast()
+   // console.log(doctor)
     const tokensEnd = new Date(new Date().setHours(20, 0, 0));  // disable update button till 8pm in evening
     const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update button after 6am in morning
     const { isOpen, onOpen, onClose } = useDisclosure()
     const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
-    const {doctor} = useContext(AppContext)
+   // const {doctor} = useContext(AppContext)
 
     useEffect(() => {
-        api.settings.fetchSettings({doctor}).then((res) => {
+        api.settings.fetchSettings({doctor : doctor.doctorID}).then((res) => {
             const response = JSON.parse(res.data).result
+            console.log(response[0])
             setSettings(response[0])
         })
     }, [doctor]);
@@ -72,7 +74,7 @@ export const WorkingHourSettings = () => {
     function updateSettings() {
         onClose()
         setIsLoading(true)
-        api.settings.updateHours({ settings, doctor }).then((res) => {
+        api.settings.updateHours({ settings, doctor:doctor.doctorID }).then((res) => {
             setIsLoading(false)
             toast({
                 title: 'Updated settings successfully',
@@ -140,8 +142,8 @@ export const WorkingHourSettings = () => {
                             <Text fontWeight={"bold"} mb={2}>Update working hours</Text>
                             <RadioGroup>
                                 <VStack alignItems={"baseline"}>
-                                    <Radio bg={settings.working_hr_flag == 1 ? "green" : "white"} onChange={handleFreqChange} value={1}>Only for 1 day</Radio>
-                                    <Radio bg={settings.working_hr_flag == 0 ? "green" : "white"} onChange={handleFreqChange} value={0}>Permanently</Radio>
+                                    <Radio bg={settings?.working_hr_flag == 1 ? "green" : "white"} onChange={handleFreqChange} value={1}>Only for 1 day</Radio>
+                                    <Radio bg={settings?.working_hr_flag == 0 ? "green" : "white"} onChange={handleFreqChange} value={0}>Permanently</Radio>
                                 </VStack>
                             </RadioGroup>
                         </ModalBody>

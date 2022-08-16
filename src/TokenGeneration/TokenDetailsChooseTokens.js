@@ -119,8 +119,9 @@ export const TokenDetailsChooseToken = () => {
                 }
                 else {
                     setIsLoading(false)
-                    setTokenNo(`${response.initials}-${response.tokenNo}`)
                     if (token.slot != "W") {
+                    setTokenNo(`${response.initials}-${response.tokenNo}`)
+           
                         const start = new Date(), end = new Date()
 
                         if (response.slot == "A" && response.tokenNo == settings.morn_token_start) {
@@ -167,6 +168,7 @@ export const TokenDetailsChooseToken = () => {
                     }
 
                     else {
+                        setTokenNo(`W${response.initials}-${response.tokenNo}`)
                         toast({
                             title: 'Token generated',
                             status: 'success',
@@ -189,7 +191,7 @@ export const TokenDetailsChooseToken = () => {
             <Flex
                 minH={'100vh'}
                 bg={"gray.100"}>
-                <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
+                {/* <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton> */}
 
                 {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
