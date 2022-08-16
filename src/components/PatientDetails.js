@@ -16,6 +16,11 @@ import {
     MenuButton,
     MenuList,
     MenuItem,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaEllipsisV, FaHome } from 'react-icons/fa'
@@ -27,25 +32,27 @@ import { filterDoctor, logout } from '../utils/tokenFunctions';
 export const PatientDetails = (props) => {
     let navigate = useNavigate()
     let location = useLocation()
-    const { availability, navigateTo, doctor } = props
+    const { availability, navigateTo} = props
     const [patients, setPatients] = useState([])
     const [settings, setSettings] = useState([])
     const [reasons, setReasons] = useState([])
-    const { setDoctor, doctors,user } = useContext(AppContext)
+    const { setDoctor, doctors,user, doctor, index, setIndex } = useContext(AppContext)
     let obj = {
         id: location.state && location.state.item ? location.state.item.patientID : "",
         phone: location.state && location.state.item ? location.state.item.phone.substring(2) : "",
         new_name: "",
         name: location.state && location.state.item ? location.state.item.name : "",
         fileNumber: location.state && location.state.item ? location.state.item.fileNumber : "",
-        doctor: doctor.doctorID
+        doctor: doctor
     }
     const [token, setToken] = useState(location.state && location.state.tokenObj ? { ...obj, ...location.state.tokenObj }
         : obj)
 
     useEffect(() => {
 
-        api.settings.fetchSettings({doctor : doctor.doctorID}).then((res) => {
+        //setDoctor(doctor.doctorID)
+        //console.log(doctor.doctorID)
+        api.settings.fetchSettings({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
             //   setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
@@ -98,6 +105,13 @@ export const PatientDetails = (props) => {
         localStorage.setItem("doctor",e.target.value)
         setToken(prev => ({ ...prev, "doctor": e.target.value }))
     }
+
+    function handleNewChange(index) {
+        setDoctor(doctors[index].doctorID)
+        setIndex(index)
+        localStorage.setItem("doctor",doctors[index].doctorID)
+        localStorage.setItem("tabIndex",index)
+      }
 
     function fetchPatients() {
 
@@ -157,6 +171,16 @@ export const PatientDetails = (props) => {
 
     return (
         <Stack mx={'auto'} width="full" spacing="2%" py={12} px={6} >
+             <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+                <TabList>
+                    {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
+                </TabList>
+
+                <TabPanels>
+                    {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+                  
+                  
+
              {/* <Box align='center'>
                         <Select size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
                         {filterDoctor(doctors, user.userID).map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
@@ -214,6 +238,9 @@ export const PatientDetails = (props) => {
                     </Box>
                 </>
             }
+              </TabPanel>)}
+                </TabPanels>
+            </Tabs>
         </Stack>
     )
 }

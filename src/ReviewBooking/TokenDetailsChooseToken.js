@@ -47,11 +47,13 @@ export const TokenDetailsForReviewChooseToken = () => {
     const [tokenNo, setTokenNo] = useState("")
 
     const today = new Date()
+    console.log(settings)
     const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
     const [maxdate, setMaxDate] = useState(new Date(today.setDate(today.getDate() + parseInt(location.state?.settings.review_date_limit))).toISOString().split('T')[0])
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
     const { user, doctor,doctors } = useContext(AppContext)
+    console.log(doctor)
     //let maxdate=30
     useEffect(() => {
 

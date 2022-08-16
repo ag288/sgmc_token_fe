@@ -91,6 +91,7 @@ export const PhysioList = () => {
     }, [doctor]);
 
 
+
     function handleChange(e, tokenNumber, timeInEst, slotNumber) {
         console.log("hi")
         let token = {
@@ -108,6 +109,13 @@ setDoctor(e.target.value)
 localStorage.setItem("doctor", e.target.value)
     }
 
+    function handleNewChange(index) {
+        setDoctor(doctors[index].doctorID)
+        setIndex(index)
+        localStorage.setItem("doctor",doctors[index].doctorID)
+        localStorage.setItem("tabIndex",index)
+      }
+      
     return (
         <Flex bg="gray.100"
             minH={"100vh"}>
@@ -127,8 +135,7 @@ localStorage.setItem("doctor", e.target.value)
                         <Select width="30%" size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
                             {filterDoctor(doctors).map((doctor) => <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box> */}
-                         <Tabs m={2} defaultIndex={index} onChange={(index) => {setDoctor(doctors[index].doctorID)
-                    setIndex(index)}} variant="solid-rounded">
+                         <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
                         <TabList>
                             {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
                         </TabList>

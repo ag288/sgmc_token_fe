@@ -27,7 +27,7 @@ export const ReviewBooking = () => {
                 {user.userID == 2 ? <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaList />} onClick={() => navigate('/review-list')}></IconButton>
                     : null}
             </HStack>
-            <Tabs m={2} defaultIndex={index} onChange={(index) => {setDoctor(doctors[index].doctorID)
+            {/* <Tabs m={2} defaultIndex={index} onChange={(index) => {setDoctor(doctors[index].doctorID)
             setIndex(index)}} variant="solid-rounded">
                 <TabList>
                     {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
@@ -38,9 +38,9 @@ export const ReviewBooking = () => {
                         <PatientDetails availability={""} navigateTo={"/review-details"} doctor={doctor} />
                     </TabPanel>)}
                 </TabPanels>
-            </Tabs>
+            </Tabs> */}
 
-
+<PatientDetails availability={""} navigateTo={"/review-details"}/>
         </Flex>
     )
 }

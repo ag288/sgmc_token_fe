@@ -44,7 +44,7 @@ export const PhysioTokenBooking = () => {
         token: location.state.token.token,
         reason: location.state.token.reason
     })
-    const {doctor} = useContext(AppContext)
+    const {doctor, doctors} = useContext(AppContext)
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -104,7 +104,7 @@ export const PhysioTokenBooking = () => {
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             console.log(token)
             setIsLoading(true)
-            api.book.generateToken({ token: location.state.token }).then((res) => {
+            api.book.generateToken({ token: location.state.token, doctors, user }).then((res) => {
                 const response = JSON.parse(res.data)
                 if (response.message != "") {
                     setIsLoading(false)

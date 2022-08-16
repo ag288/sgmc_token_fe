@@ -30,7 +30,7 @@ export const TokenGeneration = () => {
 
             {/* <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton>
             */}
-            <Tabs m={2} defaultIndex={index} onChange={(index) => {
+            {/* <Tabs m={2} defaultIndex={index} onChange={(index) => {
                 setDoctor(doctors[index].doctorID)
                 setIndex(index)
             }} variant="solid-rounded">
@@ -40,11 +40,11 @@ export const TokenGeneration = () => {
 
                 <TabPanels>
                     {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
-                        <PatientDetails doctor={doctor} availability={availability} navigateTo={"/token-details"} />
+                      
                     </TabPanel>)}
                 </TabPanels>
-            </Tabs>
-
+            </Tabs> */}
+            <PatientDetails availability={availability} navigateTo={"/token-details"} />
         </Flex>
     )
 }

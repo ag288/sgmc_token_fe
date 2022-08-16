@@ -30,7 +30,7 @@ import api from '../api';
 
 
 const ActiveRoute = (routeName) => {
-    console.log(routeName)
+   // console.log(routeName)
     let location = useLocation()
     return location && location.pathname === routeName ? "active" : "";
 };
@@ -70,7 +70,7 @@ export default function Simple() {
         if (!pendingCount && !duplicateCount) {
             api.token.fetchAlerts().then((res) => {
                 const result = JSON.parse(res.data).result
-                console.log(result)
+             //   console.log(result)
                 setPendingCount(result[0].length)
                 setDuplicateCount(result[1].length)
             })

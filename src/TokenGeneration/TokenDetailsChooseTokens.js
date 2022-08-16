@@ -110,7 +110,7 @@ export const TokenDetailsChooseToken = () => {
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             console.log(token)
             setIsLoading(true)
-            api.book.generateToken({ token: location.state.token, doctors }).then((res) => {
+            api.book.generateToken({ token: location.state.token, doctors, user }).then((res) => {
                 const response = JSON.parse(res.data)
                 if (response.message != "") {
                     setIsLoading(false)

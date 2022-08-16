@@ -96,9 +96,16 @@ export const PatientList = (props) => {
     navigate("/duplicates")
   }
 
-  function handleChange(e) {
-    setDoctor(e.target.value)
-    localStorage.setItem("doctor", e.target.value)
+  // function handleChange(e) {
+  //   setDoctor(e.target.value)
+  //   localStorage.setItem("doctor", e.target.value)
+  // }
+
+  function handleNewChange(index) {
+    setDoctor(doctors[index].doctorID)
+    setIndex(index)
+    localStorage.setItem("doctor",doctors[index].doctorID)
+    localStorage.setItem("tabIndex",index)
   }
 
   return (
@@ -167,8 +174,7 @@ export const PatientList = (props) => {
           //     </>}
           // </Stack>
           <Stack spacing="2%" py={3} width={'full'}>
-          <Tabs  defaultIndex={index} onChange={(index)=>{setDoctor(doctors[index].doctorID)
-          setIndex(index)}} variant="solid-rounded">
+          <Tabs  defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
           <TabList m={1}>
             {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
           </TabList>
