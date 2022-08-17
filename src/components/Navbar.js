@@ -30,9 +30,16 @@ import api from '../api';
 
 
 const ActiveRoute = (routeName) => {
-   // console.log(routeName)
+    console.log(routeName)
     let location = useLocation()
-    return location && location.pathname === routeName ? "active" : "";
+    if(location && location.pathname===routeName )
+    return 'active'
+    else if(location && location.pathname=="/review-details" && routeName=="/book-review")
+    return "active"
+    else if(location && location.pathname=="/token-details" && routeName=="/book")
+    return "active"
+    else
+    return "";
 };
 
 const NavLinks = ({ link }) => (

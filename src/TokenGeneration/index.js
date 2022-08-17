@@ -15,7 +15,7 @@ export const TokenGeneration = () => {
     let navigate = useNavigate()
 
     useEffect(() => {
-
+console.log(doctor)
         api.settings.checkAvailability({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             setAvailability(response)

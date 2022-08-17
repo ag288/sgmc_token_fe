@@ -110,7 +110,8 @@ export const PatientDetails = (props) => {
         let docArray=filterDoctor(doctors,user.userID)
         setDoctor(docArray[index].doctorID)
         setIndex(index)
-        localStorage.setItem("doctor",doctors[index].doctorID)
+        setToken(prev => ({ ...prev, "doctor": docArray[index].doctorID }))
+        localStorage.setItem("doctor",docArray[index].doctorID)
         localStorage.setItem("tabIndex",index)
       }
 

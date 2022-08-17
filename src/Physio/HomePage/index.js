@@ -112,7 +112,6 @@ localStorage.setItem("doctor", e.target.value)
 
     function handleNewChange(index) {
         let docArray=filterDoctor(doctors,user.userID)
-        console.log(docArray[index])
         setDoctor(docArray[index].doctorID)
         setIndex(index)
         localStorage.setItem("doctor",docArray[index].doctorID)

@@ -105,7 +105,7 @@ export const PatientList = (props) => {
     let docArray=filterDoctor(doctors,user.userID)
     setDoctor(docArray[index].doctorID)
     setIndex(index)
-    localStorage.setItem("doctor",doctors[index].doctorID)
+    localStorage.setItem("doctor",docArray[index].doctorID)
     localStorage.setItem("tabIndex",index)
   }
 
@@ -114,7 +114,7 @@ export const PatientList = (props) => {
 
       <Flex
         minH={'100vh'}
-        overflow={"scroll"}
+        //overflow={"scroll"}
         width="full"
         bg={"gray.100"}>
         {isLoading ? <FullPageSpinner /> :
@@ -176,10 +176,10 @@ export const PatientList = (props) => {
           //     </>}
           // </Stack>
           // <Stack spacing="2%" py={3} width={'full'}>
-          <Tabs isFitted width="full" overflow={"scroll"} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+          <Tabs display={"flex"} flexDirection={"column"} isFitted width="full" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
           <TabList m={1}>
-            {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab width="full">{doctor.name}</Tab>
-         : <Tab >{doctor.initials}</Tab>)}
+            {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
+         : <Tab >{doctor.longInitials}</Tab>)}
           </TabList>
 
           <TabPanels>

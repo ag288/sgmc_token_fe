@@ -97,7 +97,7 @@ export const ReviewList = () => {
         let docArray=filterDoctor(doctors,user.userID)
         setDoctor(docArray[index].doctorID)
         setIndex(index)
-        localStorage.setItem("doctor",doctors[index].doctorID)
+        localStorage.setItem("doctor",docArray[index].doctorID)
         localStorage.setItem("tabIndex",index)
       }
 
