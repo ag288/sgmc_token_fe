@@ -152,7 +152,8 @@ export default function Simple() {
                                 cursor={'pointer'}
                                 minW={0}>
                                 <Avatar
-                                    size={'sm'}
+                                    size={"md"}
+                                    name={user.username}
                                                                    />
                             </MenuButton>
                             <MenuList>

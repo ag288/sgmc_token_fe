@@ -59,6 +59,7 @@ export const PhysioList = () => {
     const navigate = useNavigate()
     const { user, setUser, doctor, doctors, setDoctor, index, setIndex } = useContext(AppContext)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
+   // console.log(filterDoctor(doctors,3))
     useEffect(() => {
 
 
@@ -67,7 +68,7 @@ export const PhysioList = () => {
                 window.location.reload()
         }, 180000)
 
-
+console.log(doctor)
         setIsLoading(true)
         api.physio.fetchSlotsforPhysio({doctor}).then((res) => {
             setIsLoading(false)
@@ -110,12 +111,14 @@ localStorage.setItem("doctor", e.target.value)
     }
 
     function handleNewChange(index) {
-        setDoctor(doctors[index].doctorID)
+        let docArray=filterDoctor(doctors,user.userID)
+        console.log(docArray[index])
+        setDoctor(docArray[index].doctorID)
         setIndex(index)
-        localStorage.setItem("doctor",doctors[index].doctorID)
+        localStorage.setItem("doctor",docArray[index].doctorID)
         localStorage.setItem("tabIndex",index)
       }
-      
+
     return (
         <Flex bg="gray.100"
             minH={"100vh"}>

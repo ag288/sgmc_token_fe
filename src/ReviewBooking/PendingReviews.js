@@ -33,16 +33,22 @@ export const PendingReviews = () => {
         localStorage.setItem("doctor", item.doctorID)
         navigate("/book", { state: { item } })
     }
+
+    function handleNewChange(index) {
+        let docArray=filterDoctor(doctors,user.userID)
+        setDoctor(docArray[index].doctorID)
+        setIndex(index)
+        localStorage.setItem("doctor",doctors[index].doctorID)
+        localStorage.setItem("tabIndex",index)
+      }
+
     return (
 
         <Flex
             minH={'100vh'}
             overflow={"scroll"}
             bg={"gray.100"}>
-            <Tabs m={2} defaultIndex={index} onChange={(index) => {
-                setDoctor(doctors[index].doctorID)
-                setIndex(index)
-            }} variant="solid-rounded">
+            <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
                 <TabList>
                     {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
                 </TabList>

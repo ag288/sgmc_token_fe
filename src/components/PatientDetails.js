@@ -107,7 +107,8 @@ export const PatientDetails = (props) => {
     }
 
     function handleNewChange(index) {
-        setDoctor(doctors[index].doctorID)
+        let docArray=filterDoctor(doctors,user.userID)
+        setDoctor(docArray[index].doctorID)
         setIndex(index)
         localStorage.setItem("doctor",doctors[index].doctorID)
         localStorage.setItem("tabIndex",index)
@@ -170,7 +171,7 @@ export const PatientDetails = (props) => {
     }
 
     return (
-        <Stack mx={'auto'} width="full" spacing="2%" py={12} px={6} >
+        <Stack mx={'auto'} width="auto" spacing="2%" py={12} px={6} >
              <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
                 <TabList>
                     {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}

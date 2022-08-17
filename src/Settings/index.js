@@ -27,7 +27,8 @@ export const Settings = () => {
         localStorage.setItem("doctor", e.target.value)
     }
     function handleNewChange(index) {
-        setDoctor(doctors[index].doctorID)
+        let docArray=filterDoctor(doctors,user.userID)
+        setDoctor(docArray[index].doctorID)
         setIndex(index)
         localStorage.setItem("doctor",doctors[index].doctorID)
         localStorage.setItem("tabIndex",index)

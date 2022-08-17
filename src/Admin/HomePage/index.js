@@ -36,7 +36,7 @@ import { DoctorTabs } from '../../components/DoctorTabs';
 export const PatientList = (props) => {
 
   const { user, setUser, setDoctor, doctor, doctors,index, setIndex } = useContext(AppContext)
-  // const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
+   const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
   // const [current, setCurrent] = useState(0)
   // const [mornlist, setMornList] = useState([])
   // const [aftlist, setAftList] = useState([])
@@ -102,7 +102,8 @@ export const PatientList = (props) => {
   // }
 
   function handleNewChange(index) {
-    setDoctor(doctors[index].doctorID)
+    let docArray=filterDoctor(doctors,user.userID)
+    setDoctor(docArray[index].doctorID)
     setIndex(index)
     localStorage.setItem("doctor",doctors[index].doctorID)
     localStorage.setItem("tabIndex",index)
@@ -114,6 +115,7 @@ export const PatientList = (props) => {
       <Flex
         minH={'100vh'}
         overflow={"scroll"}
+        width="full"
         bg={"gray.100"}>
         {isLoading ? <FullPageSpinner /> :
           // <Stack spacing="2%" mx={"auto"} py={3} px={3} width={'full'}>
@@ -173,19 +175,20 @@ export const PatientList = (props) => {
           //       {/* <WalkInList loading={isLoading} setIsLoading={setIsLoading} walklist={walklist} current={current} setCurrent={setCurrent} /> */}
           //     </>}
           // </Stack>
-          <Stack spacing="2%" py={3} width={'full'}>
-          <Tabs  defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+          // <Stack spacing="2%" py={3} width={'full'}>
+          <Tabs isFitted width="full" overflow={"scroll"} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
           <TabList m={1}>
-            {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
+            {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab width="full">{doctor.name}</Tab>
+         : <Tab >{doctor.initials}</Tab>)}
           </TabList>
 
           <TabPanels>
-            {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+            {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel width="full">
               <TokenList color={colors[index]} doctor={doctor} />
             </TabPanel>)}
           </TabPanels>
         </Tabs>
-</Stack>
+// </Stack>
         
         }
 

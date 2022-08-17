@@ -93,6 +93,13 @@ export const ReviewList = () => {
         localStorage.setItem("doctor", e.target.value)
     }
 
+    function handleNewChange(index) {
+        let docArray=filterDoctor(doctors,user.userID)
+        setDoctor(docArray[index].doctorID)
+        setIndex(index)
+        localStorage.setItem("doctor",doctors[index].doctorID)
+        localStorage.setItem("tabIndex",index)
+      }
 
     return (
         <Flex bg="gray.100"
@@ -108,8 +115,7 @@ export const ReviewList = () => {
                         <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box> */}
-                          <Tabs m={2} defaultIndex={index} onChange={(index) => {setDoctor(doctors[index].doctorID)
-                        setIndex(index)}} variant="solid-rounded">
+                          <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
                         <TabList>
                             {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
                         </TabList>

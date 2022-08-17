@@ -31,7 +31,7 @@ export class ComponentToPrint extends React.Component {
                         align="center"
                         border="1px"
                         p={2}>
-                        <Heading fontSize={"xxx-large"}>{`${this.props.item.initials}-${this.props.item.tokenNumber}`}</Heading>
+                        <Heading color="green" fontSize={"xxx-large"}>{`${this.props.item.initials}-${this.props.item.tokenNumber}`}</Heading>
                     </Box>
               
             </Flex >
