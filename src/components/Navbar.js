@@ -17,12 +17,9 @@ import {
     Image,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { BellWithBadge, DuplicatePatientsNotif } from './BellWithBadge';
+import { BellWithBadge, DuplicatePatientsNotif } from './AlertIcons';
 import { AppContext } from '../App';
 import { useLocation, Link, NavLink, Navigate, useNavigate } from 'react-router-dom';
-import { FaHome } from 'react-icons/fa';
-import { DoctorTabs } from './DoctorTabs';
-import { PatientList } from '../Admin/HomePage';
 import { logout } from '../utils/tokenFunctions';
 import { ExportToExcel } from '../Admin/HomePage/ExportToExcel';
 import api from '../api';

@@ -15,7 +15,7 @@ import {
 export class ComponentToPrint extends React.Component {
 
     render() {
-
+        const colors = ["red", "navy", "teal", "green", "purple", "darkmagenta", "darkorange", "salmon", "skyblue","maroon"]
         return (
             <Flex
                 minH={'100vh'}
@@ -31,7 +31,7 @@ export class ComponentToPrint extends React.Component {
                         align="center"
                         border="1px"
                         p={2}>
-                        <Heading color="green" fontSize={"xxx-large"}>{`${this.props.item.initials}-${this.props.item.tokenNumber}`}</Heading>
+                        <Heading color={colors[this.props.item.doctorID % 10]} fontSize={"xxx-large"}>{`${this.props.item.initials}-${this.props.item.tokenNumber}`}</Heading>
                     </Box>
               
             </Flex >

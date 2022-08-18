@@ -35,12 +35,12 @@ export const PendingReviews = () => {
     }
 
     function handleNewChange(index) {
-        let docArray=filterDoctor(doctors,user.userID)
+        let docArray = filterDoctor(doctors, user.userID)
         setDoctor(docArray[index].doctorID)
         setIndex(index)
-        localStorage.setItem("doctor",docArray[index].doctorID)
-        localStorage.setItem("tabIndex",index)
-      }
+        localStorage.setItem("doctor", docArray[index].doctorID)
+        localStorage.setItem("tabIndex", index)
+    }
 
     return (
 
@@ -49,8 +49,9 @@ export const PendingReviews = () => {
             overflow={"scroll"}
             bg={"gray.100"}>
             <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
-                <TabList>
-                    {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
+                <TabList m={1}>
+                    {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
+                        : <Tab >{doctor.longInitials}</Tab>)}
                 </TabList>
 
                 {/* <IconButton icon={<FaHome />} onClick={() => navigate("/home")}></IconButton> */}

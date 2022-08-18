@@ -21,7 +21,6 @@ import {
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext, useRef } from 'react'
 import api from '../../api';
-import { ButtonPopoverReception } from '../../Reception/Home/PopoverReception';
 import { DiffMinutes, filterList, findBg } from '../../utils/tokenFunctions';
 import { useMediaQuery } from '@chakra-ui/react'
 import { DetailsPopover } from './DetailsPopover';
@@ -109,9 +108,9 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                         </Thead>
                         <Tbody>
                             {filterList(mornlist, showCompleted).map((item, index) =>
-                                <Tr key={index} bg={findBg(item)}>
+                                <Tr key={index} bg={findBg(item, mornlist)}>
                                     <Td><ButtonPopover doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                    <Td >{`${item.initials}-${item.tokenNumber}`}</Td>
+                                    <Td >{item.slot.includes("W")?`${item.initials}W-${item.tokenNumber}` :`${item.initials}-${item.tokenNumber}`}</Td>
                                     {isMobile && <Td>{types[item.type]}</Td>}
                                     <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
                                     {isMobile && <Td>

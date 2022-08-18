@@ -47,11 +47,11 @@ export const ReviewList = () => {
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const toast = useToast()
-    const {doctor, doctors, setDoctor, user, index, setIndex} = useContext(AppContext)
+    const { doctor, doctors, setDoctor, user, index, setIndex } = useContext(AppContext)
 
     useEffect(() => {
 
-        api.review.fetchReviewList({doctor}).then((res) => {
+        api.review.fetchReviewList({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             setReviewList(response)
@@ -88,18 +88,18 @@ export const ReviewList = () => {
     }
 
 
-    function handleChange(e){
+    function handleChange(e) {
         setDoctor(e.target.value)
         localStorage.setItem("doctor", e.target.value)
     }
 
     function handleNewChange(index) {
-        let docArray=filterDoctor(doctors,user.userID)
+        let docArray = filterDoctor(doctors, user.userID)
         setDoctor(docArray[index].doctorID)
         setIndex(index)
-        localStorage.setItem("doctor",docArray[index].doctorID)
-        localStorage.setItem("tabIndex",index)
-      }
+        localStorage.setItem("doctor", docArray[index].doctorID)
+        localStorage.setItem("tabIndex", index)
+    }
 
     return (
         <Flex bg="gray.100"
@@ -111,93 +111,111 @@ export const ReviewList = () => {
                         <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
 
                         <Stack py={12} px={2} mx="auto" width="auto">
-                        {/* <Box align='center'>
+                            {/* <Box align='center'>
                         <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box> */}
-                          <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
-                        <TabList>
-                            {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
-                        </TabList>
+                            <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+                                <TabList m={1}>
+                                    {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
+                                        : <Tab >{doctor.longInitials}</Tab>)}
+                                </TabList>
 
-                        <TabPanels>
-                            {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
-                                <> 
+                                <TabPanels>
+                                    {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+                                        <>
 
-                            <Heading size="md">Booked Tokens</Heading>
-                            <Box
-                                rounded={'lg'}
-                                bg={'white'}
-                                boxShadow={'lg'}
-                                p={3}
-                                width='auto'>
+                                            <Heading size="md">Booked Tokens</Heading>
+                                            <Box
+                                                rounded={'lg'}
+                                                bg={'white'}
+                                                boxShadow={'lg'}
+                                                p={3}
+                                                width='auto'>
 
-                                {reviewlist.map((review, index) => <>
-                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString()}</Heading>
+                                                {reviewlist.map((review, index) => <>
+                                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString()}</Heading>
 
-                                    <Divider orientation='horizontal'></Divider>
-                                    <Table variant='striped' colorScheme='grey'>
-                                        <Thead>
-                                            <Tr>
-                                                <Th>Name</Th>
-                                                <Th>Phone</Th>
-                                                <Th>Token</Th>
-                                                <Th>Type</Th>
-                                                <Th>Date</Th>
-                                                <Th>Est. Time</Th>
-                                                <Th></Th>
-                                            </Tr>
-                                        </Thead>
-                                        <Tbody>
-                                            {reviewlist[index].reviews.map((item) =>
-                                                <Tr key={index}>
-                                                    <Td >{item.name}</Td>
-                                                    <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
-                                                    </Td>
-                                                    <Td >{item.tokenNumber}</Td>
-                                                    <Td>{item.type}</Td>
-                                                    <Td >{new Date(item.date).toDateString()}</Td>
-                                                    <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
-                                                    <Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
-                                                </Tr>
-                                            )
-                                            }
-                                        </Tbody>
-                                    </Table></>
-                                )}
-                            </Box></>
-                            </TabPanel>)}
-                        </TabPanels>
-                    </Tabs>
+                                                    <Divider orientation='horizontal'></Divider>
+                                                    <Table variant='striped' colorScheme='grey'>
+                                                        <Thead>
+                                                            <Tr>
+                                                                <Th>Name</Th>
+                                                                <Th>Phone</Th>
+                                                                <Th>Token</Th>
+                                                                <Th>Type</Th>
+                                                                <Th>Date</Th>
+                                                                <Th>Est. Time</Th>
+                                                                <Th></Th>
+                                                            </Tr>
+                                                        </Thead>
+                                                        <Tbody>
+                                                            {reviewlist[index].reviews.map((item) =>
+                                                                <Tr key={index}>
+                                                                    <Td >{item.name}</Td>
+                                                                    <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
+                                                                    </Td>
+                                                                    <Td >{item.tokenNumber}</Td>
+                                                                    <Td>{item.type}</Td>
+                                                                    <Td >{new Date(item.date).toDateString()}</Td>
+                                                                    <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
+                                                                    <Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
+                                                                </Tr>
+                                                            )
+                                                            }
+                                                        </Tbody>
+                                                    </Table></>
+                                                )}
+                                            </Box></>
+                                    </TabPanel>)}
+                                </TabPanels>
+                            </Tabs>
                         </Stack>
                     </>}
                     {isMobile &&
-                        <Stack width="full" alignItems="baseline" py={2} mx="2">
-                            <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
-                            <Heading size="md">Booked Tokens</Heading>
-                            {reviewlist.map((item, index) =>
-                                <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()}</Heading>
-                                    {reviewlist[index].reviews.map((review) => <Box
-                                        rounded={'lg'}
-                                        bg={'white'}
-                                        boxShadow={'lg'}
-                                        p={3}
-                                        m={5}
-                                        width='full'>
-                                        <VStack spacing={2} width="full" alignItems={"baseline"}>
-                                            <HStack width="full" spacing="auto">
-                                                <HStack ><Heading size={"md"}>{review.name}</Heading>
-                                                    <IconButton icon={<FaPhoneAlt />} href={`tel:+${review.phone}`} as="a" bg="transparent"></IconButton>
+                    <Stack width="full" alignItems="baseline" py={2} mx="2">
+                                    
+                    <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
 
-                                                </HStack>
-                                                <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
-                                            </HStack>
-                                            <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
+                        <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+                            <TabList m={1}>
+                                {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
+                                    : <Tab >{doctor.longInitials}</Tab>)}
+                            </TabList>
 
-                                        </VStack>
-                                    </Box>)
-                                    }</>)}
+                            <TabPanels>
+                                {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+
+                                      
+                                        <Heading size="md">Booked Tokens</Heading>
+                                        {reviewlist.map((item, index) =>
+                                            <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()}</Heading>
+                                                {reviewlist[index].reviews.map((review) => <Box
+                                                    rounded={'lg'}
+                                                    bg={'white'}
+                                                    boxShadow={'lg'}
+                                                    p={3}
+                                                    m={5}
+                                                    width='full'>
+                                                    <VStack spacing={2} width="full" alignItems={"baseline"}>
+                                                        <HStack width="full" spacing="auto">
+                                                            <HStack ><Heading size={"md"}>{review.name}</Heading>
+                                                                <IconButton icon={<FaPhoneAlt />} href={`tel:+${review.phone}`} as="a" bg="transparent"></IconButton>
+
+                                                            </HStack>
+                                                            <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                                        </HStack>
+                                                        <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
+
+                                                    </VStack>
+                                                </Box>)
+                                                }</>)}
+                                    
+                                </TabPanel>)}
+                        </TabPanels>
+                        </Tabs>
                         </Stack>
+                       
                     }
 
                 </>}

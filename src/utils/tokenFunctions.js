@@ -1,18 +1,50 @@
 import { Text } from '@chakra-ui/react'
 
-export function findBg(item) {
+
+
+function compareFn(a, b) {
+
+    const start1 = new Date("2020-01-01 " + a.time_of_arrival)
+    const end1 = new Date("2020-01-01 " + a.timeInEst)
+    const start2 = new Date("2020-01-01 " + b.time_of_arrival)
+    const end2 = new Date("2020-01-01 " + b.timeInEst)
+    let difference1, difference2, sign
+
+    difference1 = end1.getTime() - start1.getTime();
+    difference2 = end2.getTime() - start2.getTime();
+
+
+
+    if (difference1 < difference2) {
+        return -1;
+    }
+    if (difference1 > difference2) {
+        return 1;
+    }
+    // a must be equal to b
+    return 0;
+}
+
+
+
+export function findBg(item, list) {
+    let newList=list.filter((item)=>item.time_of_arrival!=null)
+    console.log(newList.sort(compareFn))
     if (item.status == "completed")
         return "gray.200"
     else if (item.status == "cancelled")
         return "red.200"
     else if (item.status == "current")
         return "green.100"
+    // else if (newList.sort(compareFn)[0]?.tokenID == item.tokenID)
+    //     return "blue.100"
     else {
         if (item.slot.includes("W"))
             return "yellow.100"
         else return "white"
     }
 }
+
 
 export function filterList(list, showCompleted) {
     return list.filter(item => {
@@ -31,8 +63,8 @@ export function filterDoctor(list, user) {
     //console.log(list)
     return list.filter(item => {
         if (user == 1) {
-            if(item.doctorID == 1)
-            return true
+            if (item.doctorID == 1)
+                return true
         }
         else {
             if (user == 3) {
@@ -43,7 +75,7 @@ export function filterDoctor(list, user) {
         }
 
     })
-    
+
 }
 
 export function DiffMinutes({ time1, time2, item }) {

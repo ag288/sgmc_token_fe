@@ -1,9 +1,7 @@
 import { createContext, useEffect, useState } from 'react';
 import api from './api';
 import AuthenticatedUser from './AuthenticatedUser';
-import Simple from './components/Navbar';
 import PhysioUser from './PhysioUser';
-import ReceptionUser from './ReceptionUser';
 import UnauthenticatedUser from './UnauthenticatedUser';
 
 export const AppContext = createContext(null);

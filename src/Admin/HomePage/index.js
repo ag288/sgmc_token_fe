@@ -21,21 +21,18 @@ import { CurrentPatient } from './CurrentPatient';
 import { RescheduleReviews } from '../../ReviewBooking/PendingReviews';
 import { MorningList } from './MorningList';
 import { FaBell, FaEllipsisV } from 'react-icons/fa'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../App';
 import { filterDoctor, logout } from '../../utils/tokenFunctions';
 import { FullPageSpinner } from '../../utils/spinner';
-import { ExportToExcel } from './ExportToExcel';
-import { WalkInList } from './WalkInList';
-import { BellWithBadge, DuplicatePatientsNotif } from '../../components/BellWithBadge';
 import { TokenList } from './TokenList';
-import { DoctorTabs } from '../../components/DoctorTabs';
 
 // List of staff profiles pending approval
 
 export const PatientList = (props) => {
 
   const { user, setUser, setDoctor, doctor, doctors,index, setIndex } = useContext(AppContext)
+  //let params= useParams()
    const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
   // const [current, setCurrent] = useState(0)
   // const [mornlist, setMornList] = useState([])
@@ -85,7 +82,7 @@ export const PatientList = (props) => {
 
 
 
-  const colors = ["red", "blue", "yellow", "green", "purple", "cyan", "orange"]
+  const colors = ["red", "navy", "teal", "green", "purple", "darkmagenta", "darkorange", "salmon", "skyblue"]
   let navigate = useNavigate()
 
   function viewPendingReviews() {
@@ -176,7 +173,7 @@ export const PatientList = (props) => {
           //     </>}
           // </Stack>
           // <Stack spacing="2%" py={3} width={'full'}>
-          <Tabs display={"flex"} flexDirection={"column"} isFitted width="full" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+          <Tabs display={"flex"} flexDirection={"column"} width="full" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
           <TabList m={1}>
             {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
          : <Tab >{doctor.longInitials}</Tab>)}

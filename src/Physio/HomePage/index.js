@@ -59,7 +59,7 @@ export const PhysioList = () => {
     const navigate = useNavigate()
     const { user, setUser, doctor, doctors, setDoctor, index, setIndex } = useContext(AppContext)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
-   // console.log(filterDoctor(doctors,3))
+    // console.log(filterDoctor(doctors,3))
     useEffect(() => {
 
 
@@ -68,23 +68,23 @@ export const PhysioList = () => {
                 window.location.reload()
         }, 180000)
 
-console.log(doctor)
+        console.log(doctor)
         setIsLoading(true)
-        api.physio.fetchSlotsforPhysio({doctor}).then((res) => {
+        api.physio.fetchSlotsforPhysio({ doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data)
             if (!(response.message))
                 setSlotList(response.result)
         })
 
-        api.token.fetchCurrent({doctor}).then((res) => {
+        api.token.fetchCurrent({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             if (response.length == 0)
                 setFree(true)
         })
 
-        api.settings.checkAvailability({doctor}).then((res) => {
+        api.settings.checkAvailability({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             setAvailability(response)
         })
@@ -105,18 +105,18 @@ console.log(doctor)
         navigate("/book", { state: { tokenObj: token } })
     }
 
-    function handleDoctorChange(e){
-setDoctor(e.target.value)
-localStorage.setItem("doctor", e.target.value)
+    function handleDoctorChange(e) {
+        setDoctor(e.target.value)
+        localStorage.setItem("doctor", e.target.value)
     }
 
     function handleNewChange(index) {
-        let docArray=filterDoctor(doctors,user.userID)
+        let docArray = filterDoctor(doctors, user.userID)
         setDoctor(docArray[index].doctorID)
         setIndex(index)
-        localStorage.setItem("doctor",docArray[index].doctorID)
-        localStorage.setItem("tabIndex",index)
-      }
+        localStorage.setItem("doctor", docArray[index].doctorID)
+        localStorage.setItem("tabIndex", index)
+    }
 
     return (
         <Flex bg="gray.100"
@@ -137,42 +137,43 @@ localStorage.setItem("doctor", e.target.value)
                         <Select width="30%" size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
                             {filterDoctor(doctors).map((doctor) => <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box> */}
-                         <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
-                        <TabList>
-                            {filterDoctor(doctors, user.userID).map((doctor, index) => <Tab>{doctor.name}</Tab>)}
+                    <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+                        <TabList m={1}>
+                            {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
+                                : <Tab >{doctor.longInitials}</Tab>)}
                         </TabList>
 
                         <TabPanels>
                             {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
-                         
-                    <>
-                    {free && availability =="" ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
-                        : <Box rounded="lg" m={2} textAlign={"center"} bg="red.300"><Text p={2} fontSize={"lg"}>The Doctor is not available!</Text></Box>}
-                   { availability == "" ? <Box p={5} >
-                       {slotlist.map((slot, index) => <Box align={"center"} key={index}>
 
-                            <Box my={5} fontWeight={"bold"}>
-                                {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
-                            </Box>
-                            {isMobile && <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
+                                <>
+                                    {free && availability == "" ? <Box rounded="lg" m={2} textAlign={"center"} bg="green.100"><Text p={2} fontSize={"lg"}>The Doctor is free!</Text></Box>
+                                        : <Box rounded="lg" m={2} textAlign={"center"} bg="red.300"><Text p={2} fontSize={"lg"}>The Doctor is not available!</Text></Box>}
+                                    {availability == "" ? <Box p={5} >
+                                        {slotlist.map((slot, index) => <Box align={"center"} key={index}>
 
-                                {slotlist[index].tokens.map((token) => <GridItem><Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button></GridItem>)}
+                                            <Box my={5} fontWeight={"bold"}>
+                                                {`${new Date('1970-01-01T' + slot.start + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z').toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}
+                                            </Box>
+                                            {isMobile && <Grid templateRows={'repeat(2, 1fr)'} gap={2} width={"fit-content"} templateColumns={'repeat(3, 1fr)'}>
 
-                            </Grid>}
+                                                {slotlist[index].tokens.map((token) => <GridItem><Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button></GridItem>)}
 
-                            {isLaptop && <VStack> <HStack alignItems="center">
-                                {slotlist[index].tokens.map((token) => <Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button>)}
-                            </HStack> </VStack>
-                            }
-                        </Box>)} 
+                                            </Grid>}
 
-                    </Box> : null}
-                    </>      
+                                            {isLaptop && <VStack> <HStack alignItems="center">
+                                                {slotlist[index].tokens.map((token) => <Button key={token.tokenID} id={token.tokenID} onClick={(e) => handleChange(e, token.tokenNumber, token.timeInEst, slotlist[index].slotNumber)}>{`${token.tokenNumber}`}</Button>)}
+                                            </HStack> </VStack>
+                                            }
+                                        </Box>)}
+
+                                    </Box> : null}
+                                </>
                             </TabPanel>)}
                         </TabPanels>
                     </Tabs>
                 </Box>
-                        }
+            }
 
         </Flex>
     )
