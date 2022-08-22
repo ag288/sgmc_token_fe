@@ -38,7 +38,7 @@ export const Settings = () => {
             <Flex
             width="full"
                 bg={"gray.100"}>
-                <Stack spacing="2%" px={3} width="full">
+                <Stack mx="auto" spacing="2%" px={3} width="auto">
                     {/* <IconButton size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton> */}
                     {/* <Box align='center'>
                         <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">

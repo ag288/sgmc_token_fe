@@ -79,6 +79,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
     function onCompleted() {
         const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
         if (confirm) {
+            console.log(settings)
             if (settings.enableReview) {
                 setOrigin("completed")
                 onOpenReview()

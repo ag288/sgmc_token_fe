@@ -23,9 +23,9 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
     useEffect(() => {
 
-        api.settings.fetchSettings().then((res) => {
+        api.settings.fetchSettings({doctor}).then((res) => {
             const response = JSON.parse(res.data).result
-            setSettings(response)
+            setSettings(response[0])
         })
     }, [])
 
