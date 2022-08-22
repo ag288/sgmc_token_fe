@@ -15,19 +15,21 @@ import {
 export class ComponentToPrint extends React.Component {
 
     render() {
+        console.log(this.props.item)
         const colors = ["red", "navy", "teal", "green", "purple", "darkmagenta", "darkorange", "salmon", "skyblue","maroon"]
         return (
             <Flex
-                minH={'100vh'}
-                align={'center'}
-                justify={'center'}
+            p={2}
+            justify="center"
+            height="auto"
+            width="auto"
                 bg={"white"}
                >
                 
                    
                     <Box
                         bg={"white"}
-                        width='auto'
+                        width="3in"
                         align="center"
                         border="1px"
                         p={2}>

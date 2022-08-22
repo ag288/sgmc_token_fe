@@ -49,6 +49,7 @@ export const ReviewModal = (props) => {
     }
 
     function call() {
+        console.log(doctor)
         toast({
             title: `Calling ${item.name}`,
             status: 'info',

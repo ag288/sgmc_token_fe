@@ -15,8 +15,8 @@ export default function tokenApi(fetch, baseUrl) {
             return fetch(`${baseUrl}/duplicate-patients`)
         },
 
-        fetchMorningList(data) {
-            return fetch.post(`${baseUrl}/fetch_morning`,{data})
+        fetchTokenList(data) {
+            return fetch.post(`${baseUrl}/list`,{data})
         },
 
         fetchAfternoonList() {
@@ -41,6 +41,12 @@ export default function tokenApi(fetch, baseUrl) {
         },
         setAsArrived(data) {
             return fetch.post(`${baseUrl}/arrived`,{data})
+        },
+        bookWalkIn(data) {
+            return fetch.post(`${baseUrl}/walk-in`,{data})
+        },
+        setAsDelayed(data) {
+            return fetch.post(`${baseUrl}/delayed`,{data})
         },
         callNewToken(data) {
             console.log(data)

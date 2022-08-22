@@ -31,23 +31,23 @@ import { FullPageSpinner } from '../utils/spinner'
 
 
 
-export const Holidays = ({doctor}) => {
+export const Holidays = ({ doctor }) => {
     const [holidays, setHolidays] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [isGeneralHoliday, setIsGeneralHoliday] = useState("")
     const [date, setDate] = useState("")
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const [holidayInfo, setHolidayInfo]= useState({
-        isGeneralHoliday : "",
-        duration : "",
-        slot : ""
+    const [holidayInfo, setHolidayInfo] = useState({
+        isGeneralHoliday: "",
+        duration: "",
+        slot: ""
     })
-  //  const {doctor} = useContext(AppContext)
+    //  const {doctor} = useContext(AppContext)
     const toast = useToast()
 
     useEffect(() => {
 
-        api.settings.fetchHolidays({doctor:doctor.doctorID}).then((res) => {
+        api.settings.fetchHolidays({ doctor: doctor.doctorID }).then((res) => {
             const response = JSON.parse(res.data).result
             console.log(response)
             setHolidays(response)
@@ -61,41 +61,54 @@ export const Holidays = ({doctor}) => {
     }
 
     function handleTypeChange(e) {
-        setHolidayInfo(prev=>({...prev, "isGeneralHoliday":e.target.value}))
+        setHolidayInfo(prev => ({ ...prev, "isGeneralHoliday": e.target.value }))
     }
     function handleDurationChange(e) {
-        setHolidayInfo(prev=>({...prev, "duration":e.target.value}))
+        setHolidayInfo(prev => ({ ...prev, "duration": e.target.value }))
     }
     function handleSlotChange(e) {
-        setHolidayInfo(prev=>({...prev, "slot":e.target.value}))
+        setHolidayInfo(prev => ({ ...prev, "slot": e.target.value }))
     }
 
     function updateHolidays() {
         onClose()
-        if (date!= "" && holidayInfo.isGeneralHoliday!="")  {
+        if (date != "" && holidayInfo.isGeneralHoliday != "") {
+            let confirm=true
             setIsLoading(true)
-            api.settings.updateHolidays({ date, holidayInfo, doctor:doctor.doctorID }).then((res) => {
+            api.settings.checkReviewOnHolidays({ date, doctor: doctor.doctorID, isGeneralHoliday : holidayInfo.isGeneralHoliday }).then((res) => {
+               const result = JSON.parse(res.data).result
+               if(result.length!=0){
                 setIsLoading(false)
-                setHolidays(prev => ([...prev, { "date": new Date(date) }]))
-            }).catch((err) => {
-                setIsLoading(false)
-                toast({
-                    title: 'An error occured.',
-                    description: 'Please try again later',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: false,
-                    position: "top"
+                confirm = window.confirm("There are reviews booked on this date. If you proceed to add this date as a holiday, the booked reviews will be ignored. Proceed to update holiday?")
+               }
+                if(confirm)
+              {setIsLoading(true)
+                api.settings.updateHolidays({ date, holidayInfo, doctor: doctor.doctorID }).then((res) => {
+                    setIsLoading(false)
+                    setHolidays(prev => ([...prev, { "date": new Date(date) }]))
+                }).catch((err) => {
+                    setIsLoading(false)
+                    toast({
+                        title: 'An error occured.',
+                        description: 'Please try again later',
+                        status: 'error',
+                        duration: 3000,
+                        isClosable: false,
+                        position: "top"
+                    })
                 })
+            }
+            
             })
+
         }
     }
 
 
     function deleteHoliday(day) {
-       // console.log(day.leaveID)
+        // console.log(day.leaveID)
         setIsLoading(true)
-        api.settings.deleteHolidays( {leave : day.leaveID, doctor:doctor.doctorID} ).then((res) => {
+        api.settings.deleteHolidays({ leave: day.leaveID, doctor: doctor.doctorID }).then((res) => {
             setIsLoading(false)
             setHolidays(holidays.filter(item => item.leaveID != day.leaveID))
         }).catch((err) => {
@@ -144,7 +157,7 @@ export const Holidays = ({doctor}) => {
                         <Button isDisabled={isLoading} colorScheme="blue" onClick={chooseType}>Add</Button>
                     </Box>
                 </HStack>
-               {isLoading? <FullPageSpinner/> : <Box rounded={'lg'}
+                {isLoading ? <FullPageSpinner /> : <Box rounded={'lg'}
                     bg={'gray.300'}
                     boxShadow={'lg'}
                     p={8}
@@ -166,9 +179,9 @@ export const Holidays = ({doctor}) => {
                     <ModalOverlay />
                     <ModalContent>
                         <ModalHeader>Choose leave type</ModalHeader>
-                        <ModalCloseButton/>
+                        <ModalCloseButton />
                         <ModalBody>
-                        <FormControl mt={5}><FormLabel>Choose leave duration</FormLabel>
+                            <FormControl mt={5}><FormLabel>Choose leave duration</FormLabel>
                                 <RadioGroup>
                                     <HStack>
                                         <Radio onChange={handleTypeChange} value={"true"}>Clinic holiday</Radio>
@@ -184,7 +197,7 @@ export const Holidays = ({doctor}) => {
                                     </HStack>
                                 </RadioGroup>
                             </FormControl>
-                          { holidayInfo.duration=="H" && <FormControl mt={5}><FormLabel>Choose leave slot</FormLabel>
+                            {holidayInfo.duration == "H" && <FormControl mt={5}><FormLabel>Choose leave slot</FormLabel>
                                 <RadioGroup>
                                     <HStack>
                                         <Radio onChange={handleSlotChange} value={"A"}>Morning</Radio>

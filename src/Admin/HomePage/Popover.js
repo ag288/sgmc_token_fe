@@ -21,10 +21,11 @@ import { useNavigate } from 'react-router-dom';
 import { FaPrint } from 'react-icons/fa';
 import { ComponentToPrint } from './TokenPrint';
 import ReactToPrint from 'react-to-print';
+import settingsApi from '../../api/settings';
 // confirm deletion of staff profile
 
 
-export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurrent, doctor }) => {
+export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current, setCurrent, doctor }) => {
 
     const [opened, setOpened] = useState(false)
     const [origin, setOrigin] = useState("")
@@ -33,23 +34,25 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     const { user } = useContext(AppContext)
     const toast = useToast()
     const navigate = useNavigate()
+
     const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
     const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
-    let componentRef = useRef(); 
+   
 
     function onCall() {
-        if (current) {
-            setOrigin("call")
-            onOpenReview()
-        }
-        else {
-            const confirm = window.confirm(`You are going to call ${item.name}`)
-            if (confirm)
-                call()
-        }
+        // if (current) {
+        //     setOrigin("call")
+        //     onOpenReview()
+        // }
+        // else {
+        const confirm = window.confirm(`You are going to call ${item.name}`)
+        if (confirm)
+            call()
+        // }
     }
 
     function call() {
+        //console.log(doctor)
         toast({
             title: `Calling ${item.name}`,
             status: 'info',
@@ -76,9 +79,14 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
     function onCompleted() {
         const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
         if (confirm) {
-            // completed()
-            setOrigin("completed")
-            onOpenReview()
+            if (settings.enableReview) {
+                setOrigin("completed")
+                onOpenReview()
+
+            }
+            else {
+                completed()
+            }
         }
     }
 
@@ -112,8 +120,8 @@ export const ButtonPopover = ({ isLoading, setIsLoading, item, current, setCurre
                     <PopoverBody>
                         <HStack>
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
-                            <Button width={"sm"} isDisabled={item.status != "new"} colorScheme={"green"} onClick={onCall} >Call</Button>
-                            <Button width={"sm"} isDisabled={item.status != "new"} colorScheme={"red"} onClick={onOpenCancel} >Cancel</Button>
+                            <Button width={"sm"} isDisabled={item.status == "cancelled" || item.status == "completed" || current} colorScheme={"green"} onClick={onCall} >Call</Button>
+                            <Button width={"sm"} isDisabled={item.status == "current" || item.status == "completed"} colorScheme={"red"} onClick={onOpenCancel} >Cancel</Button>
                             <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={onCompleted} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
                             {/* <ReactToPrint

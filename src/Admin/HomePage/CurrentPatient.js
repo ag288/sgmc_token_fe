@@ -32,7 +32,7 @@ export const CurrentPatient = ({ current }) => {
                             textAlign="center"
                             paddingTop={"5%"}
                         >
-                            <Heading color={"green"}>{`${current?.initials}-${current?.tokenNumber}`}</Heading>
+                            <Heading color={"green"}>{current.slot.includes("W") ?`${current?.initials}W-${current?.tokenNumber}` :`${current?.initials}-${current?.tokenNumber}` }</Heading>
                         </Box>
                         <VStack>
                             <Text fontWeight={"bold"} fontSize={"large"}>{current?.name}</Text>

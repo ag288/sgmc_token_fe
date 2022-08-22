@@ -1,48 +1,51 @@
+
 import { Text } from '@chakra-ui/react'
+import api from '../api'
 
 
 
-function compareFn(a, b) {
-
-    const start1 = new Date("2020-01-01 " + a.time_of_arrival)
-    const end1 = new Date("2020-01-01 " + a.timeInEst)
-    const start2 = new Date("2020-01-01 " + b.time_of_arrival)
-    const end2 = new Date("2020-01-01 " + b.timeInEst)
+function compareFn(a, b=new Date()) {
+    /// console.log(a)
+    const start1 = new Date()
+    start1.setHours(a.split(":")[0], a.split(":")[1], 0)
+    const end1 = new Date()
     let difference1, difference2, sign
 
     difference1 = end1.getTime() - start1.getTime();
-    difference2 = end2.getTime() - start2.getTime();
 
+    // console.log(start1)
+    // console.log(end1)
 
-
-    if (difference1 < difference2) {
-        return -1;
+    if (difference1 < 0) {
+        return false;
     }
-    if (difference1 > difference2) {
-        return 1;
+    if (difference1 >= 0) {
+        return true;
     }
-    // a must be equal to b
-    return 0;
+
 }
 
 
 
-export function findBg(item, list) {
-    let newList=list.filter((item)=>item.time_of_arrival!=null)
-    console.log(newList.sort(compareFn))
+export function findBg(item) {
+    console.log(item.status)
     if (item.status == "completed")
         return "gray.200"
     else if (item.status == "cancelled")
         return "red.200"
     else if (item.status == "current")
         return "green.100"
-    // else if (newList.sort(compareFn)[0]?.tokenID == item.tokenID)
-    //     return "blue.100"
-    else {
-        if (item.slot.includes("W"))
-            return "yellow.100"
-        else return "white"
+    else if (item.slot.includes("W"))
+        return "yellow.100"
+    else if ((!item.time_of_arrival) && compareFn(item.timeInEst)) {
+        item.status="delayed"
+        api.token.setAsDelayed({ item }).then((res) => {
+            console.log("hi")
+        })
+        return "white"
     }
+    else return "white"
+
 }
 
 

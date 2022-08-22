@@ -19,7 +19,7 @@ export const TokenList = ({doctor,color}) =>{
         let flag = 0
     
     
-        api.token.fetchMorningList({doctor: doctor.doctorID}).then((res) => {
+        api.token.fetchTokenList({doctor: doctor.doctorID}).then((res) => {
           const response = JSON.parse(res.data).result
     
           for (var i = 0; i < response[0].length; i++) {

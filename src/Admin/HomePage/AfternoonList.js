@@ -29,6 +29,7 @@ import { isContentEditable } from '@testing-library/user-event/dist/utils';
 import { FaPrint } from 'react-icons/fa';
 import { ComponentToPrint } from './TokenPrint';
 import ReactToPrint from 'react-to-print'
+import { ListComponent } from './ListComponent';
 
 // List of staff profiles pending approval
 
@@ -89,9 +90,11 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
     }
 
     function setAsArrived(item) {
-        api.token.setAsArrived({ item }).then((res) => {
-            window.location.reload()
-        })
+        if (!(item.time_of_arrival)) {
+            api.token.setAsArrived({ item }).then((res) => {
+                //   window.location.reload()
+            })
+        }
     }
 
     return (
@@ -130,54 +133,54 @@ export const AfternoonList = ({ isLoading, setIsLoading, aftlist, current, setCu
                             </Thead>
                             <Tbody>
                                 {filterList(aftlist, showCompleted).map((item, index) =>
-                                    <Tr key={index} bg={findBg(item, aftlist)}>
-                                        <Td><ButtonPopover doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                        <Td >{item.slot.includes("W")?`${item.initials}W-${item.tokenNumber}` :`${item.initials}-${item.tokenNumber}`}</Td>
-                                        {isMobile && <Td>{types[item.type]}</Td>}
-                                        <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
-                                        {isMobile && <Td>
-                                            <VStack>
-                                                <DetailsPopover doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
-                                                <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
-                                                {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
-                                            </VStack>
-                                        </Td>}
-                                        {isLaptop && <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
-                                        </Td>
-                                            <Td> {item.type}</Td>
-                                            <Td>{item.phone.substring(2)}</Td>
-                                            <Td>{item.timeInEst &&
-                                                <VStack alignItems={"baseline"}>
-                                                    <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
-                                                        .toLocaleTimeString('en-US',
-                                                            { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                                    </Text>
-                                                    <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
-                                                </VStack>}
-                                            </Td>
-                                            <Td ><Text>{item.time_of_arrival ? `${new Date('1970-01-01T' + item.time_of_arrival + 'Z')
-                                                .toLocaleTimeString('en-US',
-                                                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}🟢` : ""}</Text>
-                                            </Td>
-                                            <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
-                                                .toLocaleTimeString('en-US',
-                                                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                            </Td>
-                                            <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
-                                                .toLocaleTimeString('en-US',
-                                                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                            </Td>
+                                    // <Tr key={index} bg={findBg(item, aftlist)}>
+                                    //     <Td><ButtonPopover doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
+                                    //     <Td >{item.slot.includes("W")?`${item.initials}W-${item.tokenNumber}` :`${item.initials}-${item.tokenNumber}`}</Td>
+                                    //     {isMobile && <Td>{types[item.type]}</Td>}
+                                    //     <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
+                                    //     {isMobile && <Td>
+                                    //         <VStack>
+                                    //             <DetailsPopover doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
+                                    //             <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
+                                    //             {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
+                                    //         </VStack>
+                                    //     </Td>}
+                                    //     {isLaptop && <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+                                    //     </Td>
+                                    //         <Td> {item.type}</Td>
+                                    //         <Td>{item.phone.substring(2)}</Td>
+                                    //         <Td>{item.timeInEst &&
+                                    //             <VStack alignItems={"baseline"}>
+                                    //                 <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
+                                    //                     .toLocaleTimeString('en-US',
+                                    //                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                    //                 </Text>
+                                    //                 <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
+                                    //             </VStack>}
+                                    //         </Td>
+                                    //         <Td ><Text>{item.time_of_arrival ? `${new Date('1970-01-01T' + item.time_of_arrival + 'Z')
+                                    //             .toLocaleTimeString('en-US',
+                                    //                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}🟢` : ""}</Text>
+                                    //         </Td>
+                                    //         <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
+                                    //             .toLocaleTimeString('en-US',
+                                    //                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                    //         </Td>
+                                    //         <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
+                                    //             .toLocaleTimeString('en-US',
+                                    //                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                                    //         </Td>
                                             
-                                            <Td>  <ReactToPrint
-                                                onAfterPrint={()=>setAsArrived(item)}
-                                                trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
-                                                content={() => componentRef}
-                                            />
-                                                <div style={{ display: "none" }}>
-                                                    <ComponentToPrint ref={(el) => (componentRef = el)} item={item} />
-                                                </div></Td></>}
+                                    //         <Td>  <ReactToPrint
+                                    //             onAfterPrint={()=>setAsArrived(item)}
+                                    //             trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
+                                    //             content={() => componentRef.current}
+                                    //         />
+                                    //                 <ComponentToPrint ref={componentRef} item={item} />
+                                    //             </Td></>}
 
-                                    </Tr>
+                                    // </Tr>
+                                    <ListComponent item={item} index={index} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor} current={current} setCurrent={setCurrent}/>
                                 )
                                 }
                             </Tbody>

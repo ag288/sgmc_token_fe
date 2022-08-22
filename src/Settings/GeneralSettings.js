@@ -8,7 +8,8 @@ import {
     Input,
     Button,
     useToast,
-    Divider
+    Divider,
+    Switch
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import { scryRenderedComponentsWithType } from 'react-dom/test-utils'
@@ -17,19 +18,19 @@ import { AppContext } from '../App'
 
 
 
-export const GeneralSettings = ({doctor}) => {
+export const GeneralSettings = ({ doctor }) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const [settings, setSettings] = useState({})
-   // const [max, setMax] = useState([])
+    // const [max, setMax] = useState([])
     const toast = useToast()
     const tokensEnd = new Date(new Date().setHours(20, 0, 0));  // disable update settings button till 8pm in evening
     const tokensStart = new Date(new Date().setHours(6, 0, 0)); // disable update settings button after 6am in morning
     const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" }))
-  //  const { doctor } = useContext(AppContext)
+    //  const { doctor } = useContext(AppContext)
     useEffect(() => {
 
-        api.settings.fetchSettings({doctor:doctor.doctorID}).then((res) => {
+        api.settings.fetchSettings({ doctor: doctor.doctorID }).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
@@ -96,6 +97,9 @@ export const GeneralSettings = ({doctor}) => {
             case "14":
                 setSettings(prev => ({ ...prev, ["review_date_limit"]: e.target.value }));
                 break;
+            case "15":
+                setSettings(prev => ({ ...prev, ["enableReview"]: e.target.checked }));
+                break;
 
         }
     }
@@ -106,30 +110,30 @@ export const GeneralSettings = ({doctor}) => {
         // else if (settings.aft_max_tokens < max.find(item => item.slot == "B").tokenNumber)
         //     alert("Please enter the correct value for maximum afternoon tokens!")
         // else {
-            setIsLoading(true)
-            api.settings.updateSettings({ settings, doctor:doctor.doctorID }).then((res) => {
-                setIsLoading(false)
-                toast({
-                    title: 'Updated settings successfully',
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: false,
-                    position: "top"
-                })
-                window.location.reload()
-            }).catch((err) => {
-                setIsLoading(false)
-                toast({
-                    title: 'An error occured.',
-                    description: 'Please try again later',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: false,
-                    position: "top"
-                })
-                window.location.reload()
+        setIsLoading(true)
+        api.settings.updateSettings({ settings, doctor: doctor.doctorID }).then((res) => {
+            setIsLoading(false)
+            toast({
+                title: 'Updated settings successfully',
+                status: 'success',
+                duration: 3000,
+                isClosable: false,
+                position: "top"
             })
-      //  }
+            window.location.reload()
+        }).catch((err) => {
+            setIsLoading(false)
+            toast({
+                title: 'An error occured.',
+                description: 'Please try again later',
+                status: 'error',
+                duration: 3000,
+                isClosable: false,
+                position: "top"
+            })
+            window.location.reload()
+        })
+        //  }
     }
 
 
@@ -214,6 +218,11 @@ export const GeneralSettings = ({doctor}) => {
                         <Text fontWeight={"bold"} >Days upto which reviews can be booked</Text>
                         <Input type="number" id={"14"} onChange={handleChange} value={settings?.review_date_limit}></Input>
                     </VStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Add review as days</Text>
+                        <Switch id={"15"} onChange={handleChange} isChecked={settings?.enableReview}></Switch>
+                    </HStack>
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>

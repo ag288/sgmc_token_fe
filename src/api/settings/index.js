@@ -31,6 +31,9 @@ export default function settingsApi(fetch, baseUrl) {
         },
         checkAvailability(data) {
             return fetch.post(`${baseUrl}/check`, {data})
+        },
+        checkReviewOnHolidays(data){
+            return fetch.post(`${baseUrl}/check-reviews`, {data})
         }
     }
 }

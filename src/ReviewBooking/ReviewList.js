@@ -66,7 +66,7 @@ export const ReviewList = () => {
             setIsLoading(true)
             api.review.deleteReview({ id: item.reviewID }).then((res) => {
                 setIsLoading(false)
-                // window.location.reload()
+                 window.location.reload()
                 toast({
                     title: 'Deleted review successfully',
                     status: 'success',
