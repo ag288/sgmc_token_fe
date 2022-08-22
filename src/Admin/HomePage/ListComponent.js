@@ -100,19 +100,24 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 <Td> {item.type}</Td>
                 <Td>{item.phone.substring(2)}</Td>
                 <Td>{item.timeInEst &&
-                    <VStack alignItems={"baseline"}>
                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
+                            .toLocaleTimeString('en-US',
+                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                        </Text>}
+                </Td>
+                <Td >{decideArrival()}</Td>
+                <Td>{item.timeIn &&
+                    <VStack alignItems={"baseline"}>
+                        <Text>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
                         <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
-                    </VStack>}
-                </Td>
-                <Td >{decideArrival()}</Td>
-                <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
+                    </VStack>}</Td>
+                {/* <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                     .toLocaleTimeString('en-US',
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                </Td>
+                </Td> */}
                 <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
                     .toLocaleTimeString('en-US',
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}

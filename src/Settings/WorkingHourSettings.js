@@ -107,7 +107,7 @@ export const WorkingHourSettings = ({doctor}) => {
                 rounded={'lg'}
                 bg={'white'}
                 boxShadow={'lg'}
-                p={8}
+                p={3}
                 width='full'>
                 <Heading size="lg">Working Hours</Heading>
                 <VStack width="full">
