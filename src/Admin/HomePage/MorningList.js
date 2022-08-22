@@ -109,7 +109,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                                     <Th>Type</Th>
                                     <Th>Phone</Th>
                                     <Th>Token Time</Th>
-                                    <Th>Time of Arrival</Th>
+                                    <Th>Arrival Time</Th>
                                     <Th>In</Th>
                                     <Th>Out</Th>
                                     <Th></Th></>}

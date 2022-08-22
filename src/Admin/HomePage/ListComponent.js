@@ -88,14 +88,16 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
             <Td >{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}</Td>
             {isMobile && <Td>{types[item.type]}</Td>}
             <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
-            {isMobile && <Td>
+           
+            {/* {isMobile && <Td>
                 <VStack>
                     <DetailsPopover doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
                     <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
-                    {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
                 </VStack>
-            </Td>}
-            {isLaptop && <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+            </Td>} */}
+            
+          {/* {isLaptop && */}
+             <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
             </Td>
                 <Td> {item.type}</Td>
                 <Td>{item.phone.substring(2)}</Td>
@@ -130,7 +132,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 />
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                     </div>
-                </Td></>}
+                </Td></>
+               { /*}*/}
 
         </Tr>
     )
