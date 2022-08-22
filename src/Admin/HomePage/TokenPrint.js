@@ -15,7 +15,6 @@ import {
 export class ComponentToPrint extends React.Component {
 
     render() {
-        console.log(this.props.item)
         const colors = ["red", "navy", "teal", "green", "purple", "darkmagenta", "darkorange", "salmon", "skyblue","maroon"]
         return (
             <Flex

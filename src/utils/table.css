@@ -1,0 +1,12 @@
+/* styling the search input and heading of table */
+
+.tableHeader {
+    font-size: 14px;
+}
+
+.tableFilterInput {
+    background-color: gray;
+    border-style: groove;
+    border: 3pt;
+    width: 100%;
+}

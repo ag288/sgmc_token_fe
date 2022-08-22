@@ -95,17 +95,17 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
                 </VStack>
             </Td>} */}
-            
-          {/* {isLaptop && */}
+
+             {isMobile && 
              <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
             </Td>
-                <Td> {item.type}</Td>
-                <Td>{item.phone.substring(2)}</Td>
-                <Td>{item.timeInEst &&
+              
+               
+                <Td>
                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                        </Text>}
+                        </Text>
                 </Td>
                 <Td >{decideArrival()}</Td>
                 <Td>{item.timeIn &&
@@ -114,27 +114,52 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
-                        <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
+                       {item.timeInEst && <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />}
                     </VStack>}</Td>
-                {/* <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
-                    .toLocaleTimeString('en-US',
-                        { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                </Td> */}
                 <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
                     .toLocaleTimeString('en-US',
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
 
-                <Td>  <ReactToPrint
+                <Td>{item.phone.substring(2)}</Td>
+                </>
+               }
+            
+           {isLaptop &&
+             <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+            </Td>
+                <Td> {item.type}</Td>
+                <Td>{item.phone.substring(2)}</Td>
+                <Td>
+                        <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
+                            .toLocaleTimeString('en-US',
+                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                        </Text>
+                </Td>
+                <Td >{decideArrival()}</Td>
+                <Td>{item.timeIn &&
+                    <VStack alignItems={"baseline"}>
+                        <Text>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
+                            .toLocaleTimeString('en-US',
+                                { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                        </Text>
+                       {item.timeInEst && <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />}
+                    </VStack>}</Td>
+                <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
+                    .toLocaleTimeString('en-US',
+                        { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
+                </Td>
+
+                </>
+               }
+{ user.userID==2 && <Td>  <ReactToPrint
                     onAfterPrint={setAsArrived}
                     trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
                     content={() => componentRef.current}
                 />
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                     </div>
-                </Td></>
-               { /*}*/}
-
+                </Td>}
         </Tr>
     )
 }

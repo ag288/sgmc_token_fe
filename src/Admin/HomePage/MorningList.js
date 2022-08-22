@@ -32,6 +32,7 @@ import { FaPrint } from 'react-icons/fa';
 import { ComponentToPrint } from './TokenPrint';
 import ReactToPrint from 'react-to-print'
 import { ListComponent } from './ListComponent';
+import { useSortableData } from '../../utils/sortTable';
 
 // List of staff profiles pending approval
 
@@ -45,43 +46,18 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
         "First time": 'F',
         "Other": "O"
     }
-    // const { user } = useContext(AppContext)
-    let componentRef = useRef();
+    const { items, requestSort, sortConfig } = useSortableData(mornlist, { key: "tokenNumber", direction: "ascending" });
+
+    const { user } = useContext(AppContext)
+    //let componentRef = useRef();
 
     function handleChange() {
         setShowCompleted(!showCompleted)
     }
 
-    function handleDoubleClickForFile(id) {
-        let fileNo = window.prompt("Enter the file number")
-        if (fileNo != null)
-            //  editFileNumber(fileNo, id)
-            api.token.editFileNumber({ fileNo, id }).then((res) => {
-                const response = JSON.parse(res.data).result
-                window.location.reload()
-            })
-    }
+   
 
-    function handleDoubleClickForName(id) {
-        let name = window.prompt("Enter the patient's name")
-        if (name != null)
-            api.token.editName({ name, id }).then((res) => {
-                const response = JSON.parse(res.data).result
-                window.location.reload()
-            })
-    }
-
-    function editFileNumber(value, id) {
-
-    }
-
-    function setAsArrived(item) {
-        if (!(item.time_of_arrival)) {
-            api.token.setAsArrived({ item }).then((res) => {
-                //   window.location.reload()
-            })
-        }
-    }
+    
     return (
         <>
 
@@ -100,72 +76,31 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
                         <Thead>
                             <Tr>
                                 <Th></Th>
-                                <Th>Token
-                                </Th>
+                                <Th onClick={() => requestSort('tokenNumber')}>Token</Th>
                                 {isMobile && <Th>Type</Th>}
-                                <Th>Name</Th>
-                                {isMobile && <Th></Th>}
-                                {isLaptop && <><Th>File No.</Th>
+                                <Th onClick={() => requestSort('name')}>Name</Th>
+                                {/* {isMobile && <Th></Th>} */}
+                                {isMobile && <><Th onClick={() => requestSort('fileNumber')}>File No.</Th>
+                                    <Th onClick={() => requestSort('timeInEst')}>Token Time</Th>
+                                    <Th onClick={() => requestSort('time_of_arrival')}>Arrival Time</Th>
+                                    <Th onClick={() => requestSort('timeIn')}>In</Th>
+                                    <Th onClick={() => requestSort('timeOut')}>Out</Th>
+                                    <Th>Phone</Th>
+                                </>}
+                                {isLaptop && <><Th onClick={() => requestSort('fileNumber')}>File No.</Th>
                                     <Th>Type</Th>
                                     <Th>Phone</Th>
-                                    <Th>Token Time</Th>
-                                    <Th>Arrival Time</Th>
-                                    <Th>In</Th>
-                                    <Th>Out</Th>
-                                    <Th></Th></>}
+                                    <Th onClick={() => requestSort('timeInEst')}>Token Time</Th>
+                                    <Th onClick={() => requestSort('time_of_arrival')}>Arrival Time</Th>
+                                    <Th onClick={() => requestSort('timeIn')}>In</Th>
+                                    <Th onClick={() => requestSort('timeOut')}>Out</Th></>}
+                                {user.userID == 2 && <Th></Th>}
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {filterList(mornlist, showCompleted).map((item, index) =>
-                                // <Tr key={index} bg={findBg(item, mornlist)}>
-                                //     <Td><ButtonPopover doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                                //     <Td >{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}</Td>
-                                //     {isMobile && <Td>{types[item.type]}</Td>}
-                                //     <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
-                                //     {isMobile && <Td>
-                                //         <VStack>
-                                //             <DetailsPopover doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
-                                //             <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
-                                //             {/* <Text >{item.timeIn ? diffMinutes(item.timeIn, item.timeInEst) : ""} </Text> */}
-                                //         </VStack>
-                                //     </Td>}
-                                //     {isLaptop && <><Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
-                                //     </Td>
-                                //         <Td> {item.type}</Td>
-                                //         <Td>{item.phone.substring(2)}</Td>
-                                //         <Td>
-                                //             {item.timeInEst && <VStack alignItems={"baseline"}>
-                                //                 <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
-                                //                     .toLocaleTimeString('en-US',
-                                //                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                //                 </Text>
-                                //                 <DiffMinutes time1={item.timeIn} time2={item.timeInEst} item={item} />
-                                //             </VStack>}
-                                //         </Td>
-                                //         <Td ><Text>{item.time_of_arrival ? `${new Date('1970-01-01T' + item.time_of_arrival + 'Z')
-                                //             .toLocaleTimeString('en-US',
-                                //                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}🟢` : ""}</Text>
-                                //         </Td>
-                                //         <Td>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
-                                //             .toLocaleTimeString('en-US',
-                                //                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                //         </Td>
-                                //         <Td>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
-                                //             .toLocaleTimeString('en-US',
-                                //                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
-                                //         </Td> <Td>  <ReactToPrint
-                                //             onAfterPrint={() => setAsArrived(item)}
-                                //             trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
-                                //             content={() => componentRef}
-                                //         />
-                                //             <div style={{ display: "none" }}>
-                                //                 <ComponentToPrint ref={(el) => (componentRef = el)} item={item} />
-                                //             </div></Td>
+                            {filterList(items, showCompleted).map((item, index) =>
 
-                                //     </>}
-
-                                // </Tr>
-                                <ListComponent item={item} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor} index={index} current={current} setCurrent={setCurrent}/>
+                                <ListComponent item={item} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor} index={index} current={current} setCurrent={setCurrent} />
                             )
                             }
                         </Tbody>

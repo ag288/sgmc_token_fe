@@ -28,7 +28,6 @@ function compareFn(a, b=new Date()) {
 
 
 export function findBg(item) {
-    console.log(item.status)
     if (item.status == "completed")
         return "gray.200"
     else if (item.status == "cancelled")
@@ -40,7 +39,7 @@ export function findBg(item) {
     else if ((!item.time_of_arrival) && compareFn(item.timeInEst)) {
         item.status="delayed"
         api.token.setAsDelayed({ item }).then((res) => {
-            console.log("hi")
+           
         })
         return "white"
     }

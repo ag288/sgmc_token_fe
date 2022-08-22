@@ -94,7 +94,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
     function completed() {
 
         setIsLoading(true)
-        api.token.setAsCompleted().then((res) => {
+        api.token.setAsCompleted({doctor}).then((res) => {
             setIsLoading(false)
             window.location.reload()
         }
