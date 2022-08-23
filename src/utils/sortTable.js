@@ -29,7 +29,8 @@ export const useSortableData = (items, config) => {
     const requestSort = key => {
         let direction = 'ascending';
         if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
-            direction = 'descending';
+          //  direction = 'descending';
+        key="tokenNumber"
         }
         setSortConfig({ key, direction });
     }

@@ -1,5 +1,5 @@
 
-import { Text } from '@chakra-ui/react'
+import { Text, Toast } from '@chakra-ui/react'
 import api from '../api'
 
 
@@ -37,10 +37,12 @@ export function findBg(item) {
     else if (item.slot.includes("W"))
         return "yellow.100"
     else if ((!item.time_of_arrival) && compareFn(item.timeInEst)) {
+        if(item.status!="delayed"){
         item.status="delayed"
         api.token.setAsDelayed({ item }).then((res) => {
            
         })
+    }
         return "white"
     }
     else return "white"
@@ -113,4 +115,68 @@ export function DiffMinutes({ time1, time2, item }) {
 export function logout(setUser) {
     setUser(null)
     localStorage.removeItem("currentUser")
+}
+
+
+
+export function onCall(item,current,doctor,toast,setIsLoading) {
+    // if (current) {
+    //     setOrigin("call")
+    //     onOpenReview()
+    // }
+    // else {
+    const confirm = window.confirm(`You are going to call ${item.name}`)
+    if (confirm)
+        call(item,current,doctor,toast,setIsLoading)
+    // }
+}
+
+export function call(item,current,doctor,toast,setIsLoading) {
+    //console.log(doctor)
+    toast({
+        title: `Calling ${item.name}`,
+        status: 'info',
+        duration: 3000,
+        isClosable: false,
+        position: "top"
+    })
+    setIsLoading(true)
+    api.token.callNewToken({ current, item, doctor }).then((res) => {
+        // setCurrent(item)
+        setIsLoading(false)
+        window.location.reload()
+    }).catch(err => {
+        toast({
+            title: "An error occured",
+            status: 'error',
+            duration: 3000,
+            isClosable: false,
+            position: "top"
+        })
+    })
+}
+
+export function onCompleted(item, settings, onOpenReview,doctor,setIsLoading) {
+    const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
+    if (confirm) {
+        if (settings.enableReview) {
+            //setOrigin("completed")
+            onOpenReview()
+
+        }
+        else {
+            completed(doctor,setIsLoading)
+        }
+    }
+}
+
+function completed(doctor,setIsLoading) {
+
+    setIsLoading(true)
+    api.token.setAsCompleted({doctor}).then((res) => {
+        setIsLoading(false)
+        window.location.reload()
+    }
+    )
+
 }

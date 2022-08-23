@@ -32,7 +32,7 @@ import { AppContext } from '../../App';
 
 export const ReviewModal = (props) => {
 
-    const { item, current, isOpen, onClose, isLoading, setIsLoading, origin, doctor } = props
+    const { current, isOpen, onClose, isLoading, setIsLoading, doctor } = props
     const [info, setInfo] = useState({
         file: "",
         days: 0
@@ -48,30 +48,30 @@ export const ReviewModal = (props) => {
         setInfo(prev => ({ ...prev, "days": e.target.value }))
     }
 
-    function call() {
-        console.log(doctor)
-        toast({
-            title: `Calling ${item.name}`,
-            status: 'info',
-            duration: 3000,
-            isClosable: false,
-            position: "top"
-        })
-        setIsLoading(true)
-        api.token.callNewToken({ item, current,doctor }).then((res) => {
-            // setCurrent(item)
-            setIsLoading(false)
-            window.location.reload()
-        }).catch(err => {
-            toast({
-                title: "An error occured",
-                status: 'error',
-                duration: 3000,
-                isClosable: false,
-                position: "top"
-            })
-        })
-    }
+    // function call() {
+    //     toast({
+    //        // title: `Calling ${item.name}`,
+    //        title: `Calling ${current.name}`,
+    //         status: 'info',
+    //         duration: 3000,
+    //         isClosable: false,
+    //         position: "top"
+    //     })
+    //     setIsLoading(true)
+    //     api.token.callNewToken({ current,doctor }).then((res) => {
+    //         // setCurrent(item)
+    //         setIsLoading(false)
+    //         window.location.reload()
+    //     }).catch(err => {
+    //         toast({
+    //             title: "An error occured",
+    //             status: 'error',
+    //             duration: 3000,
+    //             isClosable: false,
+    //             position: "top"
+    //         })
+    //     })
+    // }
 
     function completed() {
 
@@ -86,7 +86,8 @@ export const ReviewModal = (props) => {
 
     function saveReview() {
         onClose()
-        let id = origin == "previous" ? item : current
+       // let id = origin == "previous" ? item : current
+       let id=current
         if (!(info.file == "" && info.days == 0)) {
             api.token.saveReview({ id: id, info, doctor }).then((res) => {
                 //window.location.reload()
@@ -107,9 +108,9 @@ export const ReviewModal = (props) => {
                 })
             })
         }
-        if (origin == "call")
-            call()
-        else if (origin == "completed")
+        // if (origin == "call")
+        //     call()
+        // else if (origin == "completed")
             completed()
     }
 
@@ -120,13 +121,16 @@ export const ReviewModal = (props) => {
         <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>{origin == "previous" ? item.name : current.name}</ModalHeader>
+                {/* <ModalHeader>{origin == "previous" ? item.name : current.name}</ModalHeader> */}
+                <ModalHeader>{current.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    {origin == "previous" && (item.fileNumber == null|| item.fileNumber=="N") || origin != "previous" && (current.fileNumber == null || current.fileNumber=="N")? <FormControl>
-                        <FormLabel>File number</FormLabel>
+                    {/* {origin == "previous" && (item.fileNumber == null|| item.fileNumber=="N") || origin != "previous" && (current.fileNumber == null || current.fileNumber=="N")? */}
+                   { current.fileNumber==null || current.fileNumber=="N" &&<FormControl> 
+                          <FormLabel>File number</FormLabel>
                         <Input type="text" value={info.file} onChange={handleFileChange}></Input>
-                    </FormControl> : null}
+                    </FormControl> } 
+                    {/* : null} */}
                     <FormControl>
                         <FormLabel>Review after</FormLabel>
                         <InputGroup>

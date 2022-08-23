@@ -1,17 +1,29 @@
 import { HamburgerIcon, } from "@chakra-ui/icons";
-import { Box, Heading, Text, HStack, VStack, Button } from "@chakra-ui/react"
-import { useEffect } from "react";
+import { Box, Heading, Text, HStack, VStack, Button, useDisclosure } from "@chakra-ui/react"
+import { useEffect, useState } from "react";
 import { useMediaQuery } from "@chakra-ui/react";
+import api from "../../api";
+import { ReviewModal } from "./ReviewModal";
+import { onCompleted } from "../../utils/tokenFunctions";
 
-
-export const CurrentPatient = ({ current }) => {
+export const CurrentPatient = ({ current, isLoading, setIsLoading, doctor }) => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
+    const [origin, setOrigin] = useState("")
+    const [settings, setSettings] = useState([])
+    
+    const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
 
     useEffect(() => {
+
+        api.settings.fetchSettings({doctor}).then((res) => {
+            const response = JSON.parse(res.data).result
+            setSettings(response[0])
+        })
 
     }, [current]);
 
 
+    
 
     return (
         <VStack>
@@ -32,11 +44,13 @@ export const CurrentPatient = ({ current }) => {
                             textAlign="center"
                             paddingTop={"5%"}
                         >
-                            <Heading color={"green"}>{current.slot.includes("W") ?`${current?.initials}W-${current?.tokenNumber}` :`${current?.initials}-${current?.tokenNumber}` }</Heading>
+                            <Heading color={"green"}>{current.slot.includes("W") ? `${current?.initials}W-${current?.tokenNumber}` : `${current?.initials}-${current?.tokenNumber}`}</Heading>
                         </Box>
                         <VStack>
-                            <Text fontWeight={"bold"} fontSize={"large"}>{current?.name}</Text>
+                            <Text noOfLines={1} fontWeight={"bold"} fontSize={"large"}>{current?.name}</Text>
                             <Text fontWeight={"bold"} fontSize={"large"}>{current?.type}</Text>
+                            {current ? <Button colorScheme={"blue"} onClick={()=>onCompleted(current, settings, onOpenReview,doctor,setIsLoading)}>Done</Button>
+                                : null}
                         </VStack>
                         <VStack width="30%">
                             <Text fontWeight={"bold"} >Time in:</Text>
@@ -49,14 +63,19 @@ export const CurrentPatient = ({ current }) => {
                                 .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                                 </Text>
                             </Box>
+
                         </VStack>
+
                     </HStack> :
                     <VStack>
                         <Heading color="green" width="full" textAlign={"center"} size="lg">
                             Please call the next token</Heading>
                         <Text>Click on  <HamburgerIcon boxSize={"5"} border={"1px"} />  next to the token and press <Button size="sm" colorScheme={"blue"}>Call</Button></Text>
                     </VStack>}
+
             </Box>
+            <ReviewModal isOpen={isOpenReview} onClose={onCloseReview} doctor={doctor} current={current} isLoading={isLoading}
+                setIsLoading={setIsLoading} />
         </VStack>
     )
 }
