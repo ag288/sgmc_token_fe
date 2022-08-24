@@ -148,7 +148,8 @@ export default function Simple() {
                     </HStack>
                     <Flex alignItems={'center'}>
                         {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={pendingCount} />}
-                        {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
+                        {/* {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
+                        */}
                         <Menu>
                             <MenuButton
                                 as={Button}

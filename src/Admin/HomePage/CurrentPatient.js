@@ -1,16 +1,17 @@
 import { HamburgerIcon, } from "@chakra-ui/icons";
 import { Box, Heading, Text, HStack, VStack, Button, useDisclosure } from "@chakra-ui/react"
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useMediaQuery } from "@chakra-ui/react";
 import api from "../../api";
 import { ReviewModal } from "./ReviewModal";
 import { onCompleted } from "../../utils/tokenFunctions";
+import { AppContext } from "../../App";
 
 export const CurrentPatient = ({ current, isLoading, setIsLoading, doctor }) => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [origin, setOrigin] = useState("")
     const [settings, setSettings] = useState([])
-    
+    const {user} = useContext(AppContext)
     const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
 
     useEffect(() => {
@@ -49,7 +50,7 @@ export const CurrentPatient = ({ current, isLoading, setIsLoading, doctor }) => 
                         <VStack>
                             <Text noOfLines={1} fontWeight={"bold"} fontSize={"large"}>{current?.name}</Text>
                             <Text fontWeight={"bold"} fontSize={"large"}>{current?.type}</Text>
-                            {current ? <Button colorScheme={"blue"} onClick={()=>onCompleted(current, settings, onOpenReview,doctor,setIsLoading)}>Done</Button>
+                            {current ? <Button colorScheme={"blue"} onClick={()=>onCompleted(current, settings, onOpenReview,doctor,setIsLoading, user.userID)}>Done</Button>
                                 : null}
                         </VStack>
                         <VStack width="30%">

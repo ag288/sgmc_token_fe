@@ -11,7 +11,7 @@ import {
     HStack,
     Text,
 } from '@chakra-ui/react';
-import { FaEllipsisH, FaEllipsisV } from 'react-icons/fa'
+import { FaEllipsisH, FaEllipsisV, FaSortDown } from 'react-icons/fa'
 import api from '../../api';
 import { diffMinutes } from '../../utils/tokenFunctions';
 

@@ -22,6 +22,7 @@ import {
     Input,
     InputGroup,
     InputRightAddon,
+    Text,
 } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
 import api from '../../api';
@@ -125,6 +126,7 @@ export const ReviewModal = (props) => {
                 <ModalHeader>{current.name}</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
+                    <Text mb={3}>{`You are going to mark ${current.name}'s token as completed!`}</Text>
                     {/* {origin == "previous" && (item.fileNumber == null|| item.fileNumber=="N") || origin != "previous" && (current.fileNumber == null || current.fileNumber=="N")? */}
                    { current.fileNumber==null || current.fileNumber=="N" &&<FormControl> 
                           <FormLabel>File number</FormLabel>
@@ -143,7 +145,7 @@ export const ReviewModal = (props) => {
 
                 <ModalFooter>
                     <Button colorScheme='blue' mr={3} onClick={saveReview}>
-                        Save
+                        Ok
                     </Button>
 
                 </ModalFooter>

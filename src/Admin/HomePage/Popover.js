@@ -121,7 +121,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
                             <Button width={"sm"} isDisabled={item.status == "cancelled" || item.status == "completed" || current} colorScheme={"green"} onClick={()=>onCall(item,current,doctor,toast,setIsLoading)} >Call</Button>
                             <Button width={"sm"} isDisabled={item.status == "current" || item.status == "completed"} colorScheme={"red"} onClick={onOpenCancel} >Cancel</Button>
-                            <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={()=>onCompleted(current, settings, onOpenReview,doctor,setIsLoading)} >Done</Button>
+                            <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={()=>onCompleted(current, settings, onOpenReview,doctor,setIsLoading,user.userID)} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>
                             {/* <ReactToPrint
                             trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}

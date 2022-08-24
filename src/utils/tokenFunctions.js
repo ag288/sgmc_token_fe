@@ -4,14 +4,14 @@ import api from '../api'
 
 
 
-function compareFn(a, b=new Date()) {
+export function compareFn(a, b) {
     /// console.log(a)
     const start1 = new Date()
     start1.setHours(a.split(":")[0], a.split(":")[1], 0)
-    const end1 = new Date()
-    let difference1, difference2, sign
+    //const end1 = new Date()
+    let difference1
 
-    difference1 = end1.getTime() - start1.getTime();
+    difference1 = b.getTime() - start1.getTime();
 
     // console.log(start1)
     // console.log(end1)
@@ -28,6 +28,7 @@ function compareFn(a, b=new Date()) {
 
 
 export function findBg(item) {
+
     if (item.status == "completed")
         return "gray.200"
     else if (item.status == "cancelled")
@@ -36,13 +37,13 @@ export function findBg(item) {
         return "green.100"
     else if (item.slot.includes("W"))
         return "yellow.100"
-    else if ((!item.time_of_arrival) && compareFn(item.timeInEst)) {
-        if(item.status!="delayed"){
-        item.status="delayed"
-        api.token.setAsDelayed({ item }).then((res) => {
-           
-        })
-    }
+    else if ((!item.time_of_arrival) && compareFn(item.timeInEst, new Date())) {
+        if (item.status != "delayed") {
+            item.status = "delayed"
+            api.token.setAsDelayed({ item }).then((res) => {
+
+            })
+        }
         return "white"
     }
     else return "white"
@@ -119,7 +120,7 @@ export function logout(setUser) {
 
 
 
-export function onCall(item,current,doctor,toast,setIsLoading) {
+export function onCall(item, current, doctor, toast, setIsLoading) {
     // if (current) {
     //     setOrigin("call")
     //     onOpenReview()
@@ -127,11 +128,11 @@ export function onCall(item,current,doctor,toast,setIsLoading) {
     // else {
     const confirm = window.confirm(`You are going to call ${item.name}`)
     if (confirm)
-        call(item,current,doctor,toast,setIsLoading)
+        call(item, current, doctor, toast, setIsLoading)
     // }
 }
 
-export function call(item,current,doctor,toast,setIsLoading) {
+export function call(item, current, doctor, toast, setIsLoading) {
     //console.log(doctor)
     toast({
         title: `Calling ${item.name}`,
@@ -156,24 +157,27 @@ export function call(item,current,doctor,toast,setIsLoading) {
     })
 }
 
-export function onCompleted(item, settings, onOpenReview,doctor,setIsLoading) {
-    const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
-    if (confirm) {
-        if (settings.enableReview) {
+export function onCompleted(item, settings, onOpenReview, doctor, setIsLoading, user) {
+  //  const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
+    //if (confirm) {
+        if (settings.enableReview && user == 1) {
             //setOrigin("completed")
             onOpenReview()
 
         }
         else {
-            completed(doctor,setIsLoading)
+            const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
+            if (confirm) {
+                completed(doctor, setIsLoading)
+            }
         }
-    }
+   // }
 }
 
-function completed(doctor,setIsLoading) {
+function completed(doctor, setIsLoading) {
 
     setIsLoading(true)
-    api.token.setAsCompleted({doctor}).then((res) => {
+    api.token.setAsCompleted({ doctor }).then((res) => {
         setIsLoading(false)
         window.location.reload()
     }

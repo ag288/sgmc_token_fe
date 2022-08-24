@@ -1,10 +1,10 @@
-import { Box, Button, HStack, IconButton, Td, Text, Tr, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, Button, Divider, HStack, IconButton, Td, Text, Tr, useMediaQuery, VStack } from "@chakra-ui/react"
 import { useContext, useEffect, useRef, useState } from "react"
 import { FaCheck, FaPrint } from "react-icons/fa"
 import ReactToPrint from "react-to-print"
 import api from "../../api"
 import { AppContext } from "../../App"
-import { DiffMinutes, findBg } from "../../utils/tokenFunctions"
+import { compareFn, DiffMinutes, findBg } from "../../utils/tokenFunctions"
 import { DetailsPopover } from "./DetailsPopover"
 import { DetailsPopover1 } from "./DetailsPopover1"
 import { ButtonPopover } from "./Popover"
@@ -79,8 +79,18 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
         if (item.status == "delayed")
             str += "🔴"
-        if (item.status == "arrived")
-            str += "🟢"
+        if (item.status == "arrived") {
+            let arrival = new Date()
+            arrival.setHours(item.time_of_arrival.split(":")[0], item.time_of_arrival.split(":")[1], 0)
+
+            if (item.timeInEst && compareFn(item.timeInEst, arrival)) {
+                str += "🔴"
+            }
+            else {
+                str += "🟢"
+            }
+        }
+
         return str
     }
 
@@ -174,10 +184,10 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 <Td><ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                 <Td >{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}</Td>
                 <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
-              
+
                 <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
-               {isMobile ? <Td>{types[item.type]}</Td> : <Td> {item.type}</Td> } 
+                {isMobile ? <Td>{types[item.type]}</Td> : <Td> {item.type}</Td>}
                 <Td>{item.phone.substring(2)}</Td>
                 <Td>
                     <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
@@ -198,7 +208,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     .toLocaleTimeString('en-US',
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
-                {user.userID == 2 && <Td><IconButton bg="transparent" color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
+                {user.userID == 2 && <Td><IconButton bg="transparent" color={"blue"} isDisabled={item.status!="new" && item.status!="delayed"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
 
                 {/*    <Td>  <ReactToPrint
                         onAfterPrint={setAsArrived}
@@ -215,7 +225,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
                     <Text color="green" fontWeight={"bold"}>{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}
                     </Text>
-                    <Text onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}
+                    <Text fontWeight={"bold"} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}
                     </Text>
                     <Text>{types[item.type]}
                     </Text>
@@ -226,41 +236,46 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     />
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                     </div> */}
-                    {user.userID == 2 && <Td><IconButton bg="transparent" color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
-                  
-                        <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
-                 
+                    {user.userID == 2 && <Td><IconButton bg="transparent" isDisabled={item.status!="new" && item.status!="delayed"} color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
+                    <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
+
+                   
                 </HStack>
 
-                <HStack >
-                    <VStack>
-                        {item.timeInEst && <Text fontWeight={"bold"}>Token Time</Text>}
+                <HStack spacing="auto" height={"50"}>
+                     <Text width={"10%"}></Text>
+                    <VStack spacing={0}>
+                        {item.timeInEst && <Text fontWeight={"bold"}>Time</Text>}
                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
                     </VStack>
-                    <VStack>
-                        {item.time_of_arrival && <Text fontWeight={"bold"}>Arrival Time</Text>}
+                    <Divider borderColor="gray" orientation="vertical"/>
+                
+                    <VStack spacing={0}>
+                        {item.time_of_arrival && <Text fontWeight={"bold"}>Arrival</Text>}
 
                         <Text>{decideArrival()}
                         </Text>
                     </VStack>
-                    <VStack>
+                    <Divider orientation="vertical"/>
+                    <VStack spacing={0}>
                         {item.timeIn && <Text fontWeight={"bold"}>In</Text>}
                         <Text>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
                     </VStack>
-                    <VStack>
+                     <Divider orientation="vertical"/>
+                    <VStack spacing={0}>
                         {item.timeOut && <Text fontWeight={"bold"}>Out</Text>}
                         <Text>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
                     </VStack>
-                  
+
                 </HStack>
 
 
