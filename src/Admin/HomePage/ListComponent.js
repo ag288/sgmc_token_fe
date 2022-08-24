@@ -227,7 +227,9 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                     </div> */}
                     {user.userID == 2 && <Td><IconButton bg="transparent" color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
-
+                  
+                        <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
+                 
                 </HStack>
 
                 <HStack >
@@ -258,9 +260,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
                     </VStack>
-                    <VStack>
-                        <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
-                    </VStack>
+                  
                 </HStack>
 
 
