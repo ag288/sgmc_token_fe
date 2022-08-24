@@ -78,7 +78,7 @@ console.log(sortConfig)
                 p={0}
                 width='full'>
 
-                {isLaptop ? <TableContainer>
+                {isLaptop || desktopView ? <TableContainer>
                     <Table variant='striped' size={isMobile ? "sm" : "md"} colorScheme='grey'>
                         <HeaderComponent requestSort={requestSort} sortConfig={sortConfig} />
 
