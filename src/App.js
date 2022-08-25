@@ -18,7 +18,7 @@ function App() {
 
    api.token.fetchDoctors().then((res)=>{
     const response = JSON.parse(res.data).result
-  //  console.log(response)
+    console.log(response)
 setDoctors(response)
   })
 

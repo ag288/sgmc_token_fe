@@ -23,7 +23,7 @@ import { useLocation, Link, NavLink, Navigate, useNavigate } from 'react-router-
 import { logout } from '../utils/tokenFunctions';
 import { ExportToExcel } from '../Admin/HomePage/ExportToExcel';
 import api from '../api';
-import { FaLaptop } from 'react-icons/fa';
+import { ListPrintIcon } from '../Admin/HomePage/ListPrintIcon';
 
 
 
@@ -147,6 +147,7 @@ export default function Simple() {
                         </HStack>
                     </HStack>
                     <Flex alignItems={'center'}>
+                        <ListPrintIcon/>
                         {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={pendingCount} />}
                         {/* {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
                         */}

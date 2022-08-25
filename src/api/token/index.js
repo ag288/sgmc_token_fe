@@ -19,6 +19,10 @@ export default function tokenApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/list`,{data})
         },
 
+        fetchTokenListForPrint(data) {
+            return fetch.post(`${baseUrl}/print-list`,{data})
+        },
+
         fetchAfternoonList() {
             return fetch(`${baseUrl}/fetch_afternoon`)
         },

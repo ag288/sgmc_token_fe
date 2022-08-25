@@ -149,20 +149,20 @@ export const PatientDetails = (props) => {
                 else {
                     api.book.createPatient({ token }).then((res) => {
                         const response = JSON.parse(res.data).result
-                        const message = JSON.parse(res.data).message
-                        console.log(response)
-                        if (response.message == "") {
+                        // const message = JSON.parse(res.data).message
+                        // console.log(message)
+                        // if (responsemessage == "") {
                             setToken(prev => ({ ...prev, "id": response }))
                             navigate(navigateTo, { state: { token, id: response, settings, reasons } })
-                        }
-                        else {
-                            let msg = `${message}\nThe following patients were found with this file number:\n`
-                            for (var i = 0; i < response.length; i++) {
-                                msg += `${i + 1}. ${response[i].name}\n}`
-                            }
-                            msg += "\n Do you want to merge the following patients?"
-                            const merge = window.confirm(msg)
-                        }
+                        // }
+                        // else {
+                        //     let msg = `${message}\nThe following patients were found with this file number:\n`
+                        //     for (var i = 0; i < response.length; i++) {
+                        //         msg += `${i + 1}. ${response[i].name}\n}`
+                        //     }
+                        //     msg += "\n Do you want to merge the following patients?"
+                        //     const merge = window.confirm(msg)
+                        // }
                     })
                 }
             }

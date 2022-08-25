@@ -26,7 +26,7 @@ export const HeaderComponent = ({ requestSort, sortConfig }) => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
-    console.log(requestSort)
+    //console.log(requestSort)
     // const { items, requestSort, sortConfig } = useSortableData(list, { key: "tokenNumber", direction: "ascending" });
 
 

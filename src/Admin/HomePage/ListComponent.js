@@ -208,7 +208,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     .toLocaleTimeString('en-US',
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
-                {user.userID == 2 && <Td><IconButton bg="transparent" color={"blue"} isDisabled={item.status!="new" && item.status!="delayed"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
+                {user.userID == 2 && <Td><IconButton color={"blue"} isDisabled={item.status!="new" && item.status!="delayed"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
 
                 {/*    <Td>  <ReactToPrint
                         onAfterPrint={setAsArrived}
@@ -236,14 +236,14 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     />
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                     </div> */}
-                    {user.userID == 2 && <Td><IconButton bg="transparent" isDisabled={item.status!="new" && item.status!="delayed"} color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
+                    {user.userID == 2 && <Td><IconButton isDisabled={item.status!="new" && item.status!="delayed"} color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton></Td>}
                     <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
 
                    
                 </HStack>
 
                 <HStack spacing="auto" height={"50"}>
-                     <Text width={"10%"}></Text>
+                     <Text></Text>
                     <VStack spacing={0}>
                         {item.timeInEst && <Text fontWeight={"bold"}>Time</Text>}
                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
@@ -251,15 +251,13 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
                     </VStack>
-                    <Divider borderColor="gray" orientation="vertical"/>
-                
+                   
                     <VStack spacing={0}>
                         {item.time_of_arrival && <Text fontWeight={"bold"}>Arrival</Text>}
 
                         <Text>{decideArrival()}
                         </Text>
                     </VStack>
-                    <Divider orientation="vertical"/>
                     <VStack spacing={0}>
                         {item.timeIn && <Text fontWeight={"bold"}>In</Text>}
                         <Text>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
@@ -267,7 +265,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                         </Text>
                     </VStack>
-                     <Divider orientation="vertical"/>
+                    
                     <VStack spacing={0}>
                         {item.timeOut && <Text fontWeight={"bold"}>Out</Text>}
                         <Text>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
