@@ -18,6 +18,7 @@ import {
     ModalHeader,
     ModalFooter,
     useDisclosure,
+    ModalCloseButton,
     HStack,
     Spinner,
     IconButton,
@@ -37,7 +38,7 @@ export const TokenDetailsChooseToken = () => {
     const toast = useToast()
     const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
-    const { user,doctors,doctor } = useContext(AppContext)
+    const { user, doctors, doctor } = useContext(AppContext)
     const [reasons, setReasons] = useState([])
     const [settings, setSettings] = useState([])
     const [token, setToken] = useState({
@@ -47,7 +48,8 @@ export const TokenDetailsChooseToken = () => {
     })
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpenGenerate, onOpen: onOpenGenerate, onClose: onCloseGenerate } = useDisclosure()
+    const { isOpen: isOpenArrival, onOpen: onOpenArrival, onClose: onCloseArrival } = useDisclosure()
 
     useEffect(() => {
         setIsLoading(true)
@@ -56,12 +58,12 @@ export const TokenDetailsChooseToken = () => {
             setReasons(response)
         })
 
-        api.settings.fetchSettings({doctor}).then((res) => {
+        api.settings.fetchSettings({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
         })
 
-        api.book.decideSlots({doctor}).then((res) => {
+        api.book.decideSlots({ doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             console.log(response)
@@ -97,9 +99,15 @@ export const TokenDetailsChooseToken = () => {
 
     }
 
+    function setArrived(value) {
+        // setToken(prev => ({ ...prev, "arrived": value }))
+        onCloseArrival()
+        handleSubmit(value)
 
+    }
 
-    function handleSubmit() {
+    function handleSubmit(value) {
+
         if (user.userID == 3)
             token.reason = 1
         console.log(token)
@@ -107,6 +115,7 @@ export const TokenDetailsChooseToken = () => {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
             location.state.token.token = token.token
+            location.state.token.arrived = value
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             console.log(token)
             setIsLoading(true)
@@ -120,8 +129,8 @@ export const TokenDetailsChooseToken = () => {
                 else {
                     setIsLoading(false)
                     if (token.slot != "W") {
-                    setTokenNo(`${response.initials}-${response.tokenNo}`)
-           
+                        setTokenNo(`${response.initials}-${response.tokenNo}`)
+
                         const start = new Date(), end = new Date()
 
                         if (response.slot == "A" && response.tokenNo == settings.morn_token_start) {
@@ -164,7 +173,7 @@ export const TokenDetailsChooseToken = () => {
                         }
                         setTime({ start: start, end: end })
 
-                        onOpen()
+                        onOpenGenerate()
                     }
 
                     else {
@@ -195,7 +204,7 @@ export const TokenDetailsChooseToken = () => {
 
                 {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                         <Heading m={2} size={"md"}>{doctors.find((doc)=>doc.doctorID==doctor).name}</Heading>
+                        <Heading m={2} size={"md"}>{doctors.find((doc) => doc.doctorID == doctor).name}</Heading>
                         <Heading fontSize={'2xl'} color="red">Book a Token</Heading>
                         <Box
                             rounded={'lg'}
@@ -234,7 +243,7 @@ export const TokenDetailsChooseToken = () => {
                                     </RadioGroup>
                                 </FormControl>
                             </Stack>
-                            <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
+                            <Modal size={"2xl"} isOpen={isOpenGenerate} onClose={onCloseGenerate}>
                                 <ModalOverlay />
                                 <ModalContent>
                                     <ModalHeader>Booking successful</ModalHeader>
@@ -257,8 +266,24 @@ export const TokenDetailsChooseToken = () => {
                                     </ModalFooter>
                                 </ModalContent>
                             </Modal>
+                            <Modal size={"2xl"} isOpen={isOpenArrival} onClose={onCloseArrival}>
+                                <ModalOverlay />
+                                <ModalContent>
+                                    <ModalCloseButton />
+                                    <ModalBody>
+                                        Has the patient arrived at the clinic?
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button colorScheme='blue' mr={3} onClick={() => setArrived(1)}>
+                                            Yes
+                                        </Button>
+                                        <Button colorScheme='red' mr={3} onClick={() => setArrived(0)}>
+                                            No</Button>
+                                    </ModalFooter>
+                                </ModalContent>
+                            </Modal>
                             <Button
-                                onClick={handleSubmit}
+                                onClick={onOpenArrival}
                                 m={4}
                                 bg={'blue.400'}
                                 color={'white'}

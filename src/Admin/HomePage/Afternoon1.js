@@ -32,7 +32,7 @@ import { HeaderComponent } from './HeaderComponent';
 
 // List of staff profiles pending approval
 
-export const AfternoonList1 = ({ isLoading, setIsLoading, aftlist, current, setCurrent, doctor, desktopView }) => {
+export const AfternoonList1 = ({ isLoading, setIsLoading, aftlist, current, setCurrent, doctor, desktopView, next }) => {
 
     const morningEnd = new Date(new Date().setHours(14, 0, 0));
     const { user } = useContext(AppContext)
@@ -84,7 +84,7 @@ console.log(desktopView)
 
                         <Tbody>
                             {filterList(items, showCompleted).map((item, index) =>
-                                <ListComponent desktopView={desktopView} item={item} index={index} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor} current={current} setCurrent={setCurrent} />
+                                <ListComponent next={next}  desktopView={desktopView} item={item} index={index} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor} current={current} setCurrent={setCurrent} />
                             )
                             }
                         </Tbody>
@@ -92,7 +92,7 @@ console.log(desktopView)
                 </TableContainer>
 
                     : filterList(items, showCompleted).map((item, index) =>
-                        <ListComponent desktopView={desktopView} item={item} index={index} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor} current={current} setCurrent={setCurrent} />
+                        <ListComponent next={next} desktopView={desktopView} item={item} index={index} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor} current={current} setCurrent={setCurrent} />
                     )
 
                 }

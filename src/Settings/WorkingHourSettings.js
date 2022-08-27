@@ -131,7 +131,7 @@ export const WorkingHourSettings = ({doctor}) => {
                     <Divider borderColor={"gray"} orientation='horizontal' />
                 </VStack>
                 <Box mt="2%" align={"right"}>
-                    <Button isLoading={isLoading} colorScheme="blue" /*isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())}*/ onClick={onOpen}>Update</Button>
+                    <Button isLoading={isLoading} colorScheme="blue" isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} onClick={onOpen}>Update</Button>
                 </Box>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />

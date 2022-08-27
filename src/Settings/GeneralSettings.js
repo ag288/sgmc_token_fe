@@ -227,7 +227,7 @@ export const GeneralSettings = ({ doctor }) => {
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>
 
-                    <Button isLoading={isLoading} /*isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())}*/ colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
+                    <Button isLoading={isLoading} isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
             </Box>
         </>

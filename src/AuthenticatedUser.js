@@ -12,13 +12,14 @@ import { AppContext } from './App';
 import { PendingReviews } from './ReviewBooking/PendingReviews';
 import { DuplicatePatients } from './DuplicatePatients';
 import Simple from './components/Navbar';
+import { DoctorView } from './DoctorView';
 
 function AuthenticatedUser() {
 
   const { user } = useContext(AppContext)
   return (
     <BrowserRouter>
-     <Simple/>
+      <Simple />
       <Routes>
         <Route path="/" element={<PatientList />} />
         <Route path="/home" element={<PatientList />} />

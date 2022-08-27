@@ -80,7 +80,7 @@ let name = (props.doctors)?.find((doc)=>doc.doctorID==props.doctor)?.name
 
                 {/* <Heading size={"sm"}>Afternoon</Heading>
                 <TableContainer>
-                    <Table>
+                    <Table variant={"striped"}>
                         <Thead>
                             <Tr>
                                 <Th>Token</Th>

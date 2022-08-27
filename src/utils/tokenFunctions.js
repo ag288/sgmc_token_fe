@@ -27,7 +27,7 @@ export function compareFn(a, b) {
 
 
 
-export function findBg(item) {
+export function findBg(item, next) {
 
     if (item.status == "completed")
         return "gray.200"
@@ -35,17 +35,18 @@ export function findBg(item) {
         return "red.200"
     else if (item.status == "current")
         return "green.100"
+    else if (item.tokenID == next)
+        return "red.100"
     else if (item.slot.includes("W"))
         return "yellow.100"
-    else if ((!item.time_of_arrival) && compareFn(item.timeInEst, new Date())) {
-        if (item.status != "delayed") {
-            item.status = "delayed"
-            api.token.setAsDelayed({ item }).then((res) => {
-
-            })
-        }
-        return "white"
-    }
+    // else if ((!item.time_of_arrival) && compareFn(item.timeInEst, new Date())) {
+    //     if (item.status != "delayed") {
+    //         item.status = "delayed"
+    //         api.token.setAsDelayed({ item }).then((res) => {
+    //         })
+    //     }
+    //     return "white"
+    // }
     else return "white"
 
 }
@@ -158,20 +159,20 @@ export function call(item, current, doctor, toast, setIsLoading) {
 }
 
 export function onCompleted(item, settings, onOpenReview, doctor, setIsLoading, user) {
-  //  const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
+    //  const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
     //if (confirm) {
-        if (settings.enableReview && user == 1) {
-            //setOrigin("completed")
-            onOpenReview()
+    if (settings.enableReview && user == 1) {
+        //setOrigin("completed")
+        onOpenReview()
 
+    }
+    else {
+        const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
+        if (confirm) {
+            completed(doctor, setIsLoading)
         }
-        else {
-            const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
-            if (confirm) {
-                completed(doctor, setIsLoading)
-            }
-        }
-   // }
+    }
+    // }
 }
 
 function completed(doctor, setIsLoading) {
