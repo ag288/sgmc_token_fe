@@ -3,14 +3,14 @@ import { FaPrint } from "react-icons/fa"
 import ReactToPrint from "react-to-print"
 import { TokenListPrint } from "./TokenListPrint"
 import { AppContext } from "../../App"
-import { IconButton } from "@chakra-ui/react"
+import { IconButton, MenuItem } from "@chakra-ui/react"
 import api from "../../api"
 
-export const ListPrintIcon = () => {
+export const ListPrintIcon = ({ timeOfDay }) => {
     const componentRef = useRef()
     const { doctor, doctors } = useContext(AppContext)
-    const [mornlist, setMornList] = useState([])
-    const [aftlist, setAftList] = useState([])
+    const [list, setList] = useState([])
+    //  const [aftlist, setAftList] = useState([])
     console.log(doctors)
 
     useEffect(() => {
@@ -20,8 +20,10 @@ export const ListPrintIcon = () => {
             const response = JSON.parse(res.data).result
 
             console.log(response)
-            setMornList(response[0])
-            setAftList(response[1])
+            if (timeOfDay == "Morning")
+                setList(response[0])
+            else
+                setList(response[1])
         })
 
 
@@ -29,10 +31,10 @@ export const ListPrintIcon = () => {
     }, [doctor]);
 
     return (<> <ReactToPrint
-        trigger={() => <IconButton mx="1%" icon={<FaPrint />} color="white" bg="transparent" />}
+        trigger={() => <MenuItem >{`Print ${timeOfDay}`}</MenuItem>}
         content={() => componentRef.current}
     />
-        <div style={{ display: "none" }}>  <TokenListPrint ref={componentRef} doctors={doctors} doctor={doctor} aftlist={aftlist} mornlist={mornlist} />
+        <div style={{ display: "none" }}>  <TokenListPrint ref={componentRef} doctors={doctors} doctor={doctor} timeOfDay={timeOfDay} list={list} />
         </div>
     </>)
 }

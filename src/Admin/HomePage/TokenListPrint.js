@@ -30,7 +30,7 @@ let name = (props.doctors)?.find((doc)=>doc.doctorID==props.doctor)?.name
         <Flex ref={ref}>
             <Stack p={10}>
                 <Heading align={"center"}>{name}</Heading>
-                <Heading size={"sm"}>Morning</Heading>
+                <Heading size={"sm"}>{props.timeOfDay}</Heading>
                 <TableContainer>
                     <Table variant='striped'>
                         <Thead>
@@ -46,7 +46,7 @@ let name = (props.doctors)?.find((doc)=>doc.doctorID==props.doctor)?.name
                             </Tr>
                         </Thead>
                         <Tbody>
-                            {props.mornlist.map((item, index) =>
+                            {props.list.map((item, index) =>
                                 <Tr key={index}>
                                     <Td >{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}</Td>
                                     <Td>{item.name}</Td>
@@ -78,7 +78,7 @@ let name = (props.doctors)?.find((doc)=>doc.doctorID==props.doctor)?.name
                     </Table>
                 </TableContainer>
 
-                <Heading size={"sm"}>Afternoon</Heading>
+                {/* <Heading size={"sm"}>Afternoon</Heading>
                 <TableContainer>
                     <Table>
                         <Thead>
@@ -124,7 +124,7 @@ let name = (props.doctors)?.find((doc)=>doc.doctorID==props.doctor)?.name
                             }
                         </Tbody>
                     </Table>
-                </TableContainer>
+                </TableContainer> */}
             </Stack>
         </Flex>
     );

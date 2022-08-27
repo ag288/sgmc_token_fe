@@ -24,6 +24,7 @@ import { logout } from '../utils/tokenFunctions';
 import { ExportToExcel } from '../Admin/HomePage/ExportToExcel';
 import api from '../api';
 import { ListPrintIcon } from '../Admin/HomePage/ListPrintIcon';
+import { FaPrint } from 'react-icons/fa';
 
 
 
@@ -147,7 +148,23 @@ export default function Simple() {
                         </HStack>
                     </HStack>
                     <Flex alignItems={'center'}>
-                        <ListPrintIcon/>
+                    <Menu>
+                            <MenuButton
+                                as={IconButton}
+                                rounded={'full'}
+                                variant={'link'}
+                                cursor={'pointer'}
+                                minW={0}
+                                px={2}
+                                color={"white"}
+                                icon={<FaPrint/>}>
+                           
+                            </MenuButton>
+                            <MenuList>
+                                <ListPrintIcon timeOfDay={"Morning"}/>
+                                <ListPrintIcon timeOfDay={"Afternoon"}/>
+                            </MenuList>
+                        </Menu>
                         {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={pendingCount} />}
                         {/* {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
                         */}
