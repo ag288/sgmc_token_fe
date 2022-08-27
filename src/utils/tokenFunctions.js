@@ -27,7 +27,7 @@ export function compareFn(a, b) {
 
 
 
-export function findBg(item, next) {
+export function findBg(item) {
 
     if (item.status == "completed")
         return "gray.200"
@@ -35,8 +35,6 @@ export function findBg(item, next) {
         return "red.200"
     else if (item.status == "current")
         return "green.100"
-    else if (item.tokenID == next)
-        return "red.100"
     else if (item.slot.includes("W"))
         return "yellow.100"
     // else if ((!item.time_of_arrival) && compareFn(item.timeInEst, new Date())) {

@@ -10,7 +10,7 @@ import { DetailsPopover1 } from "./DetailsPopover1"
 import { ButtonPopover } from "./Popover"
 import { ComponentToPrint } from "./TokenPrint"
 
-export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, doctor, item, index, next,desktopView }) => {
+export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, doctor, item, index, next, desktopView }) => {
 
     const { user } = useContext(AppContext)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
@@ -75,11 +75,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
             str = `${new Date('1970-01-01T' + item.time_of_arrival + 'Z')
                 .toLocaleTimeString('en-US',
                     { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`
-        }
 
-        if (item.status == "delayed")
-            str += "🔴"
-        if (item.status == "arrived") {
             let arrival = new Date()
             arrival.setHours(item.time_of_arrival.split(":")[0], item.time_of_arrival.split(":")[1], 0)
 
@@ -90,7 +86,21 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 str += "🟢"
             }
         }
+        else {
+            if (item.status == "delayed")
+                str += "🔴"
+            // if (item.status == "arrived") {
+            //     let arrival = new Date()
+            //     arrival.setHours(item.time_of_arrival.split(":")[0], item.time_of_arrival.split(":")[1], 0)
 
+            //     if (item.timeInEst && compareFn(item.timeInEst, arrival)) {
+            //         str += "🔴"
+            //     }
+            //     else {
+            //         str += "🟢"
+            //     }
+            // }
+        }
         return str
     }
 
@@ -180,7 +190,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
         isLaptop || desktopView ?
 
 
-            <Tr key={index} bg={findBg(item,next)} className="Blink">
+            <Tr key={index} bg={findBg(item)} className={next == item.tokenID ? "Blink" : ""}>
                 <Td><ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                 <Td >{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}</Td>
                 <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
@@ -222,7 +232,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </Td>
                 */}
 
-            </Tr> : <Box bg={findBg(item,next)} rounded="lg" p={3} m={3}>
+            </Tr> : <Box bg={findBg(item, next)} rounded="lg" p={3} m={3}>
                 <HStack spacing={"auto"}>
                     <ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} />
 
