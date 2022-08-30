@@ -2,7 +2,12 @@
 import { Text, Toast } from '@chakra-ui/react'
 import api from '../api'
 
-
+export const types = {
+    "Review": "R",
+    "First time": 'F',
+    "Other": "O",
+    "Long slot": "L"
+}
 
 export function compareFn(a, b) {
     /// console.log(a)

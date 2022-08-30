@@ -31,7 +31,7 @@ import {
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import api from '../api';
-import { ArrowBackIcon, DeleteIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
 import { FullPageSpinner } from '../utils/spinner';
 import { FaPhoneAlt } from 'react-icons/fa';
@@ -44,6 +44,8 @@ import { filterDoctor } from '../utils/tokenFunctions';
 export const ReviewList = () => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [reviewlist, setReviewList] = useState([])
+    const [settings, setSettings] = useState([])
+    const [reasons, setReasons] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
     const toast = useToast()
@@ -53,8 +55,15 @@ export const ReviewList = () => {
 
         api.review.fetchReviewList({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
-            console.log(response)
             setReviewList(response)
+        })
+        api.settings.fetchSettings({ doctor }).then((res) => {
+            const response = JSON.parse(res.data).result
+            setSettings(response[0])
+        })
+        api.settings.fetchReasons().then((res) => {
+            const response = JSON.parse(res.data).result
+            setReasons(response)
         })
 
     }, [doctor]);
@@ -66,7 +75,7 @@ export const ReviewList = () => {
             setIsLoading(true)
             api.review.deleteReview({ id: item.reviewID }).then((res) => {
                 setIsLoading(false)
-                 window.location.reload()
+                window.location.reload()
                 toast({
                     title: 'Deleted review successfully',
                     status: 'success',
@@ -99,6 +108,18 @@ export const ReviewList = () => {
         setIndex(index)
         localStorage.setItem("doctor", docArray[index].doctorID)
         localStorage.setItem("tabIndex", index)
+    }
+
+    function editReview(item) {
+        let token = {
+            id: item.patientID,
+            phone: item.phone.substring(2),
+            new_name: "",
+            name: item.name,
+            fileNumber: item.fileNumber,
+            doctor: doctor
+        }
+        navigate("/review-details", { state: { token, settings, reasons, origin : "editReview" } })
     }
 
     return (
@@ -147,6 +168,7 @@ export const ReviewList = () => {
                                                                 <Th>Date</Th>
                                                                 <Th>Est. Time</Th>
                                                                 <Th></Th>
+                                                                <Th></Th>
                                                             </Tr>
                                                         </Thead>
                                                         <Tbody>
@@ -160,6 +182,8 @@ export const ReviewList = () => {
                                                                     <Td >{new Date(item.date).toDateString()}</Td>
                                                                     <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
                                                                     <Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
+                                                                    <Td> <IconButton bg="transparent" onClick={() => editReview(item)} icon={<EditIcon />}></IconButton>
+                                                                    </Td>
                                                                 </Tr>
                                                             )
                                                             }
@@ -173,20 +197,20 @@ export const ReviewList = () => {
                         </Stack>
                     </>}
                     {isMobile &&
-                    <Stack width="full" alignItems="baseline" py={2} mx="2">
-                                    
-                    <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
+                        <Stack width="full" alignItems="baseline" py={2} mx="2">
 
-                        <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
-                            <TabList m={1}>
-                                {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
-                                    : <Tab >{doctor.longInitials}</Tab>)}
-                            </TabList>
+                            <IconButton size="lg" onClick={() => navigate("/book-review")} icon={<ArrowBackIcon />}></IconButton>
 
-                            <TabPanels>
-                                {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+                            <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+                                <TabList m={1}>
+                                    {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
+                                        : <Tab >{doctor.longInitials}</Tab>)}
+                                </TabList>
 
-                                      
+                                <TabPanels>
+                                    {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+
+
                                         <Heading size="md">Booked Tokens</Heading>
                                         {reviewlist.map((item, index) =>
                                             <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()}</Heading>
@@ -204,18 +228,19 @@ export const ReviewList = () => {
 
                                                             </HStack>
                                                             <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                                            <IconButton bg="transparent" onClick={() => editReview(review)} icon={<EditIcon />}></IconButton>
                                                         </HStack>
                                                         <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
 
                                                     </VStack>
                                                 </Box>)
                                                 }</>)}
-                                    
-                                </TabPanel>)}
-                        </TabPanels>
-                        </Tabs>
+
+                                    </TabPanel>)}
+                                </TabPanels>
+                            </Tabs>
                         </Stack>
-                       
+
                     }
 
                 </>}

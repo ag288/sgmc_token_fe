@@ -5,17 +5,13 @@ import { FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import api from "../api";
 import { AppContext } from "../App";
-import { filterDoctor } from "../utils/tokenFunctions";
+import { filterDoctor, types } from "../utils/tokenFunctions";
 
 
 export const PendingReviews = () => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [reviewlist, setReviewList] = useState([])
-    const types = {
-        "Review": "R",
-        "First time": 'F',
-        "Other": "O"
-    }
+ 
     const navigate = useNavigate()
     const { doctor, setDoctor, doctors, user, index, setIndex } = useContext(AppContext)
     useEffect(() => {

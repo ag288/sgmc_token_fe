@@ -42,11 +42,7 @@ export const MorningList = ({ isLoading, setIsLoading, mornlist, current, setCur
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
-    const types = {
-        "Review": "R",
-        "First time": 'F',
-        "Other": "O"
-    }
+   
     const { items, requestSort, sortConfig } = useSortableData(mornlist, { key: "tokenNumber", direction: "ascending" });
 
     const { user } = useContext(AppContext)

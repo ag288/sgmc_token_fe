@@ -142,9 +142,15 @@ export const PatientDetails = (props) => {
         else {
             if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != null && token.fileNumber != "")) {
                 if (token.new_name == "") {
-
-
-                    navigate(navigateTo, { state: { token, settings, reasons } })
+                    let file = patients.find((patient) => patient.patientID == token.id).fileNumber
+                    if (token.fileNumber != file) {
+                        api.token.editFileNumber({ token }).then((res) => {
+                            navigate(navigateTo, { state: { token, settings, reasons } })
+                        })
+                    }
+                    else {
+                        navigate(navigateTo, { state: { token, settings, reasons } })
+                    }
                 }
                 else {
                     api.book.createPatient({ token }).then((res) => {
@@ -152,8 +158,8 @@ export const PatientDetails = (props) => {
                         // const message = JSON.parse(res.data).message
                         // console.log(message)
                         // if (responsemessage == "") {
-                            setToken(prev => ({ ...prev, "id": response }))
-                            navigate(navigateTo, { state: { token, id: response, settings, reasons } })
+                        setToken(prev => ({ ...prev, "id": response }))
+                        navigate(navigateTo, { state: { token, id: response, settings, reasons } })
                         // }
                         // else {
                         //     let msg = `${message}\nThe following patients were found with this file number:\n`

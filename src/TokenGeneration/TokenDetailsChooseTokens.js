@@ -85,8 +85,11 @@ export const TokenDetailsChooseToken = () => {
                 setTokens(response)
             })
         }
-        else
+        else {
             setToken(prev => ({ ...prev, "slot": e.target.value }))
+            setTokens([{ "tokenID": "A", "tokenNumber": "Morning" },
+            { "tokenID": "B", "tokenNumber": "Evening" }])
+        }
     }
 
     function handleTokenChange(e) {
@@ -266,7 +269,7 @@ export const TokenDetailsChooseToken = () => {
                                     </ModalFooter>
                                 </ModalContent>
                             </Modal>
-                            <Modal size={"2xl"} isOpen={isOpenArrival} onClose={onCloseArrival}>
+                            <Modal size={"sm"} isOpen={isOpenArrival} onClose={onCloseArrival}>
                                 <ModalOverlay />
                                 <ModalContent>
                                     <ModalCloseButton />

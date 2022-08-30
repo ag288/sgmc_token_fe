@@ -42,12 +42,6 @@ export const AfternoonList1 = ({ isLoading, setIsLoading, aftlist, current, setC
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
-    const types = {
-        "Review": "R",
-        "First time": 'F',
-        "Other": "O"
-    }
-    let componentRef = useRef()
     const { items, requestSort, sortConfig } = useSortableData(aftlist, { key: "tokenNumber", direction: "ascending" });
 console.log(desktopView)
 

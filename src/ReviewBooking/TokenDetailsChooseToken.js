@@ -52,7 +52,7 @@ export const TokenDetailsForReviewChooseToken = () => {
     const [maxdate, setMaxDate] = useState(new Date(today.setDate(today.getDate() + parseInt(location.state?.settings.review_date_limit))).toISOString().split('T')[0])
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
-    const { user, doctor,doctors } = useContext(AppContext)
+    const { user, doctor, doctors } = useContext(AppContext)
     console.log(doctor)
     //let maxdate=30
     useEffect(() => {
@@ -68,19 +68,20 @@ export const TokenDetailsForReviewChooseToken = () => {
         //     const response = JSON.parse(res.data).result
         //     setReasons(response)
         // })
+        if (!location.state.origin) {
+            api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id, doctor }).then((res) => {
+                const response = JSON.parse(res.data).result
+                console.log(response)
+                if (response.length != 0) {
+                    let update = window.confirm(`A review already exists for ${location.state.token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
+                    if (!update) {
+                        navigate("/home")
 
-        api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id, doctor }).then((res) => {
-            const response = JSON.parse(res.data).result
-            console.log(response)
-            if (response.length != 0) {
-                let update = window.confirm(`A review already exists for ${location.state.token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
-                if (!update) {
-                    navigate("/home")
+                    }
 
                 }
-
-            }
-        })
+            })
+        }
     }, [])
 
 
@@ -159,7 +160,7 @@ export const TokenDetailsForReviewChooseToken = () => {
 
                 {isLoading ? <FullPageSpinner /> :
                     <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                        <Heading m={2} size={"md"}>{doctors.find((doc)=>doc.doctorID==doctor).name}</Heading>
+                        <Heading m={2} size={"md"}>{doctors.find((doc) => doc.doctorID == doctor).name}</Heading>
                         <Heading color="crimson" fontSize={'2xl'}>Book a Future Review</Heading>
                         <Box
                             rounded={'lg'}

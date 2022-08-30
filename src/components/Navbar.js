@@ -31,14 +31,14 @@ import { FaPrint } from 'react-icons/fa';
 const ActiveRoute = (routeName) => {
     console.log(routeName)
     let location = useLocation()
-    if(location && location.pathname===routeName )
-    return 'active'
-    else if(location && location.pathname=="/review-details" && routeName=="/book-review")
-    return "active"
-    else if(location && location.pathname=="/token-details" && routeName=="/book")
-    return "active"
+    if (location && location.pathname === routeName)
+        return 'active'
+    else if (location && location.pathname == "/review-details" && routeName == "/book-review")
+        return "active"
+    else if (location && location.pathname == "/token-details" && routeName == "/book")
+        return "active"
     else
-    return "";
+        return "";
 };
 
 const NavLinks = ({ link }) => (
@@ -76,7 +76,7 @@ export default function Simple() {
         if (!pendingCount && !duplicateCount) {
             api.token.fetchAlerts().then((res) => {
                 const result = JSON.parse(res.data).result
-             //   console.log(result)
+                //   console.log(result)
                 setPendingCount(result[0].length)
                 setDuplicateCount(result[1].length)
             })
@@ -148,23 +148,23 @@ export default function Simple() {
                         </HStack>
                     </HStack>
                     <Flex alignItems={'center'}>
-                    <Menu>
+                        {user.userID == 2 && <Menu>
                             <MenuButton
                                 as={IconButton}
                                 rounded={'full'}
                                 variant={'link'}
                                 cursor={'pointer'}
                                 minW={0}
-                                px={2}
+                                mx={2}
                                 color={"white"}
-                                icon={<FaPrint/>}>
-                           
+                                icon={<FaPrint />}>
+
                             </MenuButton>
                             <MenuList>
-                                <ListPrintIcon timeOfDay={"Morning"}/>
-                                <ListPrintIcon timeOfDay={"Afternoon"}/>
+                                <ListPrintIcon timeOfDay={"Morning"} />
+                                <ListPrintIcon timeOfDay={"Afternoon"} />
                             </MenuList>
-                        </Menu>
+                        </Menu>}
                         {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={pendingCount} />}
                         {/* {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
                         */}
@@ -178,7 +178,7 @@ export default function Simple() {
                                 <Avatar
                                     size={"md"}
                                     name={user.username}
-                                                                   />
+                                />
                             </MenuButton>
                             <MenuList>
                                 <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>

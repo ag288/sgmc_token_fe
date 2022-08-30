@@ -9,7 +9,9 @@ import {
     Button,
     useToast,
     Divider,
-    Switch
+    Switch,
+    InputGroup,
+    InputRightAddon
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import { scryRenderedComponentsWithType } from 'react-dom/test-utils'
@@ -98,9 +100,14 @@ export const GeneralSettings = ({ doctor }) => {
                 setSettings(prev => ({ ...prev, ["review_date_limit"]: e.target.value }));
                 break;
             case "15":
+                setSettings(prev => ({ ...prev, ["delay_minutes"]: e.target.value }));
+                break;
+            case "16":
                 setSettings(prev => ({ ...prev, ["enableReview"]: e.target.checked }));
                 break;
-
+            case "17":
+                setSettings(prev => ({ ...prev, ["delay_count"]: e.target.value }));
+                break;
         }
     }
 
@@ -219,9 +226,25 @@ export const GeneralSettings = ({ doctor }) => {
                         <Input type="number" id={"14"} onChange={handleChange} value={settings?.review_date_limit}></Input>
                     </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Set as delayed after</Text>
+                        <InputGroup>
+                            <Input type="number" id={"15"} onChange={handleChange} value={settings?.delay_minutes}></Input>
+                            <InputRightAddon children="minutes" />
+                        </InputGroup>
+                    </VStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Set as delayed if there are less than</Text>
+                        <InputGroup>
+                            <Input type="number" id={"17"} onChange={handleChange} value={settings?.delay_count}></Input>
+                            <InputRightAddon children="waiting tokens" />
+                        </InputGroup>
+                    </VStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
                     <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Add review as days</Text>
-                        <Switch id={"15"} onChange={handleChange} isChecked={settings?.enableReview}></Switch>
+                        <Switch id={"16"} onChange={handleChange} isChecked={settings?.enableReview}></Switch>
                     </HStack>
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />

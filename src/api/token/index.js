@@ -76,6 +76,10 @@ export default function tokenApi(fetch, baseUrl) {
 
         fetchAlerts(){
             return fetch(`${baseUrl}/alerts`)
+        },
+
+       updateReason(data){
+            return fetch.post(`${baseUrl}/update-reason`,{data})
         }
     }
 }

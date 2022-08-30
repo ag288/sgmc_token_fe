@@ -1,13 +1,14 @@
-import { Box, Button, Divider, HStack, IconButton, Td, Text, Tr, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, Button, Divider, HStack, IconButton, Td, Text, Tr, useDisclosure, useMediaQuery, VStack } from "@chakra-ui/react"
 import { useContext, useEffect, useRef, useState } from "react"
-import { FaCheck, FaPrint } from "react-icons/fa"
+import { FaCheck, FaPrint, FaRegFileWord, FaUserCheck, FaWalking } from "react-icons/fa"
 import ReactToPrint from "react-to-print"
 import api from "../../api"
 import { AppContext } from "../../App"
-import { compareFn, DiffMinutes, findBg } from "../../utils/tokenFunctions"
+import { compareFn, DiffMinutes, findBg, types } from "../../utils/tokenFunctions"
 import { DetailsPopover } from "./DetailsPopover"
 import { DetailsPopover1 } from "./DetailsPopover1"
 import { ButtonPopover } from "./Popover"
+import { ReasonEditModal } from "./ReasonEditModal"
 import { ComponentToPrint } from "./TokenPrint"
 
 export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, doctor, item, index, next, desktopView }) => {
@@ -15,13 +16,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     const { user } = useContext(AppContext)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [settings, setSettings] = useState([])
-    const types = {
-        "Review": "R",
-        "First time": 'F',
-        "Other": "O"
-    }
-    console.log(desktopView)
-    let componentRef = useRef()
+
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
 
@@ -32,10 +28,10 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     }, [])
 
     function handleDoubleClickForFile(id) {
-        let fileNo = window.prompt("Enter the file number")
-        if (fileNo != null) {
+        let fileNumber = window.prompt("Enter the file number")
+        if (fileNumber != null) {
             //  editFileNumber(fileNo, id)
-            api.token.editFileNumber({ fileNo, id }).then((res) => {
+            api.token.editFileNumber({ fileNumber, id }).then((res) => {
                 const response = JSON.parse(res.data).result
                 window.location.reload()
             })
@@ -52,6 +48,11 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
         }
     }
 
+    function handleDoubleClickForReason() {
+        if (user.userID == 2) {
+            onOpen()
+        }
+    }
 
     function bookWalkIn() {
         api.token.bookWalkIn({ item }).then((res) => {
@@ -197,7 +198,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
                 <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
-                {isMobile ? <Td>{types[item.type]}</Td> : <Td> {item.type}</Td>}
+                <Td onDoubleClick={handleDoubleClickForReason}> {item.type}</Td>
                 <Td>{item.phone.substring(2)}</Td>
                 <Td>
                     <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
@@ -220,8 +221,9 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 </Td>
                 {user.userID == 2 && <Td>
                     {item.status == "delayed" ? <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
-                        : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton>
+                        : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />}></IconButton>
                     }</Td>}
+                <ReasonEditModal item={item} isOpen={isOpen} onClose={onClose} />
 
                 {/*    <Td>  <ReactToPrint
                         onAfterPrint={setAsArrived}
@@ -232,7 +234,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </Td>
                 */}
 
-            </Tr> : <Box bg={findBg(item, next)} rounded="lg" p={3} m={3}>
+            </Tr> : <Box className={next == item.tokenID ? "Blink" : ""} bg={findBg(item)} rounded="lg" p={3} m={3}>
                 <HStack spacing={"auto"}>
                     <ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} />
 
@@ -240,7 +242,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </Text>
                     <Text fontWeight={"bold"} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}
                     </Text>
-                    <Text>{types[item.type]}
+                    <Text onDoubleClick={handleDoubleClickForReason}>{types[item.type]}
                     </Text>
                     {/* <ReactToPrint
                         onAfterPrint={setAsArrived}
@@ -250,12 +252,11 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                     </div> */}
                     {user.userID == 2 && <Td>
-                        {item.status == "delayed" ? <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
-                            : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} color={"blue"} onClick={setAsArrived} icon={<FaCheck />}></IconButton>
+                        {item.status == "delayed" ? <IconButton colorScheme={"blue"} icon={<FaRegFileWord />} onClick={bookWalkIn} />
+                            : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck/>}></IconButton>
                         }</Td>}
 
                     <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
-
 
                 </HStack>
 
@@ -293,7 +294,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
                 </HStack>
 
-
+                <ReasonEditModal item={item} isOpen={isOpen} onClose={onClose} />
             </Box>
 
 
