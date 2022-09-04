@@ -46,7 +46,7 @@ import api from '../../api';
 import { FaEllipsisV } from 'react-icons/fa';
 import { filterDoctor, logout } from '../../utils/tokenFunctions';
 import { AppContext } from '../../App';
-import { FullPageSpinner } from '../../utils/spinner';
+import { FullPageSpinner } from '../../components/Spinner';
 
 // List of staff profiles pending approval
 

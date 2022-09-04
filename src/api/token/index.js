@@ -15,6 +15,10 @@ export default function tokenApi(fetch, baseUrl) {
             return fetch(`${baseUrl}/duplicate-patients`)
         },
 
+        mergeDuplicatePatients(data) {
+            return fetch.post(`${baseUrl}/merge-duplicates`,{data})
+        },
+
         fetchTokenList(data) {
             return fetch.post(`${baseUrl}/list`,{data})
         },
@@ -46,6 +50,11 @@ export default function tokenApi(fetch, baseUrl) {
         setAsArrived(data) {
             return fetch.post(`${baseUrl}/arrived`,{data})
         },
+
+        undoArrived(data) {
+            return fetch.post(`${baseUrl}/undo-arrived`,{data})
+        },
+
         bookWalkIn(data) {
             return fetch.post(`${baseUrl}/walk-in`,{data})
         },

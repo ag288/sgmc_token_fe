@@ -28,7 +28,7 @@ import { FaHome } from 'react-icons/fa'
 import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import { AppContext } from '../App';
-import { FullPageSpinner } from '../utils/spinner';
+import { FullPageSpinner } from '../components/Spinner';
 
 export const TokenDetailsForReviewChooseToken = () => {
     let navigate = useNavigate()

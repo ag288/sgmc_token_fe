@@ -24,7 +24,7 @@ import { FaBell, FaEllipsisV, FaLaptop, FaMobile, FaMobileAlt, FaPhone, FaPhoneS
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { AppContext } from '../../App';
 import { filterDoctor, logout } from '../../utils/tokenFunctions';
-import { FullPageSpinner } from '../../utils/spinner';
+import { FullPageSpinner } from '../../components/Spinner';
 import { TokenList } from './TokenList';
 
 // List of staff profiles pending approval

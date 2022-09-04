@@ -29,6 +29,7 @@ import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import { AppContext } from '../App';
 import { filterDoctor, logout } from '../utils/tokenFunctions';
+import { FullPageSpinner } from './Spinner';
 
 export const PatientDetails = (props) => {
     let navigate = useNavigate()
@@ -37,6 +38,7 @@ export const PatientDetails = (props) => {
     const { availability, navigateTo } = props
     const [patients, setPatients] = useState([])
     const [settings, setSettings] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
     const [reasons, setReasons] = useState([])
     const { setDoctor, doctors, user, doctor, index, setIndex } = useContext(AppContext)
     let obj = {
@@ -144,7 +146,9 @@ export const PatientDetails = (props) => {
                 if (token.new_name == "") {
                     let file = patients.find((patient) => patient.patientID == token.id).fileNumber
                     if (token.fileNumber != file) {
+                        setIsLoading(true)
                         api.token.editFileNumber({ token }).then((res) => {
+                            setIsLoading(false)
                             navigate(navigateTo, { state: { token, settings, reasons } })
                         })
                     }
@@ -153,7 +157,9 @@ export const PatientDetails = (props) => {
                     }
                 }
                 else {
+                    setIsLoading(true)
                     api.book.createPatient({ token }).then((res) => {
+                        setIsLoading(false)
                         const response = JSON.parse(res.data).result
                         // const message = JSON.parse(res.data).message
                         // console.log(message)
@@ -179,78 +185,79 @@ export const PatientDetails = (props) => {
     }
 
     return (
-        <Stack mx={'auto'} width="auto" spacing="2%" py={12} px={6} >
-            <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
-                <TabList m={1}>
-                    {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
-                        : <Tab >{doctor.longInitials}</Tab>)}
-                </TabList>
+        isLoading ? <FullPageSpinner /> :
+            <Stack mx={'auto'} width="auto" spacing="2%" py={12} px={6} >
+                <Tabs m={2} defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+                    <TabList m={1}>
+                        {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
+                            : <Tab >{doctor.longInitials}</Tab>)}
+                    </TabList>
 
-                <TabPanels>
-                    {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
+                    <TabPanels>
+                        {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
 
 
 
-                        {/* <Box align='center'>
+                            {/* <Box align='center'>
                         <Select size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
                         {filterDoctor(doctors, user.userID).map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box> */}
-                        {availability != "" ?
-                            <Heading size="md">{availability}</Heading>
-                            :
-                            <>
+                            {availability != "" ?
+                                <Heading size="md">{availability}</Heading>
+                                :
+                                <>
 
-                                <Heading color="red" fontSize={'2xl'}>Book a Token</Heading>
+                                    <Heading color="red" fontSize={'2xl'}>Book a Token</Heading>
 
-                                <Box
-                                    rounded={'lg'}
-                                    bg={'white'}
-                                    boxShadow={'lg'}
-                                    width="full"
-                                    p={8}>
-                                    <Stack spacing={4}>
-                                        {location.state && location.state.tokenObj ? <Heading size="sm">{`Selected Token Number: ${token.tokenNumber}; ETA: ${token.timeInEst}`}</Heading> : null}
-                                        <FormControl id="phone" isRequired >
-                                            <FormLabel>Phone number</FormLabel>
-                                            <InputGroup>
-                                                <InputLeftAddon children='91'></InputLeftAddon>
-                                                <Input value={token.phone} onBlur={fetchPatients} onChange={handlePhoneChange} type="number" />
-                                            </InputGroup>
-                                        </FormControl>
-                                        <FormControl id="name" isRequired >
-                                            <FormLabel>Name</FormLabel>
-                                            <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
-                                                {patients.map((patient) => <option key={patient.patientID}>{`${patient.name}`}</option>)}
-                                                { /* {patients.length==0 ? null : <option>Add new</option>}*/}
-                                            </Select>
-                                        </FormControl>
-                                        {
-                                            token.name == "Add new" ? <FormControl id="name" isRequired >
-                                                <FormLabel>Enter the name</FormLabel>
-                                                <Input value={token.new_name} onChange={handleNewNameChange}>
-                                                </Input>
-                                            </FormControl> : null}
-                                        <FormControl id="file">
-                                            <FormLabel >File Number</FormLabel>
-                                            <Input type="text" value={token.fileNumber} onChange={handleFileChange} />
-                                        </FormControl>
-                                    </Stack>
-                                    <Button
-                                        onClick={handleSubmit}
-                                        mt={4}
-                                        bg={'blue.400'}
-                                        color={'white'}
-                                        _hover={{
-                                            bg: 'blue.500',
-                                        }}>
-                                        Next
-                                    </Button>
-                                </Box>
-                            </>
-                        }
-                    </TabPanel>)}
-                </TabPanels>
-            </Tabs>
-        </Stack>
+                                    <Box
+                                        rounded={'lg'}
+                                        bg={'white'}
+                                        boxShadow={'lg'}
+                                        width="full"
+                                        p={8}>
+                                        <Stack spacing={4}>
+                                            {location.state && location.state.tokenObj ? <Heading size="sm">{`Selected Token Number: ${token.tokenNumber}; ETA: ${token.timeInEst}`}</Heading> : null}
+                                            <FormControl id="phone" isRequired >
+                                                <FormLabel>Phone number</FormLabel>
+                                                <InputGroup>
+                                                    <InputLeftAddon children='91'></InputLeftAddon>
+                                                    <Input value={token.phone} onBlur={fetchPatients} onChange={handlePhoneChange} type="number" />
+                                                </InputGroup>
+                                            </FormControl>
+                                            <FormControl id="name" isRequired >
+                                                <FormLabel>Name</FormLabel>
+                                                <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>
+                                                    {patients.map((patient) => <option key={patient.patientID}>{`${patient.name}`}</option>)}
+                                                    { /* {patients.length==0 ? null : <option>Add new</option>}*/}
+                                                </Select>
+                                            </FormControl>
+                                            {
+                                                token.name == "Add new" ? <FormControl id="name" isRequired >
+                                                    <FormLabel>Enter the name</FormLabel>
+                                                    <Input value={token.new_name} onChange={handleNewNameChange}>
+                                                    </Input>
+                                                </FormControl> : null}
+                                            <FormControl id="file">
+                                                <FormLabel >File Number</FormLabel>
+                                                <Input type="text" value={token.fileNumber} onChange={handleFileChange} />
+                                            </FormControl>
+                                        </Stack>
+                                        <Button
+                                            onClick={handleSubmit}
+                                            mt={4}
+                                            bg={'blue.400'}
+                                            color={'white'}
+                                            _hover={{
+                                                bg: 'blue.500',
+                                            }}>
+                                            Next
+                                        </Button>
+                                    </Box>
+                                </>
+                            }
+                        </TabPanel>)}
+                    </TabPanels>
+                </Tabs>
+            </Stack>
     )
 }

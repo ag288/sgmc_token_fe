@@ -11,12 +11,12 @@ export const types = {
 
 export function compareFn(a, b) {
     /// console.log(a)
-    const start1 = new Date()
-    start1.setHours(a.split(":")[0], a.split(":")[1], 0)
-    //const end1 = new Date()
+    // const start1 = new Date()
+    // start1.setHours(a.split(":")[0], a.split(":")[1], 0)
+    // //const end1 = new Date()
     let difference1
 
-    difference1 = b.getTime() - start1.getTime();
+    difference1 = b.getTime() - a.getTime();
 
     // console.log(start1)
     // console.log(end1)

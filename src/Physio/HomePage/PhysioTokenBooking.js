@@ -27,7 +27,7 @@ import { FaBackward, FaHome } from 'react-icons/fa'
 import { useContext, useEffect, useState } from 'react'
 import api from '../../api'
 import { AppContext } from '../../App'
-import { FullPageSpinner } from '../../utils/spinner'
+import { FullPageSpinner } from '../../components/Spinner'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 
 export const PhysioTokenBooking = () => {

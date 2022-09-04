@@ -1,9 +1,10 @@
 import { Box, Button, Divider, HStack, IconButton, Td, Text, Tr, useDisclosure, useMediaQuery, VStack } from "@chakra-ui/react"
 import { useContext, useEffect, useRef, useState } from "react"
-import { FaCheck, FaPrint, FaRegFileWord, FaUserCheck, FaWalking } from "react-icons/fa"
+import { FaCheck, FaPrint, FaRegFileWord, FaUndo, FaUserCheck, FaWalking } from "react-icons/fa"
 import ReactToPrint from "react-to-print"
 import api from "../../api"
 import { AppContext } from "../../App"
+import { QRScanner } from "../../components/QRScanner"
 import { compareFn, DiffMinutes, findBg, types } from "../../utils/tokenFunctions"
 import { DetailsPopover } from "./DetailsPopover"
 import { DetailsPopover1 } from "./DetailsPopover1"
@@ -62,12 +63,23 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
 
     function setAsArrived() {
-        if (!(item.time_of_arrival)) {
-            //  console.log("hi")
-            api.token.setAsArrived({ item }).then((res) => {
+
+        api.token.setAsArrived({ item }).then((res) => {
+            window.location.reload()
+        })
+
+    }
+
+    function undoArrived() {
+
+
+        const confirm = window.confirm("Are you sure you want to undo the arrived action?")
+        if (confirm) {
+            api.token.undoArrived({ item, doctor }).then((res) => {
                 window.location.reload()
             })
         }
+
     }
 
     function decideArrival() {
@@ -76,11 +88,15 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
             str = `${new Date('1970-01-01T' + item.time_of_arrival + 'Z')
                 .toLocaleTimeString('en-US',
                     { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`
+            let arrival = new Date(), estTime = new Date()
+            const [hrs, mins, secs] = item.time_of_arrival.split(":")
+            arrival.setHours(hrs, mins, 0)
+            if (item.timeInEst) {
+                const [hrs_est, mins_est, secs_est] = item.timeInEst.split(":")
 
-            let arrival = new Date()
-            arrival.setHours(item.time_of_arrival.split(":")[0], item.time_of_arrival.split(":")[1], 0)
-
-            if (item.timeInEst && compareFn(item.timeInEst, arrival)) {
+                estTime.setHours(hrs_est, parseInt(mins_est) + parseInt(settings.delay_minutes), 0)
+            }
+            if (item.timeInEst && compareFn(estTime, arrival)) {
                 str += "🔴"
             }
             else {
@@ -220,9 +236,11 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
                 {user.userID == 2 && <Td>
-                    {item.status == "delayed" ? <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
-                        : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />}></IconButton>
-                    }</Td>}
+                    {item.status == "delayed" ?
+                        <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
+                        : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
+                            <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
+                        )}</Td>}
                 <ReasonEditModal item={item} isOpen={isOpen} onClose={onClose} />
 
                 {/*    <Td>  <ReactToPrint
@@ -233,6 +251,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                         </div>
                     </Td>
                 */}
+
 
             </Tr> : <Box className={next == item.tokenID ? "Blink" : ""} bg={findBg(item)} rounded="lg" p={3} m={3}>
                 <HStack spacing={"auto"}>
@@ -253,7 +272,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </div> */}
                     {user.userID == 2 && <Td>
                         {item.status == "delayed" ? <IconButton colorScheme={"blue"} icon={<FaRegFileWord />} onClick={bookWalkIn} />
-                            : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck/>}></IconButton>
+                            : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />}></IconButton>
                         }</Td>}
 
                     <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
@@ -295,6 +314,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 </HStack>
 
                 <ReasonEditModal item={item} isOpen={isOpen} onClose={onClose} />
+                
             </Box>
 
 

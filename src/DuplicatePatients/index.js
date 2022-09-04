@@ -23,14 +23,22 @@ import {
     Icon,
     Divider,
     Select,
-    useDisclosure
+    useDisclosure,
+    RadioGroup,
+    Radio,
+    MenuItemOption,
+    ButtonGroup,
+    useEditableControls,
+    Input,
+    Alert,
+    AlertIcon
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import api from '../api';
-import { ArrowBackIcon, DeleteIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, CheckIcon, CloseIcon, DeleteIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { FullPageSpinner } from '../utils/spinner';
-import { FaPhoneAlt } from 'react-icons/fa';
+import { FullPageSpinner } from '../components/Spinner';
+import { FaEdit, FaPhoneAlt } from 'react-icons/fa';
 import { useMediaQuery } from '@chakra-ui/react'
 import { AppContext } from '../App';
 import { DuplicatesModal } from './DuplicatesModal';
@@ -41,71 +49,88 @@ export const DuplicatePatients = () => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [reviewlist, setReviewList] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+    const [merge, setMerge] = useState({ index: -1, i: -1 })
     const navigate = useNavigate()
     const toast = useToast()
-    const {doctor, doctors, setDoctor} = useContext(AppContext)
-    const {isOpen, onOpen, onClose} = useDisclosure()
+    const { doctor, doctors, setDoctor } = useContext(AppContext)
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
-
+        setIsLoading(true)
         api.token.fetchDuplicatePatients().then((res) => {
+            setIsLoading(false)
             const response = JSON.parse(res.data).result
-            console.log(response)
             setReviewList(response)
         })
-
     }, [doctor]);
 
 
-    function deleteReview(item) {
-        const flag = window.confirm(`Warning!\nYou are going to delete review of ${item.name}`)
-        if (flag) {
-            setIsLoading(true)
-            api.review.deleteReview({ id: item.reviewID }).then((res) => {
-                setIsLoading(false)
-                // window.location.reload()
-                toast({
-                    title: 'Deleted review successfully',
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: false,
-                    position: "top"
-                })
-            }).catch((err) => {
-                setIsLoading(false)
-                toast({
-                    title: 'Something went wrong',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: false,
-                    position: "top"
-                })
+
+    function setAsMerge(index, i) {
+        // let copy=merge
+        // copy["index"]=index
+        // copy["i"]=i
+        // setMerge(copy)
+        setMerge(prev => ({ ...prev, "index": index }))
+        setMerge(prev => ({ ...prev, "i": i }))
+    }
+
+
+    function EditableControls() {
+        const {
+            isEditing,
+            getSubmitButtonProps,
+            getCancelButtonProps,
+            getEditButtonProps,
+        } = useEditableControls()
+
+        return isEditing ? (
+            // <ButtonGroup size='sm'>
+            //     <IconButton icon={<CheckIcon />} {...getSubmitButtonProps()} />
+            //     <IconButton icon={<CloseIcon />} {...getCancelButtonProps()} />
+            // </ButtonGroup>
+            null
+
+        ) : (
+            <IconButton size='sm' icon={<FaEdit />} {...getEditButtonProps()} />
+
+        )
+    }
+
+    function editFile(fileNumber, item) {
+        if (fileNumber != item.fileNumber) {
+            api.token.editFileNumber({ fileNumber, id: item.patientID }).then((res) => {
+                const response = JSON.parse(res.data).result
+                window.location.reload()
             })
         }
     }
-
-
-    function handleChange(e){
-        setDoctor(e.target.value)
-        localStorage.setItem("doctor", e.target.value)
-    }
-
 
     return (
         <Flex bg="gray.100"
             minH={"100vh"}>
             {isLoading ? <FullPageSpinner /> :
                 <>
-                    {isLaptop && <>
+                    {isLaptop && reviewlist.length != 0 && <>
 
                         {/* <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton> */}
 
-                        <Stack py={12} px={2} mx="auto" width="full">
-                        {/* <Box align='center'>
+                        <Stack py={12} px={2} mx="auto" width="auto">
+                            {/* <Box align='center'>
                         <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
                         {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
                         </Select></Box> */}
                             <Heading size="md">Duplicate Patients</Heading>
+                            <Box>
+                                <Alert mb={2} status='info'>
+                                    <AlertIcon />
+                                    Choose the patient you wish to keep by clicking on the patient name. Then click Merge to combine all duplicate entries.
+                                </Alert >
+                                <Alert mb={2} status='info'>
+                                    <AlertIcon />
+                                    Click on the edit button next to the file number to update the file number of the patient
+                                </Alert>
+                            </Box>
                             <Box
                                 rounded={'lg'}
                                 bg={'white'}
@@ -114,74 +139,114 @@ export const DuplicatePatients = () => {
                                 width='full'>
 
                                 {reviewlist.map((review, index) => <>
-                                
+
                                     <Divider mt={2} orientation='horizontal'></Divider>
                                     <Heading m={8} size="md" color="red">{`File Number: ${review.fileNumber}`}</Heading>
 
-                                    <Table  variant='striped' colorScheme='grey'>
+                                    <Table variant='striped' colorScheme='grey'>
                                         <Thead>
                                             <Tr>
                                                 <Th>Name</Th>
-                                                <Th>Phone</Th>
+                                                <Th>Primary Phone</Th>
                                                 <Th>File Number</Th>
-                                                
+
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            {reviewlist[index].patients.map((item) =>
-                                                <Tr key={index}>
-                                                    <Td >{item.name}</Td>
-                                                    <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
+                                            {reviewlist[index].patients.map((item, i) =>
+
+                                                <Tr bg={merge["i"] == i && merge["index"] == index ? "gray.200" : "transparent"} key={i}>
+                                                    <Td style={{ cursor: "pointer" }} onClick={() => setAsMerge(index, i)} >{item.name}</Td>
+                                                    <Td ><Text>{item.phone.substring(2)}</Text>
                                                     </Td>
-                                                    <Td>{item.fileNumber}</Td>
+                                                    <Td>
+                                                        <Editable
+                                                            textAlign='center'
+                                                            defaultValue={item.fileNumber}
+                                                            isPreviewFocusable={false}
+                                                            onSubmit={(fileNumber) => editFile(fileNumber, item)}
+                                                        >
+                                                            <HStack>
+                                                                <EditablePreview />
+                                                                {/* Here is the custom input */}
+
+                                                                <Input as={EditableInput} />
+                                                                <EditableControls />
+                                                            </HStack>
+                                                        </Editable></Td>
+
                                                 </Tr>
+
                                             )
                                             }
-                                              <DuplicatesModal isOpen={isOpen} onClose={onClose} item={reviewlist[index].patients}/>
-                                   
                                         </Tbody>
                                     </Table>
-                                    <HStack mt={2}>
-                                    <Button colorScheme={"blue"} onClick={onOpen}>Merge</Button>
-                                    <Button colorScheme={"blue"}>Keep separate</Button></HStack>
-                                   </>
+                                    <DuplicatesModal isOpen={isOpen} isLoading={isLoading} setIsLoading={setIsLoading} onClose={onClose} item={merge["index"] != -1 ? reviewlist[merge["index"]].patients[merge["i"]] : {}} />
+
+                                    <Button mt={2} onClick={onOpen} colorScheme={"blue"} isDisabled={merge["index"] != index}>Merge</Button>
+
+                                </>
                                 )}
                             </Box>
                         </Stack>
                     </>}
-                    {isMobile &&
+                    {isMobile && reviewlist.length != 0 &&
                         <Stack width="full" alignItems="baseline" py={2} mx="2">
                             <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton>
-                            <Heading size="md">Duplicate Patients</Heading>
+
+                            <Heading size="lg">Duplicate Patients</Heading>
+                            <Box>
+                                <Alert mb={2} status='info'>
+                                    <AlertIcon />
+                                    Choose the patient you wish to keep by clicking on the patient name. Then click Merge to combine all duplicate entries.
+                                </Alert >
+                                <Alert mb={2} status='info'>
+                                    <AlertIcon />
+                                    Click on the edit button next to the file number to update the file number of the patient
+                                </Alert>
+                            </Box>
                             {reviewlist.map((item, index) =>
-                                <><Heading size="md" color="red" pt={3}>{item.fileNumber}</Heading>
-                                    {reviewlist[index].patients.map((review) => <Box
+                                <><Heading size="md" color="red" pt={3}>{`File No: ${item.fileNumber}`}</Heading>
+                                    {reviewlist[index].patients.map((review, i) => <Box
                                         rounded={'lg'}
-                                        bg={'white'}
                                         boxShadow={'lg'}
                                         p={3}
                                         m={5}
+                                        key={i}
+                                        style={{ cursor: "pointer" }}
+                                        bg={merge["i"] == i && merge["index"] == index ? "gray.200" : "white"}
                                         width='full'>
-                                        <VStack spacing={2} width="full" alignItems={"baseline"}>
-                                            <HStack width="full" spacing="auto">
-                                                <HStack ><Heading size={"md"}>{review.name}</Heading>
-                                                    <IconButton icon={<FaPhoneAlt />} href={`tel:+${review.phone}`} as="a" bg="transparent"></IconButton>
+                                        <HStack spacing={"auto"}>
+                                            <Heading onClick={() => setAsMerge(index, i)} size={"md"}>{review.name}</Heading>
+                                            <HStack>
+                                                <Editable
+                                                    textAlign='center'
+                                                    defaultValue={review.fileNumber}
+                                                    isPreviewFocusable={false}
+                                                    onSubmit={(fileNumber) => editFile(fileNumber, review)}
+                                                >
+                                                    <HStack>
+                                                        <EditablePreview />
+                                                        {/* Here is the custom input */}
 
-                                                </HStack>
-                                                <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                                        <Input as={EditableInput} />
+                                                        <EditableControls />
+                                                    </HStack>
+                                                </Editable>
+
                                             </HStack>
-                                        </VStack>
+                                        </HStack>
                                     </Box>)
                                     }
-                                    <HStack mt={2}>
-                            <Button colorScheme={"blue"}>Merge</Button>
-                            <Button colorScheme={"blue"}>Keep separate</Button></HStack>
-                            {/* <DuplicatesModal isOpen={isOpen} onClose={onClose} item={reviewlist[index].patients}/>
-                             */}
-                           </> )}
+
+                                    <DuplicatesModal isOpen={isOpen} isLoading={isLoading} setIsLoading={setIsLoading} onClose={onClose} item={merge["index"] != -1 ? reviewlist[merge["index"]].patients[merge["i"]] : {}} />
+
+                                    <Button mt={2} onClick={onOpen} colorScheme={"blue"} isDisabled={merge["index"] != index}>Merge</Button>
+
+                                </>)}
                         </Stack>
                     }
-
+                    {reviewlist.length == 0 && <Flex bg="white" width="full" align="center" justify="center"><Heading size="lg">No Duplicate Patients</Heading></Flex>}
                 </>}
         </Flex>
     )

@@ -33,7 +33,7 @@ import { useState, useEffect, useContext } from 'react'
 import api from '../api';
 import { ArrowBackIcon, DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router-dom';
-import { FullPageSpinner } from '../utils/spinner';
+import { FullPageSpinner } from '../components/Spinner';
 import { FaPhoneAlt } from 'react-icons/fa';
 import { useMediaQuery } from '@chakra-ui/react'
 import { AppContext } from '../App';

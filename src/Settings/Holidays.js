@@ -27,7 +27,7 @@ import {
 import { useState, useEffect, useContext } from 'react'
 import api from '../api'
 import { AppContext } from '../App'
-import { FullPageSpinner } from '../utils/spinner'
+import { FullPageSpinner } from '../components/Spinner'
 
 
 
@@ -61,7 +61,10 @@ export const Holidays = ({ doctor }) => {
     }
 
     function handleTypeChange(e) {
-        setHolidayInfo(prev => ({ ...prev, "isGeneralHoliday": e.target.value }))
+        if (e.target.value == "true")
+            setHolidayInfo(prev => ({ ...prev, "isGeneralHoliday": 1 }))
+        else
+            setHolidayInfo(prev => ({ ...prev, "isGeneralHoliday": 0 }))
     }
     function handleDurationChange(e) {
         setHolidayInfo(prev => ({ ...prev, "duration": e.target.value }))
@@ -72,33 +75,34 @@ export const Holidays = ({ doctor }) => {
 
     function updateHolidays() {
         onClose()
-        if (date != "" && holidayInfo.isGeneralHoliday != "") {
-            let confirm=true
+        console.log(holidayInfo)
+        if (date != "" && holidayInfo.isGeneralHoliday !== "") {
+            let confirm = true
             setIsLoading(true)
-            api.settings.checkReviewOnHolidays({ date, doctor: doctor.doctorID, isGeneralHoliday : holidayInfo.isGeneralHoliday }).then((res) => {
-               const result = JSON.parse(res.data).result
-               if(result.length!=0){
-                setIsLoading(false)
-                confirm = window.confirm("There are reviews booked on this date. If you proceed to add this date as a holiday, the booked reviews will be ignored. Proceed to update holiday?")
-               }
-                if(confirm)
-              {setIsLoading(true)
-                api.settings.updateHolidays({ date, holidayInfo, doctor: doctor.doctorID }).then((res) => {
+            api.settings.checkReviewOnHolidays({ date, doctor: doctor.doctorID, isGeneralHoliday: holidayInfo.isGeneralHoliday }).then((res) => {
+                const result = JSON.parse(res.data).result
+                if (result.length != 0) {
                     setIsLoading(false)
-                    setHolidays(prev => ([...prev, { "date": new Date(date) }]))
-                }).catch((err) => {
-                    setIsLoading(false)
-                    toast({
-                        title: 'An error occured.',
-                        description: 'Please try again later',
-                        status: 'error',
-                        duration: 3000,
-                        isClosable: false,
-                        position: "top"
+                    confirm = window.confirm("There are reviews booked on this date. If you proceed to add this date as a holiday, the booked reviews will be ignored. Proceed to update holiday?")
+                }
+                if (confirm) {
+                    setIsLoading(true)
+                    api.settings.updateHolidays({ date, holidayInfo, doctor: doctor.doctorID }).then((res) => {
+                        setIsLoading(false)
+                        setHolidays(prev => ([...prev, { "date": new Date(date) }]))
+                    }).catch((err) => {
+                        setIsLoading(false)
+                        toast({
+                            title: 'An error occured.',
+                            description: 'Please try again later',
+                            status: 'error',
+                            duration: 3000,
+                            isClosable: false,
+                            position: "top"
+                        })
                     })
-                })
-            }
-            
+                }
+
             })
 
         }

@@ -18,6 +18,7 @@ import {
 } from '@chakra-ui/react';
 import { useContext, useState } from 'react';
 import api from '../api';
+import { FullPageSpinner } from '../components/Spinner';
 
 //ask for file number and no of days after which review is required
 
@@ -25,35 +26,38 @@ import api from '../api';
 
 export const DuplicatesModal = (props) => {
 
-    const { item, isOpen, onClose, setIsLoading } = props
+    const { item, isOpen, onClose, setIsLoading, isLoading } = props
     // const [reason, setReason] = useState("")
     const toast = useToast()
     // const {doctor} = useContext(AppContext)
+    console.log(item)
 
 
-
-
+    function mergePatients() {
+        onClose()
+        //setIsLoading(true)
+        api.token.mergeDuplicatePatients({ item }).then((res) => {
+            //  setIsLoading(false)
+            window.location.reload()
+        })
+    }
 
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
+        isLoading ? <FullPageSpinner /> : <Modal isOpen={isOpen} onClose={onClose}>
             <ModalOverlay />
             <ModalContent>
-                <ModalHeader>Warning!</ModalHeader>
+                <ModalHeader color="red">Warning!</ModalHeader>
                 <ModalCloseButton />
                 <ModalBody>
-                    <Text mb={4} fontSize={"lg"}>Select the patient you want to keep</Text>
-                    <RadioGroup>
-                        <VStack alignItems={"baseline"}>
-                            {item.map((patient) => <Radio>{`${patient.name} - ${patient.phone}`}</Radio>)}
-                        </VStack>
-                    </RadioGroup>
+                    Are you sure you want to merge the chosen entries?
                 </ModalBody>
 
                 <ModalFooter>
-                    <Button colorScheme='blue' mr={3}>
+                    <Button colorScheme='blue' onClick={mergePatients} mr={3} >
                         Ok
                     </Button>
+                    <Button onClick={onClose}>Cancel</Button>
                 </ModalFooter>
             </ModalContent>
         </Modal>

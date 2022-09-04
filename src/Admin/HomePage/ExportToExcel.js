@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import * as FileSaver from "file-saver";
 import * as XLSX from "xlsx";
 import { MenuItem, useColorMode } from '@chakra-ui/react'
-import { FullPageSpinner } from '../../utils/spinner';
+import { FullPageSpinner } from '../../components/Spinner';
 import api from '../../api';
 import { AppContext } from '../../App';
 

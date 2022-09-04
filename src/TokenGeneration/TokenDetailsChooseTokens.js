@@ -30,7 +30,7 @@ import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import userApi from '../api/user';
 import { AppContext } from '../App';
-import { FullPageSpinner } from '../utils/spinner';
+import { FullPageSpinner } from '../components/Spinner';
 
 export const TokenDetailsChooseToken = () => {
     let navigate = useNavigate()
@@ -78,11 +78,18 @@ export const TokenDetailsChooseToken = () => {
         if (e.target.value != "W") {
             setIsLoading(true)
             setToken(prev => ({ ...prev, "slot": e.target.value }))
-            api.book.fetchTokens({ slot: e.target.value, doctor }).then((res) => {
+            api.book.fetchTokens({ slot: e.target.value, doctor, patientID: location.state.token.id }).then((res) => {
                 setIsLoading(false)
-                const response = JSON.parse(res.data).result
-                console.log(response)
-                setTokens(response)
+                const response = JSON.parse(res.data)
+                if (response.result)
+                    setTokens(response.result)
+                else if (response.message) {
+                    setTokens([])
+                    alert(response.message)
+                    navigate("/home")
+                }
+
+
             })
         }
         else {
