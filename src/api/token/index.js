@@ -89,6 +89,12 @@ export default function tokenApi(fetch, baseUrl) {
 
        updateReason(data){
             return fetch.post(`${baseUrl}/update-reason`,{data})
+        },
+        scanQr(data){
+            return fetch.post(`${baseUrl}/qr`,{data})
+        },
+        arrivedQR(data){
+            return fetch.post(`${baseUrl}/arrived-qr`,{data})
         }
     }
 }
