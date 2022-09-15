@@ -5,3 +5,12 @@
     from { background-color: lightpink; }
     to { background-color: white; }
   }
+
+
+  .shortBlink {
+    animation: screenblinker 0.5s cubic-bezier(.5, 0, 1, 1) 10 alternate;  
+  }
+  @keyframes screenblinker {  
+    from { background-color: lightgreen; }
+    to { background-color: white; }
+  }

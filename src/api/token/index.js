@@ -27,6 +27,10 @@ export default function tokenApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/print-list`,{data})
         },
 
+        fetchTokenListForScreen() {
+            return fetch(`${baseUrl}/screen`)
+        },
+
         fetchAfternoonList() {
             return fetch(`${baseUrl}/fetch_afternoon`)
         },

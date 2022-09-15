@@ -10,8 +10,7 @@ export const ListPrintIcon = ({ timeOfDay }) => {
     const componentRef = useRef()
     const { doctor, doctors } = useContext(AppContext)
     const [list, setList] = useState([])
-    //  const [aftlist, setAftList] = useState([])
-    console.log(doctors)
+
 
     useEffect(() => {
 
@@ -19,7 +18,6 @@ export const ListPrintIcon = ({ timeOfDay }) => {
         api.token.fetchTokenListForPrint({ doctor: doctor }).then((res) => {
             const response = JSON.parse(res.data).result
 
-            console.log(response)
             if (timeOfDay == "Morning")
                 setList(response[0])
             else

@@ -130,14 +130,20 @@ export function onCall(item, current, doctor, toast, setIsLoading) {
     //     onOpenReview()
     // }
     // else {
+       // setTimeout(() => {
+         // playActive()
+        //  }, 2000)
     const confirm = window.confirm(`You are going to call ${item.name}`)
-    if (confirm)
+    if (confirm) {
+        //  playActive()
         call(item, current, doctor, toast, setIsLoading)
+    }
     // }
 }
 
 export function call(item, current, doctor, toast, setIsLoading) {
     //console.log(doctor)
+    //  playActive()
     toast({
         title: `Calling ${item.name}`,
         status: 'info',

@@ -23,7 +23,6 @@ import { ComponentToPrint } from './TokenPrint';
 import ReactToPrint from 'react-to-print';
 import settingsApi from '../../api/settings';
 import { onCall, onCompleted } from '../../utils/tokenFunctions';
-// confirm deletion of staff profile
 
 
 export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current, setCurrent, doctor }) => {
@@ -38,7 +37,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
 
     const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
     const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
-
+  
 
     // function onCall() {
     //     // if (current) {
@@ -119,7 +118,9 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
                     <PopoverBody>
                         <HStack>
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
-                            <Button width={"sm"} isDisabled={item.status!="arrived"} colorScheme={"green"} onClick={() => onCall(item, current, doctor, toast, setIsLoading)} >Call</Button>
+                            <Button width={"sm"} isDisabled={item.status != "arrived" || current} colorScheme={"green"} onClick={() => {
+                                onCall(item, current, doctor, toast, setIsLoading)
+                            }} >Call</Button>
                             <Button width={"sm"} isDisabled={item.status == "current" || item.status == "completed" || item.status == "cancelled"} colorScheme={"red"} onClick={onOpenCancel} >Cancel</Button>
                             <Button isDisabled={item.status != "current"} width={"sm"} colorScheme={"yellow"} onClick={() => onCompleted(current, settings, onOpenReview, doctor, setIsLoading, user.userID)} >Done</Button>
                             <Button href={`tel:+${item.phone}`} as={"a"} width="sm" colorScheme={"blue"} className="nav-linker" >Dial</Button>

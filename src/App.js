@@ -3,6 +3,7 @@ import api from './api';
 import AuthenticatedUser from './AuthenticatedUser';
 import PhysioUser from './PhysioUser';
 import { QRScanning } from './QRScanning';
+import { TokenScreen } from './TokenScreen';
 import UnauthenticatedUser from './UnauthenticatedUser';
 
 export const AppContext = createContext(null);
@@ -19,7 +20,7 @@ function App() {
 
     api.token.fetchDoctors().then((res) => {
       const response = JSON.parse(res.data).result
-    //  console.log(response)
+      //  console.log(response)
       setDoctors(response)
     })
 
@@ -37,6 +38,7 @@ function App() {
         case 3:
           return <PhysioUser />
         case 4: return <QRScanning />
+        case 5: return <TokenScreen />
 
       }
     }

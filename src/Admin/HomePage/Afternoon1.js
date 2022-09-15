@@ -43,11 +43,9 @@ export const AfternoonList1 = ({ isLoading, setIsLoading, aftlist, current, setC
     const [showCompleted, setShowCompleted] = useState(false)
     //  const [aftlist, setAftList] = useState([])
     const { items, requestSort, sortConfig } = useSortableData(aftlist, { key: "tokenNumber", direction: "ascending" });
-console.log(desktopView)
+
 
     useEffect(() => {
-
-        console.log(aftlist)
     }, []);
 
 

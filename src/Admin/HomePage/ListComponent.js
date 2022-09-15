@@ -4,13 +4,14 @@ import { FaCheck, FaPrint, FaRegFileWord, FaUndo, FaUserCheck, FaWalking } from 
 import ReactToPrint from "react-to-print"
 import api from "../../api"
 import { AppContext } from "../../App"
-import { QRScanner } from "../../components/QRScanner"
+import { QRScanner } from "../../QRScanning/QRScanner"
 import { compareFn, DiffMinutes, findBg, types } from "../../utils/tokenFunctions"
 import { DetailsPopover } from "./DetailsPopover"
 import { DetailsPopover1 } from "./DetailsPopover1"
 import { ButtonPopover } from "./Popover"
 import { ReasonEditModal } from "./ReasonEditModal"
 import { ComponentToPrint } from "./TokenPrint"
+import "../../components/icon.css"
 
 export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, doctor, item, index, next, desktopView }) => {
 

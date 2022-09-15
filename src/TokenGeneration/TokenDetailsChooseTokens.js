@@ -240,8 +240,8 @@ export const TokenDetailsChooseToken = () => {
                                     <FormLabel >Select token number</FormLabel>
                                     <RadioGroup name="token" >
                                         <VStack align={"right"}>
-                                            {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
-                                        </VStack>
+                                         {  tokens.length>0 ? tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)
+                                       : <Text color="red">No tokens available in this slot</Text>} </VStack>
                                     </RadioGroup>
                                 </FormControl><FormControl id="reason">
                                     <FormLabel>Select reason</FormLabel>

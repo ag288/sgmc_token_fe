@@ -45,7 +45,7 @@ export const MorningList1 = ({ isLoading, setIsLoading, mornlist, current, setCu
     let componentRef = useRef()
     const { items, requestSort, sortConfig } = useSortableData(mornlist, { key: "tokenNumber", direction: "ascending" });
 
-console.log(sortConfig)
+
     useEffect(() => {
 
        // console.log(aftlist)

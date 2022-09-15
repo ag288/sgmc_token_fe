@@ -29,7 +29,6 @@ import { FaPrint } from 'react-icons/fa';
 
 
 const ActiveRoute = (routeName) => {
-    console.log(routeName)
     let location = useLocation()
     if (location && location.pathname === routeName)
         return 'active'
