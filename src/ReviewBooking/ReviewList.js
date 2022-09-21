@@ -215,7 +215,7 @@ export const ReviewList = () => {
 
                                         <Heading size="md">Booked Tokens</Heading>
                                         {reviewlist.map((item, index) =>
-                                            <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()}</Heading>
+                                            <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()==today ? "TODAY" : new Date(item.date).toDateString() }</Heading>
                                                 {reviewlist[index].reviews.map((review) => <Box
                                                     rounded={'lg'}
                                                     bg={'white'}
@@ -227,10 +227,11 @@ export const ReviewList = () => {
                                                         <HStack width="full" spacing="auto">
                                                             <HStack ><Heading size={"md"}>{review.name}</Heading>
                                                                 <IconButton icon={<FaPhoneAlt />} href={`tel:+${review.phone}`} as="a" bg="transparent"></IconButton>
-
                                                             </HStack>
-                                                            <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                                          {  new Date(item.date).toDateString()==today ? <Text textColor={review.status=="pending" ? "red" : "green"} >{review.status}</Text> :
+                                                          <><IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
                                                             <IconButton bg="transparent" onClick={() => editReview(review)} icon={<EditIcon />}></IconButton>
+                                                            </>  }
                                                         </HStack>
                                                         <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
 

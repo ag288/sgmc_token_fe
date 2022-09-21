@@ -18,7 +18,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     const { user } = useContext(AppContext)
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [settings, setSettings] = useState([])
-const componentRef = useRef()
+    const componentRef = useRef()
     const { isOpen, onOpen, onClose } = useDisclosure()
 
     useEffect(() => {
@@ -236,24 +236,24 @@ const componentRef = useRef()
                     .toLocaleTimeString('en-US',
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
-                {user.userID == 2 && 
-                <Td>
-                    {item.status == "delayed" ?
-                        <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
-                        : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
-                            <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
-                        )}</Td>
-                        }
+                {user.userID == 2 &&
+                    <Td>
+                        {item.status == "delayed" ?
+                            <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
+                            : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
+                                <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
+                            )}</Td>
+                }
                 <ReasonEditModal item={item} isOpen={isOpen} onClose={onClose} />
 
-                   {/* <Td>  <ReactToPrint
+                {/* <Td>  <ReactToPrint
                         onAfterPrint={setAsArrived}
                         trigger={() => <IconButton mx="1%" icon={<FaPrint />} variant={"outline"} colorScheme="teal" />}
                         content={() => componentRef.current}/>
                         <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                         </div>
                     </Td> */}
-               
+
 
 
             </Tr> : <Box className={next == item.tokenID ? "Blink" : ""} bg={findBg(item)} rounded="lg" p={3} m={3}>
@@ -273,10 +273,14 @@ const componentRef = useRef()
                     />
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                     </div> */}
-                    {user.userID == 2 && <Td>
-                        {item.status == "delayed" ? <IconButton colorScheme={"blue"} icon={<FaRegFileWord />} onClick={bookWalkIn} />
-                            : <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />}></IconButton>
-                        }</Td>}
+                    {user.userID == 2 &&
+                        <Td>
+                            {item.status == "delayed" ?
+                                <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
+                                : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
+                                    <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
+                                )}</Td>
+                    }
 
                     <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
 
@@ -317,7 +321,7 @@ const componentRef = useRef()
                 </HStack>
 
                 <ReasonEditModal item={item} isOpen={isOpen} onClose={onClose} />
-                
+
             </Box>
 
 
