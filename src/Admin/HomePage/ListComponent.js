@@ -276,7 +276,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     {user.userID == 2 &&
                         <Td>
                             {item.status == "delayed" ?
-                                <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
+                                <IconButton colorScheme={"blue"} icon={<FaRegFileWord/>} onClick={bookWalkIn}/>
                                 : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
                                     <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
                                 )}</Td>
