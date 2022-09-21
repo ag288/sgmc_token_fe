@@ -18,7 +18,7 @@ export const BellWithBadge = ({ onClick, count }) => {
                 onClick={onClick}
                 icon={<>
                     <FaBell color={'white'} />
-                    {count > 0 ? <Circle className="Blink" size='14px' color={'white'} position={'absolute'} top={'8px'} right={'9px'} fontSize={'0.8rem'}
+                    {count > 0 ? <Circle className="Blink" size='20px' color={'white'} position={'absolute'} top={'3px'} right={'9px'} fontSize={'0.8rem'}
                         bgColor={'red'} zIndex={9999} p={'3px'}>
                         {count}
                     </Circle> : null}

@@ -50,6 +50,7 @@ export const ReviewList = () => {
     const navigate = useNavigate()
     const toast = useToast()
     const { doctor, doctors, setDoctor, user, index, setIndex } = useContext(AppContext)
+    const today = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" })).toDateString()
 
     useEffect(() => {
 
@@ -155,7 +156,7 @@ export const ReviewList = () => {
                                                 width='auto'>
 
                                                 {reviewlist.map((review, index) => <>
-                                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString()}</Heading>
+                                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString()==today ? "TODAY" : new Date(review.date).toDateString() }</Heading>
 
                                                     <Divider orientation='horizontal'></Divider>
                                                     <Table variant='striped' colorScheme='grey'>
@@ -167,7 +168,7 @@ export const ReviewList = () => {
                                                                 <Th>Type</Th>
                                                                 <Th>Date</Th>
                                                                 <Th>Est. Time</Th>
-                                                                <Th></Th>
+                                                                { new Date(review.date).toDateString()!=today && <Th></Th>}
                                                                 <Th></Th>
                                                             </Tr>
                                                         </Thead>
@@ -181,9 +182,10 @@ export const ReviewList = () => {
                                                                     <Td>{item.type}</Td>
                                                                     <Td >{new Date(item.date).toDateString()}</Td>
                                                                     <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
-                                                                    <Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
+                                                                   { new Date(reviewlist[index].date).toDateString()==today ? <Td textColor={item.status=="pending" ? "red" : "green"} borderBottomColor={"black"}>{item.status}</Td>
+                                                                   : <><Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
                                                                     <Td> <IconButton bg="transparent" onClick={() => editReview(item)} icon={<EditIcon />}></IconButton>
-                                                                    </Td>
+                                                                    </Td></>}
                                                                 </Tr>
                                                             )
                                                             }

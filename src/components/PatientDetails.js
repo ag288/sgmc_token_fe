@@ -165,6 +165,7 @@ export const PatientDetails = (props) => {
                         // console.log(message)
                         // if (responsemessage == "") {
                         setToken(prev => ({ ...prev, "id": response }))
+                        console.log(response)
                         navigate(navigateTo, { state: { token, id: response, settings, reasons } })
                         // }
                         // else {

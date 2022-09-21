@@ -15,6 +15,7 @@ import {
     useColorModeValue,
     Stack,
     Image,
+    useToast
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { BellWithBadge, DuplicatePatientsNotif } from './AlertIcons';
@@ -70,14 +71,28 @@ export default function Simple() {
 
     const [pendingCount, setPendingCount] = useState()
     const [duplicateCount, setDuplicateCount] = useState()
+    const toast = useToast()
 
     useEffect(() => {
         if (!pendingCount && !duplicateCount) {
             api.token.fetchAlerts().then((res) => {
                 const result = JSON.parse(res.data).result
                 //   console.log(result)
-                setPendingCount(result[0].length)
-                setDuplicateCount(result[1].length)
+                if (result[0].length > 0) {
+                    toast({
+                        title: 'Tokens not generated!!',
+                        description: "Some reviews have not been generated. Click on the bell icon for details",
+                        status: 'error',
+                        duration: 5000,
+                        position: "top",
+                        isClosable : true
+                    
+
+                    })
+
+                    setPendingCount(result[0].length)
+                    setDuplicateCount(result[1].length)
+                }
             })
         }
     }, [])

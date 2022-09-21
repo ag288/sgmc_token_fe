@@ -78,7 +78,7 @@ export const TokenDetailsChooseToken = () => {
         if (e.target.value != "W") {
             setIsLoading(true)
             setToken(prev => ({ ...prev, "slot": e.target.value }))
-            api.book.fetchTokens({ slot: e.target.value, doctor, patientID: location.state.token.id }).then((res) => {
+            api.book.fetchTokens({ slot: e.target.value, doctor, patientID: location.state.id ? location.state.id : location.state.token.id }).then((res) => {
                 setIsLoading(false)
                 const response = JSON.parse(res.data)
                 if (response.result)

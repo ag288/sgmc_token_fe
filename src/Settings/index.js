@@ -15,6 +15,7 @@ import api from '../api'
 import { useContext, useEffect, useState } from 'react'
 import { AppContext } from '../App'
 import { filterDoctor } from '../utils/tokenFunctions'
+import { KillSwitchSettings } from './KillSwitch'
 
 
 export const Settings = () => {
@@ -52,10 +53,12 @@ export const Settings = () => {
 
                         <TabPanels>
                             {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
-                                <> <WorkingHourSettings doctor={doctor} />
+                               <Stack> 
+                                 {/* <KillSwitchSettings doctor={doctor}/> */}
+                                <WorkingHourSettings doctor={doctor} />
                                     <GeneralSettings doctor={doctor} />
                                     <Holidays doctor={doctor} />
-                                    <TokenTypes doctor={doctor} /></>
+                                    <TokenTypes doctor={doctor} /></Stack>
                             </TabPanel>)}
                         </TabPanels>
                     </Tabs>

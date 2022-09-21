@@ -194,3 +194,12 @@ function completed(doctor, setIsLoading) {
     )
 
 }
+
+export function findPatientInitials(item){
+    const name=item.name.split(" ")
+    let patientInitials=""
+     for(var i=0;i<name.length;i++){
+ patientInitials+=`${name[i].substring(0,1)}.`
+     }
+     return patientInitials
+}

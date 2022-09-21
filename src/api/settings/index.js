@@ -17,6 +17,10 @@ export default function settingsApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/update-hours`, { data })
         },
 
+        updateKill(data) {
+            return fetch.post(`${baseUrl}/update-kill`, { data })
+        },
+
         updateReasons(data) {
             return fetch.post(`${baseUrl}/update-reasons`, { data })
         },

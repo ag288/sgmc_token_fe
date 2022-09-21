@@ -9,6 +9,7 @@ import {
     Image,
 
 } from '@chakra-ui/react';
+import { findPatientInitials } from "../utils/tokenFunctions";
 
 // registration card layout
 
@@ -36,6 +37,7 @@ export class QRTokenPrint extends React.Component {
                mb={2}
                p={2}>
                <Heading color={colors[item?.doctorID % 10]} fontSize={"xxx-large"}>{`${item?.initials}-${item?.tokenNumber}`}</Heading>
+          <Text>{`(${findPatientInitials(item)})`}</Text>
            </Box>
               )}  
                 </VStack>   

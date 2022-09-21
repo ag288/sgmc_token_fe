@@ -34,30 +34,8 @@ export const QRScanner = () => {
         if (response.result) {
           setResult(response.result[1])
           setResultForPrint(response.result[2])
-          if (response.result[1].length == 1){
+          if (response.result[1].length == 1)
             setChecked([response.result[1][0].patientID])
-            api.token.arrivedQR({ item:[response.result[1][0].patientID] }).then((res) => {
-              setResult([])
-              setChecked([])
-              const response=JSON.parse(res.data)
-              if(response.success){
-              toast({
-                title: 'Thank You',
-                description: "Please wait for your turn",
-                position: "top",
-                status: 'success',
-                duration: 3000,
-                isClosable: false,
-              })
-            }
-            else if(response.delayed){
-              setMessage(response.delayed)
-            }
-              setActivate(false)
-        
-            })
-          
-          }
           setActivate(false)
         }
         else if (response.message) {
@@ -143,14 +121,14 @@ export const QRScanner = () => {
         <VStack spacing={2} p={3} alignItems={"baseline"}>
           {result.map((item) => <Checkbox value={item?.patientID} defaultChecked={result.length == 1} onChange={handleChange} colorScheme="blue" borderColor={"gray"}>{item?.name}</Checkbox>)}
         </VStack>
-        <Button onClick={arrivedQR} isDisabled={checked.length == 0} colorScheme="blue">Done</Button>
-        {/* <>
+        {/* <Button onClick={arrivedQR} isDisabled={checked.length == 0} colorScheme="blue">Done</Button> */}
+        <>
           <ReactToPrint
             onAfterPrint={arrivedQR}
             trigger={() => <Button isDisabled={checked.length == 0} colorScheme="blue">Done</Button>}
             content={() => componentRef.current} />
-          <div style={{ display: "none" }}>  <QRTokenPrint ref={componentRef} list={resultForPrint.filter((item)=>checked.includes(item.patientID) && item.status!="delayed")} />
-          </div></> */}
+          <div style={{ display: "none" }}>  <QRTokenPrint ref={componentRef} list={resultForPrint.filter((item)=>checked.includes(item.patientID))} />
+          </div></>
       </>}
     </>
   )
