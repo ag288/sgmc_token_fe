@@ -212,7 +212,6 @@ export const ReviewList = () => {
                                 <TabPanels>
                                     {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
 
-
                                         <Heading size="md">Booked Tokens</Heading>
                                         {reviewlist.map((item, index) =>
                                             <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()==today ? "TODAY" : new Date(item.date).toDateString() }</Heading>
