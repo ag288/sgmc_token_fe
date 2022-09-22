@@ -12,7 +12,9 @@ export default function settingsApi(fetch, baseUrl) {
         updateSettings(data) {
             return fetch.post(`${baseUrl}/update`, { data })
         },
-
+        updateAutocall(data) {
+            return fetch.post(`${baseUrl}/update-autocall`, { data })
+        },
         updateHours(data) {
             return fetch.post(`${baseUrl}/update-hours`, { data })
         },
