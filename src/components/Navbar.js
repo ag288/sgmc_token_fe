@@ -77,7 +77,7 @@ export default function Simple() {
         if (!pendingCount && !duplicateCount) {
             api.token.fetchAlerts().then((res) => {
                 const result = JSON.parse(res.data).result
-                //   console.log(result)
+                console.log(result)
                 if (result[0].length > 0) {
                     toast({
                         title: 'Tokens not generated!!',
@@ -85,14 +85,14 @@ export default function Simple() {
                         status: 'error',
                         duration: 5000,
                         position: "top",
-                        isClosable : true
-                    
+                        isClosable: true
+
 
                     })
-
-                    setPendingCount(result[0].length)
-                    setDuplicateCount(result[1].length)
                 }
+                setPendingCount(result[0].length)
+                setDuplicateCount(result[1].length)
+
             })
         }
     }, [])
@@ -180,7 +180,7 @@ export default function Simple() {
                             </MenuList>
                         </Menu>}
                         {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={pendingCount} />}
-                        {user.userID == 2 && duplicateCount > 0 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
+                        {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
 
                         <Menu>
                             <MenuButton

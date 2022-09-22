@@ -57,18 +57,7 @@ export const GeneralSettings = ({ doctor }) => {
 
     function handleChange(e) {
         switch (e.target.id) {
-            // case "1":
-            //     setSettings(prev => ({ ...prev, ["working_start_time_1"]: e.target.value }));
-            //     break;
-            // case "2":
-            //     setSettings(prev => ({ ...prev, ["working_end_time_1"]: e.target.value }));
-            //     break;
-            // case "3":
-            //     setSettings(prev => ({ ...prev, ["working_start_time_2"]: e.target.value }));
-            //     break;
-            // case "4":
-            //     setSettings(prev => ({ ...prev, ["working_end_time_2"]: e.target.value }));
-            //     break;
+
             case "5":
                 setSettings(prev => ({ ...prev, ["working_start_day"]: e.target.value }));
                 break;
@@ -103,10 +92,13 @@ export const GeneralSettings = ({ doctor }) => {
                 setSettings(prev => ({ ...prev, ["delay_minutes"]: e.target.value }));
                 break;
             case "16":
-                setSettings(prev => ({ ...prev, ["enableReview"]: e.target.checked }));
+                setSettings(prev => ({ ...prev, ["delay_count"]: e.target.value }));
                 break;
             case "17":
-                setSettings(prev => ({ ...prev, ["delay_count"]: e.target.value }));
+                setSettings(prev => ({ ...prev, ["enableReview"]: e.target.checked }));
+                break;
+            case "18":
+                setSettings(prev => ({ ...prev, ["autocall"]: e.target.checked }));
                 break;
         }
     }
@@ -155,24 +147,7 @@ export const GeneralSettings = ({ doctor }) => {
                 width='full'>
                 <Heading size="lg">Settings</Heading>
                 <VStack width="full">
-                    {/* <VStack width="full" alignItems={"baseline"} p={4}>
-                        <Text fontWeight={"bold"}>Working hours - Morning</Text>
-                        <HStack >
-                            <Input type="time" id={"1"} onChange={handleChange} value={settings?.working_start_time_1}></Input>
-                            <Text>to</Text>
-                            <Input type="time" id={"2"} onChange={handleChange} value={settings?.working_end_time_1}></Input>
-                        </HStack>
-                    </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal' />
-                    <VStack p={4} width="full" alignItems={"baseline"}>
-                        <Text fontWeight={"bold"}>Working hours - Afternoon</Text>
-                        <HStack >
-                            <Input type="time" id={"3"} onChange={handleChange} value={settings?.working_start_time_2}></Input>
-                            <Text>to</Text>
-                            <Input type="time" id={"4"} onChange={handleChange} value={settings?.working_end_time_2}></Input>
-                        </HStack>
-                    </VStack> 
-                    <Divider borderColor={"gray"} orientation='horizontal' />*/}
+
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Working days</Text>
                         <HStack >
@@ -182,20 +157,6 @@ export const GeneralSettings = ({ doctor }) => {
                         </HStack>
                     </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
-                    {/* <VStack p={4} width="full" alignItems={"baseline"}>
-                        <Text fontWeight={"bold"} >Maximum tokens - Morning</Text>
-                        <Input type="number" id={"7"} onChange={handleChange} value={settings?.morn_max_tokens}></Input>
-                        {max.find(item => item.slot == "A") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "A").tokenNumber})`}</Text>
-                            : null}
-                    </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal' />
-                    <VStack p={4} width="full" alignItems={"baseline"}>
-                        <Text fontWeight={"bold"} >Maximum tokens - Afternoon</Text>
-                        <Input type="number" id={"8"} onChange={handleChange} value={settings?.aft_max_tokens}></Input>
-                        {max.find(item => item.slot == "B") ? <Text color="red">{`(Cannot be less than ${max.find(item => item.slot == "B").tokenNumber})`}</Text>
-                            : null}
-                    </VStack>
-                    <Divider borderColor={"gray"} orientation='horizontal' /> */}
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Notify before</Text>
                         <Input type="number" id={"9"} onChange={handleChange} value={settings?.gap}></Input>
@@ -237,14 +198,19 @@ export const GeneralSettings = ({ doctor }) => {
                     <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Set as delayed if there are less than</Text>
                         <InputGroup>
-                            <Input type="number" id={"17"} onChange={handleChange} value={settings?.delay_count}></Input>
+                            <Input type="number" id={"16"} onChange={handleChange} value={settings?.delay_count}></Input>
                             <InputRightAddon children="waiting tokens" />
                         </InputGroup>
                     </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
                     <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Add review as days</Text>
-                        <Switch id={"16"} onChange={handleChange} isChecked={settings?.enableReview}></Switch>
+                        <Switch id={"17"} onChange={handleChange} isChecked={settings?.enableReview}></Switch>
+                    </HStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Automatically call next token</Text>
+                        <Switch id={"18"} onChange={handleChange} isChecked={settings?.autocall}></Switch>
                     </HStack>
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />

@@ -29,6 +29,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
         })
     }, [])
 
+    
     function handleDoubleClickForFile(id) {
         let fileNumber = window.prompt("Enter the file number")
         if (fileNumber != null) {
@@ -204,11 +205,10 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
 
 
-
         isLaptop || desktopView ?
 
 
-            <Tr key={index} bg={findBg(item)} className={next == item.tokenID ? "Blink" : ""}>
+            <Tr key={index} bg={findBg(item)} className={next == item.tokenID && !(settings?.autocall) ? "Blink" : ""}>
                 <Td><ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                 <Td >{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}</Td>
                 <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>

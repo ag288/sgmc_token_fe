@@ -19,7 +19,8 @@ import {
     ModalFooter,
     RadioGroup,
     Radio,
-    Switch
+    Switch,
+    Checkbox
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import { scryRenderedComponentsWithType } from 'react-dom/test-utils'
@@ -31,7 +32,7 @@ import { AppContext } from '../App'
 export const KillSwitchSettings = ({ doctor }) => {
 
     const [isLoading, setIsLoading] = useState(false)
-    //const [settings, setSettings] = useState({})
+    const [settings, setSettings] = useState({})
     const [killedSlot, setKilledSlot] = useState({ morning: null, evening: null })
     const toast = useToast()
     // console.log(doctor)
@@ -41,7 +42,7 @@ export const KillSwitchSettings = ({ doctor }) => {
     useEffect(() => {
         api.settings.fetchSettings({ doctor: doctor.doctorID }).then((res) => {
             const response = JSON.parse(res.data).result
-          //  setSettings(response[0])
+            setSettings(response[0])
             if (response[0].killed) {
                 if (response[0].killed.includes("A") && response[0].killed.includes("B"))
                     setKilledSlot({morning : "A", evening:"B"})
@@ -61,22 +62,25 @@ export const KillSwitchSettings = ({ doctor }) => {
 
         switch (e.target.id) {
             case "1":
+                setSettings(prev => ({ ...prev, ["globalKill"]: e.target.checked }));
+                if(e.target.checked){
+                    setKilledSlot({morning : null, evening : null});
+                }
+                break;
+            case "2":
                 if (e.target.checked) {
-
                     setKilledSlot(prev => ({ ...prev, ["morning"]: e.target.value }));
                 }
                 else {
-
                     setKilledSlot(prev => ({ ...prev, ["morning"]: null }));
                 }
 
                 break;
-            case "2":
+            case "3":
                 if (e.target.checked) {
                     setKilledSlot(prev => ({ ...prev, ["evening"]: e.target.value }));
                 }
                 else {
-
                     setKilledSlot(prev => ({ ...prev, ["evening"]: null }));
                 }
                 break;
@@ -97,7 +101,7 @@ export const KillSwitchSettings = ({ doctor }) => {
                 kill += killedSlot.evening
         }
         console.log(kill)
-        api.settings.updateKill({ kill, doctor: doctor.doctorID }).then((res) => {
+        api.settings.updateKill({globalKill:settings.globalKill, kill, doctor: doctor.doctorID }).then((res) => {
             setIsLoading(false)
             toast({
                 title: 'Updated settings successfully',
@@ -135,13 +139,16 @@ export const KillSwitchSettings = ({ doctor }) => {
                 <Heading size="lg">Block Tokens</Heading>
                 <VStack width="full">
                     <VStack width="full" alignItems={"baseline"} p={4}>
+                    <HStack spacing="auto" p={2} width="full" alignItems={"baseline"}>
+                            <Checkbox id={"1"} value="A" onChange={handleChange} isChecked={settings.globalKill}>Block whatsapp tokens till further notice</Checkbox>
+                        </HStack>
                         <HStack spacing="auto" p={2} width="full" alignItems={"baseline"}>
                             <Text fontWeight={"bold"} >Morning</Text>
-                            <Switch id={"1"} value="A" onChange={handleChange} isChecked={ killedSlot.morning && killedSlot.morning.includes("A")}></Switch>
+                            <Switch id={"2"} value="A" isDisabled={settings.globalKill} onChange={handleChange} isChecked={ killedSlot.morning && killedSlot.morning.includes("A")}></Switch>
                         </HStack>
                         <HStack spacing="auto" p={2} width="full" alignItems={"baseline"}>
                             <Text fontWeight={"bold"} >Evening</Text>
-                            <Switch id={"2"} value="B" onChange={handleChange} isChecked={killedSlot.evening && killedSlot.evening.includes("B")}></Switch>
+                            <Switch id={"3"} value="B" isDisabled={settings.globalKill} onChange={handleChange} isChecked={killedSlot.evening && killedSlot.evening.includes("B")}></Switch>
                         </HStack>
                     </VStack>
                 </VStack>

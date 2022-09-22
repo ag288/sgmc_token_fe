@@ -26,7 +26,7 @@ export const TokenList = ({ doctor, color, desktopView }) => {
 
     api.token.fetchTokenList({ doctor: doctor.doctorID }).then((res) => {
       const response = JSON.parse(res.data).result
-      const nextToken = JSON.parse(res.data).next
+      const nextToken = JSON.parse(res.data).next ? JSON.parse(res.data).next.tokenID : null
       console.log(nextToken)
       for (var i = 0; i < response[0].length; i++) {
         if (response[0][i].status == "current") {
@@ -43,6 +43,7 @@ export const TokenList = ({ doctor, color, desktopView }) => {
           }
         }
       }
+      
       setMornList(response[0])
       setAftList(response[1])
       setNext(nextToken)

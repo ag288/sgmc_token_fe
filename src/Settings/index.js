@@ -54,7 +54,7 @@ export const Settings = () => {
                         <TabPanels>
                             {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
                                <Stack> 
-                                 {/* <KillSwitchSettings doctor={doctor}/> */}
+                                 <KillSwitchSettings doctor={doctor}/>
                                 <WorkingHourSettings doctor={doctor} />
                                     <GeneralSettings doctor={doctor} />
                                     <Holidays doctor={doctor} />
