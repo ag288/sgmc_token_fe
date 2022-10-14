@@ -128,7 +128,7 @@ export const ReviewModal = (props) => {
                 <ModalBody>
                     <Text mb={3}>{`You are going to mark ${current.name}'s token as completed!`}</Text>
                     {/* {origin == "previous" && (item.fileNumber == null|| item.fileNumber=="N") || origin != "previous" && (current.fileNumber == null || current.fileNumber=="N")? */}
-                   { current.fileNumber==null || current.fileNumber=="N" &&<FormControl> 
+                   { (!current.fileNumber || current.fileNumber=="N") &&<FormControl> 
                           <FormLabel>File number</FormLabel>
                         <Input type="text" value={info.file} onChange={handleFileChange}></Input>
                     </FormControl> } 

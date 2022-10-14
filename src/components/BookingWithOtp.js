@@ -29,6 +29,7 @@ import {
     Timer
 } from '../utils/timer'
 import { AppContext } from '../App'
+import PhoneInput from 'react-phone-number-input'
 export const BookingWithOtp = () => {
     let navigate = useNavigate()
     const [otp, setOtp] = useState("")
@@ -61,7 +62,7 @@ export const BookingWithOtp = () => {
 
 
     function handlePhoneChange(e) {
-        setToken(prev => ({ ...prev, "phone": e.target.value }))
+        setToken(prev => ({ ...prev, "phone": e}))
 
     }
 
@@ -94,7 +95,7 @@ export const BookingWithOtp = () => {
 
         else {
             // myContext.setState(true)
-            const phoneNumber = '+91' + token.phone;
+            const phoneNumber = token.phone;
 
             console.log(window.recaptchaVerifier)
             const appVerifier = window.recaptchaVerifier;
@@ -165,10 +166,11 @@ export const BookingWithOtp = () => {
                                     <>
                                         <FormControl id="phone" isRequired >
                                             <FormLabel>Phone number</FormLabel>
-                                            <InputGroup>
-                                                <InputLeftAddon children='91'></InputLeftAddon>
-                                                <Input value={token.phone} onChange={handlePhoneChange} type="number" />
-                                            </InputGroup>
+                                            <PhoneInput
+                                                    placeholder="Enter phone number"
+                                                    value={token.phone}
+                                                    defaultCountry="IN"
+                                                    onChange={handlePhoneChange} />
                                         </FormControl>
                                         <Button
                                             onClick={OnSignInSubmit}

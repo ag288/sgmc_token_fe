@@ -143,11 +143,11 @@ export const KillSwitchSettings = ({ doctor }) => {
                             <Checkbox id={"1"} value="A" onChange={handleChange} isChecked={settings.globalKill}>Block whatsapp tokens till further notice</Checkbox>
                         </HStack>
                         <HStack spacing="auto" p={2} width="full" alignItems={"baseline"}>
-                            <Text fontWeight={"bold"} >Morning</Text>
+                            <Text fontWeight={"bold"} >{`Morning (${new Date().toDateString()})`}</Text>
                             <Switch id={"2"} value="A" isDisabled={settings.globalKill} onChange={handleChange} isChecked={ killedSlot.morning && killedSlot.morning.includes("A")}></Switch>
                         </HStack>
                         <HStack spacing="auto" p={2} width="full" alignItems={"baseline"}>
-                            <Text fontWeight={"bold"} >Evening</Text>
+                            <Text fontWeight={"bold"} >{`Evening (${new Date().toDateString()})`}</Text>
                             <Switch id={"3"} value="B" isDisabled={settings.globalKill} onChange={handleChange} isChecked={killedSlot.evening && killedSlot.evening.includes("B")}></Switch>
                         </HStack>
                     </VStack>

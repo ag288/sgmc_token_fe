@@ -1,35 +1,10 @@
 
 import {
-    Table,
-    Thead,
-    Tbody,
-    Tr,
-    Th,
-    Td,
     Box,
     HStack,
-    Heading,
-    Checkbox,
     VStack,
-    Editable,
-    EditablePreview,
-    EditableInput,
     Text,
     Flex,
-    Stack,
-    Select,
-    IconButton,
-    Accordion,
-    AccordionItem,
-    AccordionButton,
-    AccordionPanel,
-    Menu,
-    MenuButton,
-    MenuList,
-    MenuItem,
-    AccordionIcon,
-    RadioGroup,
-    Radio,
     Button,
     Grid,
     GridItem,
@@ -67,8 +42,6 @@ export const PhysioList = () => {
             if (window.location.pathname == "/" || window.location.pathname == "/home")
                 window.location.reload()
         }, 180000)
-
-        console.log(doctor)
         setIsLoading(true)
         api.physio.fetchSlotsforPhysio({ doctor }).then((res) => {
             setIsLoading(false)
@@ -77,11 +50,9 @@ export const PhysioList = () => {
                 setSlotList(response.result)
         })
 
-        api.token.fetchCurrent({ doctor }).then((res) => {
+        api.token.checkDoctorFree({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
-            console.log(response)
-            if (response.length == 0)
-                setFree(true)
+                setFree(response)
         })
 
         api.settings.checkAvailability({ doctor }).then((res) => {
@@ -89,12 +60,13 @@ export const PhysioList = () => {
             setAvailability(response)
         })
 
+
     }, [doctor]);
 
 
 
     function handleChange(e, tokenNumber, timeInEst, slotNumber) {
-        console.log("hi")
+  
         let token = {
             slot: slotNumber,
             tokenNumber: tokenNumber,

@@ -207,16 +207,16 @@ export const GeneralSettings = ({ doctor }) => {
                         <Text fontWeight={"bold"} >Add review as days</Text>
                         <Switch id={"17"} onChange={handleChange} isChecked={settings?.enableReview}></Switch>
                     </HStack>
-                    <Divider borderColor={"gray"} orientation='horizontal' />
+                     {/*<Divider borderColor={"gray"} orientation='horizontal' />
                     <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Automatically call next token</Text>
                         <Switch id={"18"} onChange={handleChange} isChecked={settings?.autocall}></Switch>
-                    </HStack>
+                    </HStack> */}
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>
-
-                    <Button isLoading={isLoading} isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
+                {/* isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} */}
+                    <Button isLoading={isLoading} colorScheme="blue" onClick={updateSettings}>Update Settings</Button>
                 </Box>
             </Box>
         </>

@@ -1,7 +1,8 @@
 import { Box, Button, Divider, Heading, HStack, IconButton, Stack, Switch, Text, useDisclosure, useMediaQuery } from "@chakra-ui/react"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { FaLaptop } from "react-icons/fa"
 import api from "../../api"
+import { AppContext } from "../../App"
 import { AfternoonList1 } from "./Afternoon1"
 import { AfternoonList } from "./AfternoonList"
 import { CurrentPatient } from "./CurrentPatient"
@@ -15,19 +16,19 @@ export const TokenList = ({ doctor, color, desktopView }) => {
   const [mornlist, setMornList] = useState([])
   const [aftlist, setAftList] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const [autocall, setAutocall] = useState()
+  const [doctorIn, setDoctorIn] = useState({})
   const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
   const [next, setNext] = useState("")
-
+  const { user } = useContext(AppContext)
 
   useEffect(() => {
 
     let flag = 0
 
-api.settings.fetchSettings({doctor : doctor.doctorID}).then((res)=>{
-  const response = JSON.parse(res.data).result
-  setAutocall(response[0].autocall)
-})
+    api.settings.fetchSettings({ doctor: doctor.doctorID }).then((res) => {
+      const response = JSON.parse(res.data).result
+      setDoctorIn({doctor_in:response[0].doctor_in, autocall:response[0].autocall})
+    })
 
     api.token.fetchTokenList({ doctor: doctor.doctorID }).then((res) => {
       const response = JSON.parse(res.data).result
@@ -48,7 +49,7 @@ api.settings.fetchSettings({doctor : doctor.doctorID}).then((res)=>{
           }
         }
       }
-      
+
       setMornList(response[0])
       setAftList(response[1])
       setNext(nextToken)
@@ -58,21 +59,36 @@ api.settings.fetchSettings({doctor : doctor.doctorID}).then((res)=>{
 
   }, [doctor]);
 
-  function handleChange(e){
-  setAutocall(e.target.checked)
-  api.settings.updateAutocall({autocall : e.target.checked, doctor:doctor.doctorID}).then((res)=>{
-    console.log("updated")
-  })
+  function handleChange(e) {
+    setDoctorIn(prev=>({...prev, "doctor_in":e.target.checked}))
+    
+    api.settings.updateDoctorIn({ doctor_in: e.target.checked, doctor: doctor.doctorID }).then((res) => {
+      window.location.reload()
+    })
   }
-
+  
+  function handleAutocallChange(e) {
+    setDoctorIn(prev=>({...prev, "autocall":e.target.checked}))
+    api.settings.updateAutocall({ autocall: e.target.checked, doctor: doctor.doctorID }).then((res) => {
+      window.location.reload()
+    })
+  }
   return (
     <>
       <Stack width={'full'}>
         {isLaptop && <Heading mb={3} align="center" size={"lg"}>{doctor?.name}</Heading>}
-        <HStack p={4} alignItems={"baseline"}>
-                        <Text fontWeight={"bold"} >Autocall</Text>
-                        <Switch onChange={handleChange} isChecked={autocall}></Switch>
-                    </HStack>
+        {user.userID == 2 && <HStack spacing="auto">
+          <HStack alignItems={"baseline"}>
+            <Text fontSize="md" fontWeight={"bold"}>Doctor is</Text>
+            <Text fontWeight={"bold"} >OUT</Text>
+            <Switch onChange={handleChange} isChecked={doctorIn.doctor_in}></Switch>
+            <Text fontWeight={"bold"} >IN</Text>
+          </HStack>
+          <HStack alignItems={"baseline"}>
+            <Text fontWeight={"bold"} >Autocall</Text>
+            <Switch onChange={handleAutocallChange} isChecked={doctorIn.autocall}></Switch>
+          </HStack>
+        </HStack>}
         <CurrentPatient loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} current={current} setCurrent={setCurrent} />
 
         <MorningList1 desktopView={desktopView} next={next} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} mornlist={mornlist} current={current} setCurrent={setCurrent} />

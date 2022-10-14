@@ -36,15 +36,18 @@ export const PhysioTokenBooking = () => {
     const [tokens, setTokens] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const { user } = useContext(AppContext)
-   // const [settings, setSettings] = useState([])
+    // const [settings, setSettings] = useState([])
     let location = useLocation()
-    let settings=location && location.state ? location.state.settings : {}
+    let settings = location && location.state ? location.state.settings : {}
     const [token, setToken] = useState({
         slot: location.state.token.slot,
         token: location.state.token.token,
-        reason: location.state.token.reason
+        tokenNumber: location.state.token.tokenNumber,
+        reason: location.state.token.reason,
+        limit :1,
+        flag:0
     })
-    const {doctor, doctors} = useContext(AppContext)
+    const { doctor, doctors } = useContext(AppContext)
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -56,13 +59,13 @@ export const PhysioTokenBooking = () => {
         //     setSettings(response[0])
         // })
 
-        api.book.decideSlots({doctor}).then((res) => {
+        api.book.decideSlots({ doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             setSlots(response)
         })
 
-        api.book.fetchTokens({ slot: location.state.token.slot, doctor }).then((res) => {
+        api.book.fetchTokens({ patientID: location.state.id ? location.state.id : location.state.token.id,slot: location.state.token.slot, doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             setTokens(response)
@@ -74,16 +77,17 @@ export const PhysioTokenBooking = () => {
     function handleSlotChange(e) {
         setIsLoading(true)
         setToken(prev => ({ ...prev, "slot": e.target.value }))
-        api.book.fetchTokens({ slot: e.target.value, doctor }).then((res) => {
+        api.book.fetchTokens({ patientID: location.state.id ? location.state.id : location.state.token.id, slot: e.target.value, doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
+            console.log(response)
             setTokens(response)
         })
 
     }
 
-    function handleTokenChange(e) {
-        setToken(prev => ({ ...prev, "token": e.target.value }))
+    function handleTokenChange(item) {
+        setToken(prev => ({ ...prev, ...{"token": item.tokenID, "tokenNumber": item.tokenNumber} }))
 
     }
 
@@ -101,8 +105,11 @@ export const PhysioTokenBooking = () => {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
             location.state.token.token = token.token
+            location.state.token.tokenNumber = token.tokenNumber
+            location.state.token.limit=token.limit
+            location.state.token.flag=token.flag
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
-            console.log(token)
+            
             setIsLoading(true)
             api.book.generateToken({ token: location.state.token, doctors, user }).then((res) => {
                 const response = JSON.parse(res.data)
@@ -192,12 +199,11 @@ export const PhysioTokenBooking = () => {
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
-
                                 <FormControl id="token" isRequired >
                                     <FormLabel >Select token number</FormLabel>
                                     <RadioGroup name="token" >
                                         <VStack align={"right"}>
-                                            {tokens.map((item) => <Radio key={item.tokenID} bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
+                                            {tokens.map((item) => <Radio key={item.tokenID} bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={()=>handleTokenChange(item)}>{item.tokenNumber}</Radio>)}
                                             {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>

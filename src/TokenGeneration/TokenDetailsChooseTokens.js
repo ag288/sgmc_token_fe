@@ -23,9 +23,13 @@ import {
     Spinner,
     IconButton,
     useToast,
+    CheckboxGroup,
+    Checkbox,
+    Input,
+    Switch,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FaHome } from 'react-icons/fa'
+import { FaHome, FaMinus, FaMinusCircle, FaPlus } from 'react-icons/fa'
 import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import userApi from '../api/user';
@@ -44,7 +48,10 @@ export const TokenDetailsChooseToken = () => {
     const [token, setToken] = useState({
         slot: "",
         token: "",
-        reason: ""
+        tokenNumber: "",
+        reason: "",
+        limit: 1,
+        flag: 0
     })
     const [tokenNo, setTokenNo] = useState("")
     const [time, setTime] = useState({ start: "", end: "" })
@@ -73,7 +80,7 @@ export const TokenDetailsChooseToken = () => {
     }, [])
 
     let location = useLocation()
-
+    console.log(location.state.token)
     function handleSlotChange(e) {
         if (e.target.value != "W") {
             setIsLoading(true)
@@ -92,21 +99,21 @@ export const TokenDetailsChooseToken = () => {
 
             })
         }
-        else {
+        else { // walk in slot
+            setToken(prev => ({ ...prev, "flag": 0 })) // extra booking not allowed
             setToken(prev => ({ ...prev, "slot": e.target.value }))
             setTokens([{ "tokenID": "A", "tokenNumber": "Morning" },
             { "tokenID": "B", "tokenNumber": "Evening" }])
         }
     }
 
-    function handleTokenChange(e) {
-        setToken(prev => ({ ...prev, "token": e.target.value }))
-
+    function handleTokenChange(item) {
+        console.log(item.tokenNumber)
+        setToken(prev => ({ ...prev, ...{ "token": item.tokenID, "tokenNumber": item.tokenNumber } }))
     }
 
     function handleReasonChange(e) {
         setToken(prev => ({ ...prev, "reason": e.target.value }))
-
     }
 
     function setArrived(value) {
@@ -125,12 +132,16 @@ export const TokenDetailsChooseToken = () => {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
             location.state.token.token = token.token
+            location.state.token.tokenNumber = token.tokenNumber
+            location.state.token.limit = parseInt(token.limit)
+            location.state.token.flag = token.flag
             location.state.token.arrived = value
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
-            console.log(token)
+            console.log(location.state.token)
             setIsLoading(true)
             api.book.generateToken({ token: location.state.token, doctors, user }).then((res) => {
                 const response = JSON.parse(res.data)
+                console.log(response)
                 if (response.message != "") {
                     setIsLoading(false)
                     alert(response.message)
@@ -182,8 +193,15 @@ export const TokenDetailsChooseToken = () => {
                             end.setMinutes(rounded.getMinutes() + 15)
                         }
                         setTime({ start: start, end: end })
-
                         onOpenGenerate()
+                        if (response.noBlockedMsg != "")
+                            toast({
+                                title: response.noBlockedMsg,
+                                status: 'warning',
+                                duration: 5000,
+                                isClosable: false,
+                                position: "top"
+                            })
                     }
 
                     else {
@@ -235,23 +253,36 @@ export const TokenDetailsChooseToken = () => {
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
-
                                 <FormControl id="token" isRequired >
                                     <FormLabel >Select token number</FormLabel>
                                     <RadioGroup name="token" >
                                         <VStack align={"right"}>
-                                         {  tokens.length>0 ? tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)
-                                       : <Text color="red">No tokens available in this slot</Text>} </VStack>
+                                            {tokens.length > 0 ? tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={() => handleTokenChange(item)}>{item.tokenNumber}</Radio>)
+                                                : <Text color="red">No tokens available in this slot</Text>} </VStack>
                                     </RadioGroup>
-                                </FormControl><FormControl id="reason">
+                                </FormControl>
+                                <FormControl id="reason">
                                     <FormLabel>Select reason</FormLabel>
                                     <RadioGroup name="reason" >
                                         <VStack align={"right"}>
                                             {reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
-                                            {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
+                                {/* <FormControl >
+                                    <FormLabel>No. of tokens</FormLabel>
+                                <HStack>
+                                    <IconButton color="red" isDisabled={token.limit==1 || token.slot=="W"} onClick={()=> setToken(prev => ({ ...prev, "limit": prev.limit-1 }))} size="sm" bg="transparent" icon={<FaMinus/>}></IconButton>
+                                    <Input borderColor="grey" value={token.limit} width={50} type="number"></Input>
+                                       <IconButton isDisabled={token.limit==3 || token.slot=="W"} onClick={()=> setToken(prev => ({ ...prev, "limit": prev.limit+1 }))} color="green" size="sm" bg="transparent" icon={<FaPlus/>}></IconButton>
+                                  
+                                </HStack>
+                                </FormControl> */}
+                                {token.slot != "W" ? <HStack mt={2}>
+                                    <Text fontWeight={"bold"}>Block an extra token</Text>
+                                    <Switch onChange={(e) => setToken(prev => ({ ...prev, "flag": e.target.checked }))} value={token.flag} colorScheme="green" textColor="green"></Switch>
+                                </HStack>
+                                    : null}
                             </Stack>
                             <Modal size={"2xl"} isOpen={isOpenGenerate} onClose={onCloseGenerate}>
                                 <ModalOverlay />

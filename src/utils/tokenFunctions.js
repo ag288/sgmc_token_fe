@@ -168,10 +168,9 @@ export function call(item, current, doctor, toast, setIsLoading) {
 }
 
 export function onCompleted(item, settings, onOpenReview, doctor, setIsLoading, user) {
-    //  const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
-    //if (confirm) {
+ 
     if (settings.enableReview && user == 1) {
-        //setOrigin("completed")
+ 
         onOpenReview()
 
     }
@@ -181,7 +180,7 @@ export function onCompleted(item, settings, onOpenReview, doctor, setIsLoading, 
             completed(doctor, setIsLoading)
         }
     }
-    // }
+    
 }
 
 function completed(doctor, setIsLoading) {

@@ -36,7 +36,7 @@ import { AppContext } from '../../App';
 
 export const ReasonEditModal = (props) => {
 
-    const { item, isOpen, onClose } = props
+    const { item, isOpen, onClose, flag, setState } = props
     const [newReason, setNewReason] = useState()
     const [reasons, setReasons] = useState([])
     const toast = useToast()
@@ -45,7 +45,10 @@ export const ReasonEditModal = (props) => {
     useEffect(() => {
 
         api.settings.fetchReasons().then((res) => {
-            setReasons(JSON.parse(res.data).result)
+            const response = JSON.parse(res.data).result
+            setReasons(response)
+        }).catch((err) => {
+            console.log(err)
         })
     }, [])
 
@@ -56,9 +59,11 @@ export const ReasonEditModal = (props) => {
 
     function updateReason() {
         onClose()
-
-        api.token.updateReason({ id: item.tokenID, newReason }).then((res) => {
-
+        // flag == 1 ---> editing reason of daily token
+        // flag == 2 ---> editing reason of review token
+        api.token.updateReason({ id: flag == 1 ? item.tokenID : item.reviewID, newReason, flag }).then((res) => {
+            item.reason = newReason
+            item.type = reasons.find((r) => r.reasonID == newReason).name
             toast({
                 title: "Reason for visit updated",
                 status: 'success',
@@ -66,7 +71,7 @@ export const ReasonEditModal = (props) => {
                 isClosable: false,
                 position: "top"
             })
-            window.location.reload()
+            setState(prev => prev + 1) // to re-render parent component to reflect the changes in reason
         }).catch(err => {
             toast({
                 title: "An error occured",
@@ -91,7 +96,7 @@ export const ReasonEditModal = (props) => {
                         <FormLabel>Select reason</FormLabel>
                         <RadioGroup>
                             <VStack alignItems={"baseline"}>
-                                {reasons.map((reason) => <Radio onChange={handleReasonChange} value={reason.reasonID}>{reason.name}</Radio>)}
+                                {reasons.map((reason) => <Radio bg={newReason == reason.reasonID ? "green" : "white"} onChange={handleReasonChange} value={reason.reasonID}>{reason.name}</Radio>)}
                             </VStack>
                         </RadioGroup>
 

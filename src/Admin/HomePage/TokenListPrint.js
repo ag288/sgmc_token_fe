@@ -54,7 +54,7 @@ let name = (props.doctors)?.find((doc)=>doc.doctorID==props.doctor)?.name
                                     <Td><Text>{item.fileNumber ? item.fileNumber : "----"}</Text>
                                     </Td>
                                     <Td> {item.type}</Td>
-                                    <Td>{item.phone.substring(2)}</Td>
+                                    <Td>{item.phone?.substring(2)}</Td>
                                     <Td>
                                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                                             .toLocaleTimeString('en-US',

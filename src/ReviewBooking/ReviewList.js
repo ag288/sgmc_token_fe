@@ -64,6 +64,7 @@ export const ReviewList = () => {
         })
         api.settings.fetchReasons().then((res) => {
             const response = JSON.parse(res.data).result
+            console.log(response)
             setReasons(response)
         })
 
@@ -120,7 +121,7 @@ export const ReviewList = () => {
             fileNumber: item.fileNumber,
             doctor: doctor
         }
-        navigate("/review-details", { state: { token, settings, reasons, origin : "editReview" } })
+        navigate("/review-details", { state: { token, settings, reasons, origin: "editReview" } })
     }
 
     return (
@@ -156,7 +157,7 @@ export const ReviewList = () => {
                                                 width='auto'>
 
                                                 {reviewlist.map((review, index) => <>
-                                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString()==today ? "TODAY" : new Date(review.date).toDateString() }</Heading>
+                                                    <Heading m={8} size="md" color="red">{new Date(review.date).toDateString() == today ? "TODAY" : new Date(review.date).toDateString()}</Heading>
 
                                                     <Divider orientation='horizontal'></Divider>
                                                     <Table variant='striped' colorScheme='grey'>
@@ -168,24 +169,24 @@ export const ReviewList = () => {
                                                                 <Th>Type</Th>
                                                                 <Th>Date</Th>
                                                                 <Th>Est. Time</Th>
-                                                                { new Date(review.date).toDateString()!=today && <Th></Th>}
+                                                                {new Date(review.date).toDateString() != today && <Th></Th>}
                                                                 <Th></Th>
                                                             </Tr>
                                                         </Thead>
                                                         <Tbody>
                                                             {reviewlist[index].reviews.map((item) =>
                                                                 <Tr key={index}>
-                                                                    <Td >{item.name}</Td>
+                                                                    <Td >{item.tokenCount ? `${item.name} (${item.tokenCount})` : item.name }</Td>
                                                                     <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
                                                                     </Td>
                                                                     <Td >{item.tokenNumber}</Td>
                                                                     <Td>{item.type}</Td>
                                                                     <Td >{new Date(item.date).toDateString()}</Td>
                                                                     <Td>{new Date(`1970-01-01 ${item.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}</Td>
-                                                                   { new Date(reviewlist[index].date).toDateString()==today ? <Td textColor={item.status=="pending" ? "red" : "green"} borderBottomColor={"black"}>{item.status}</Td>
-                                                                   : <><Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
-                                                                    <Td> <IconButton bg="transparent" onClick={() => editReview(item)} icon={<EditIcon />}></IconButton>
-                                                                    </Td></>}
+                                                                    {new Date(reviewlist[index].date).toDateString() == today ? <Td textColor={item.status == "pending" ? "red" : "green"} borderBottomColor={"black"}>{item.status}</Td>
+                                                                        : <><Td><IconButton bg="transparent" onClick={() => deleteReview(item)} icon={<DeleteIcon />}></IconButton></Td>
+                                                                            <Td> <IconButton bg="transparent" onClick={() => editReview(item)} icon={<EditIcon />}></IconButton>
+                                                                            </Td></>}
                                                                 </Tr>
                                                             )
                                                             }
@@ -214,23 +215,23 @@ export const ReviewList = () => {
 
                                         <Heading size="md">Booked Tokens</Heading>
                                         {reviewlist.map((item, index) =>
-                                            <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString()==today ? "TODAY" : new Date(item.date).toDateString() }</Heading>
+                                            <><Heading size="md" color="red" pt={3}>{new Date(item.date).toDateString() == today ? "TODAY" : new Date(item.date).toDateString()}</Heading>
                                                 {reviewlist[index].reviews.map((review) => <Box
                                                     rounded={'lg'}
                                                     bg={'white'}
                                                     boxShadow={'lg'}
                                                     p={3}
-                                                    m={5}
+                                                    my={5}
                                                     width='full'>
                                                     <VStack spacing={2} width="full" alignItems={"baseline"}>
                                                         <HStack width="full" spacing="auto">
-                                                            <HStack ><Heading size={"md"}>{review.name}</Heading>
+                                                            <HStack ><Heading size={"md"}>{review.tokenCount? `${review.name} (${review.tokenCount})` : review.name}</Heading>
                                                                 <IconButton icon={<FaPhoneAlt />} href={`tel:+${review.phone}`} as="a" bg="transparent"></IconButton>
                                                             </HStack>
-                                                          {  new Date(item.date).toDateString()==today ? <Text textColor={review.status=="pending" ? "red" : "green"} >{review.status}</Text> :
-                                                          <><IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
-                                                            <IconButton bg="transparent" onClick={() => editReview(review)} icon={<EditIcon />}></IconButton>
-                                                            </>  }
+                                                            {new Date(item.date).toDateString() == today ? <Text textColor={review.status == "pending" ? "red" : "green"} >{review.status}</Text> :
+                                                                <><IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                                                    <IconButton bg="transparent" onClick={() => editReview(review)} icon={<EditIcon />}></IconButton>
+                                                                </>}
                                                         </HStack>
                                                         <Heading size="sm">{`${review.tokenNumber} (${review.type}), ${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Heading>
 

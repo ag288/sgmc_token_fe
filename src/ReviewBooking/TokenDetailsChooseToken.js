@@ -22,67 +22,65 @@ import {
     Spinner,
     IconButton,
     Input,
+    Switch,
+    useToast,
+    Table,
+    Tr,
+    Td,
+    Tbody,
+    useMediaQuery,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { FaHome } from 'react-icons/fa'
+import { FaEdit, FaHome, FaMinus, FaPen, FaPlus, FaRegEdit, FaUserEdit } from 'react-icons/fa'
 import { useContext, useEffect, useState } from 'react'
 import api from '../api';
 import { AppContext } from '../App';
 import { FullPageSpinner } from '../components/Spinner';
+import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
+import { ReasonEditModal } from '../Admin/HomePage/ReasonEditModal';
+import { isPossiblePhoneNumber } from 'react-phone-number-input';
 
 export const TokenDetailsForReviewChooseToken = () => {
     let navigate = useNavigate()
+    const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [slots, setSlots] = useState([])
     const [tokens, setTokens] = useState([])
-    // const [reasons, setReasons] = useState([])
+    const [existingReviews, setExistingReviews] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     let location = useLocation()
-    const settings = location && location.state ? location.state.settings : {}
+    const toast = useToast()
     const [token, setToken] = useState({
         date: "",
         slot: "",
         token: "",
-        reason: ""
+        tokenNumber: "",
+        reason: "",
+        limit: 1,
+        flag: 0
     })
     const [tokenNo, setTokenNo] = useState("")
-
+    const [state, setState] = useState(0)  // to re-render when reason is edited
+    const [create, setCreate] = useState()
     const today = new Date()
-    console.log(settings)
     const tomorrow = new Date(today.setDate(today.getDate() + 1)).toISOString().split('T')[0];
     const [maxdate, setMaxDate] = useState(new Date(today.setDate(today.getDate() + parseInt(location.state?.settings.review_date_limit))).toISOString().split('T')[0])
     const [time, setTime] = useState({ start: "", end: "" })
     const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen: isOpenReason, onOpen: onOpenReason, onClose: onCloseReason } = useDisclosure()
     const { user, doctor, doctors } = useContext(AppContext)
-    console.log(doctor)
+
     //let maxdate=30
     useEffect(() => {
 
-
-
-        // api.settings.fetchSettings().then((res) => {
-        //     const response = JSON.parse(res.data).result
-        //     setMaxDate(new Date(today.setDate(today.getDate() + parseInt(response[0].review_date_limit))).toISOString().split('T')[0])
-        // })
-
-        // api.settings.fetchReasons().then((res) => {
-        //     const response = JSON.parse(res.data).result
-        //     setReasons(response)
-        // })
-        if (!location.state.origin) {
-            api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id, doctor }).then((res) => {
-                const response = JSON.parse(res.data).result
-                console.log(response)
-                if (response.length != 0) {
-                    let update = window.confirm(`A review already exists for ${location.state.token.name} on ${new Date(response[0].date).toDateString()}. Proceed to update existing review?`)
-                    if (!update) {
-                        navigate("/home")
-
-                    }
-
-                }
-            })
-        }
-    }, [])
+        //      if (!location.state.origin) {
+        setIsLoading(true)
+        api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id, doctor }).then((res) => {
+            setIsLoading(false)
+            const response = JSON.parse(res.data).result
+            setExistingReviews(response)
+        })
+        //   }
+    }, [state]) // re-render when reason is edited
 
 
     function handleSlotChange(e) {
@@ -96,9 +94,9 @@ export const TokenDetailsForReviewChooseToken = () => {
 
     }
 
-    function handleTokenChange(e) {
-        setToken(prev => ({ ...prev, "token": e.target.value }))
-
+    function handleTokenChange(item) {
+        setToken(prev => ({ ...prev, "token": item.tokenID }))
+        setToken(prev => ({ ...prev, "tokenNumber": item.tokenNumber }))
     }
 
     function handleReasonChange(e) {
@@ -109,30 +107,95 @@ export const TokenDetailsForReviewChooseToken = () => {
     function handleDateChange(e) {
 
         const dateValue = e.target.value
+        let flag = 0
+        let selectedDate = new Date(`${dateValue} 00:00:00`)
+        selectedDate.setHours(0, 0, 0, 0)
+        for (var i = 0; i < existingReviews.length; i++) {
+            let existingDate = new Date(existingReviews[i].date)
+            existingDate.setHours(0, 0, 0, 0)
+            if (selectedDate.getTime() == existingDate.getTime()) {
+                flag = 1
+                break
+            }
+        }
+        let confirm
+        if (flag) {
+            confirm = window.confirm("There is already a review on the selected date! Do you want to update the existing review?")
+        }
         // setIsLoading(true)
-        api.review.decideSlotsReview({ date: e.target.value, doctor }).then((res) => {
-            //  setIsLoading(false)
-            const response = JSON.parse(res.data)
-            if (!response.result) {
-                alert(response.message)
-            }
-            else {
-                setToken(prev => ({ ...prev, "date": dateValue }))
-                setSlots(response.result)
-            }
-        })
+        // else {
+        if (confirm || !flag) {
+            api.review.decideSlotsReview({ date: e.target.value, doctor }).then((res) => {
+                //  setIsLoading(false)
+                const response = JSON.parse(res.data)
+                if (!response.result) {
+                    alert(response.message)
+                }
+                else {
+                    setToken(prev => ({ ...prev, "date": dateValue }))
+                    setToken(prev => ({ ...prev, slot: "" }))
+                    setSlots(response.result)
+                    setTokens([])
+                }
+            })
+        }
+        else {
+            setToken(prev => ({ ...prev, "date": "" }))
+        }
     }
 
+
+    function deleteReview(item) {
+        const flag = window.confirm(`Warning!\nYou are going to delete review of ${item.name}`)
+        if (flag) {
+            setIsLoading(true)
+            api.review.deleteReview({ id: item.reviewID }).then((res) => {
+                setIsLoading(false)
+                setExistingReviews(prev => (prev.filter((review) => review.reviewID != item.reviewID)))
+                // window.location.reload()
+                toast({
+                    title: 'Deleted review successfully',
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
+            }).catch((err) => {
+                setIsLoading(false)
+                toast({
+                    title: 'Something went wrong',
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: false,
+                    position: "top"
+                })
+            })
+        }
+    }
+
+
+    function newReview() {
+
+
+        setCreate(true)
+    }
+
+
     function handleSubmit() {
-        console.log(token)
-        if (token.slot != "" && token.token != "" && token.date != "") {
+
+        if (token.slot != "" && token.reason != "" && token.token != "" && token.date != "") {
             location.state.token.slot = token.slot
             location.state.token.date = token.date
             location.state.token.token = token.token
+            location.state.token.tokenNumber = token.tokenNumber
+            location.state.token.limit = token.limit
+            location.state.token.flag = token.flag
             location.state.token.reason = user.userID == 3 ? 1 : token.reason
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
             location.state.token.creator = user.userID
+
             setIsLoading(true)
+            //  if (create) {
             api.review.generateTokenReview({ token: location.state.token }).then((res) => {
                 const response = JSON.parse(res.data)
                 if (response.error)
@@ -142,9 +205,18 @@ export const TokenDetailsForReviewChooseToken = () => {
                     setTokenNo(`${response.initials}-${response.tokenNo}`)
                     setTime(response.time)
                     onOpen()
+                    if (response.noBlockedMsg != "")
+                        toast({
+                            title: response.noBlockedMsg,
+                            status: 'warning',
+                            duration: 5000,
+                            isClosable: false,
+                            position: "top"
+                        })
                 }
 
             })
+            //   }
         }
         else {
             alert("Please fill in all the values")
@@ -159,87 +231,144 @@ export const TokenDetailsForReviewChooseToken = () => {
                 {/* <IconButton isDisabled={isLoading} size="lg" bg='transparent' width="fit-content" icon={<FaHome />} onClick={() => navigate('/home')}></IconButton> */}
 
                 {isLoading ? <FullPageSpinner /> :
-                    <Stack mx={'auto'} spacing="2%" py={12} px={6} width={'auto'}>
-                        <Heading m={2} size={"md"}>{doctors.find((doc) => doc.doctorID == doctor).name}</Heading>
-                        <Heading color="crimson" fontSize={'2xl'}>Book a Future Review</Heading>
-                        <Box
-                            rounded={'lg'}
-                            bg={'white'}
+                    <Stack mx={'auto'} spacing="2%" py={12} px={3} width={'auto'}>
+
+                        <Heading mb={2} fontSize={'3xl'}>{doctors.find((doc) => doc.doctorID == doctor).name}</Heading>
+                        {/* <Box rounded={'lg'}
+                            bg={'orange.100'}
                             boxShadow={'lg'}
-                            width="full"
-                            p={8}>
-                            <Stack spacing={4}>
+                            p={3}
+                            width='full'> */}
+                        {/* <VStack width="full" alignItems={"baseline"}> */}
+                        {existingReviews.length > 0 && <><Heading color="crimson" fontSize={'2xl'}>{`Existing Reviews for ${existingReviews[0]?.name}`}</Heading>
 
-                                <FormControl id="date" isRequired >
-                                    <FormLabel >Select date</FormLabel>
-                                    <Input value={token.date} onChange={handleDateChange} min={tomorrow} max={maxdate} type="date"></Input>
-                                </FormControl>
+                            {isLaptop && <Table
+                                rounded={'lg'}
+                                variant="simple"
+                                bg={"orange.100"}
+                                p={1}>
+                                <Tbody>
+                                    {existingReviews.map((review) =>
+                                        <> <Tr mb={2}>
+                                            {/* <HStack width="full" spacing="auto"> */}
+                                            <Td size="sm">{`${review.initials}-${review.tokenNumber}`}
+                                            </Td>
+                                            <Td fontWeight={"bold"}>{new Date(review.date).toDateString()}</Td>
+                                            <Td >
+                                                <HStack spacing={1}> <Text>{`${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Text>
+                                                    <Text>{`(${review.type})`}</Text>
+                                                    <IconButton bg="transparent" onClick={onOpenReason} icon={<FaPen />}></IconButton>
+                                                </HStack></Td>
+                                            <Td> <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                            </Td>
+                                        </Tr>
+                                            <ReasonEditModal setState={setState} item={review} flag={2} isOpen={isOpenReason} onClose={onCloseReason} /></>
+                                    )} </Tbody></Table>}
 
-                                <FormControl id="slot" isRequired >
-                                    <FormLabel >Select slot</FormLabel>
-                                    <RadioGroup name="slot" >
-                                        <VStack align={"right"}>
-                                            {slots.map((slot) => <Radio bg={token.slot == slot.slotID ? "green" : "white"} value={slot.slotID} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
-                                                .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
-                                                    .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
-
-                                        </VStack>
-                                    </RadioGroup>
-                                </FormControl>
-
-                                <FormControl id="token" isRequired >
-                                    <FormLabel >Select token number</FormLabel>
-                                    <RadioGroup name="token" >
-                                        <VStack align={"right"}>
-                                            {tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={handleTokenChange}>{item.tokenNumber}</Radio>)}
-                                        </VStack>
-                                    </RadioGroup>
-                                </FormControl>
-                                {user.userID != 3 ? <FormControl id="reason">
-                                    <FormLabel>Select reason</FormLabel>
-                                    <RadioGroup name="reason" >
-                                        <VStack align={"right"}>
-                                            {location?.state.reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
-                                            {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
-                                        </VStack>
-                                    </RadioGroup>
-                                </FormControl> : null}
-                            </Stack>
-                            <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
-                                <ModalOverlay />
-                                <ModalContent>
-                                    <ModalHeader>Booking successful</ModalHeader>
-                                    <ModalBody>
-                                        <HStack>
-                                            <Text>Your token number is </Text> <Text fontWeight={"bold"}>{tokenNo}</Text>
+                            {isMobile && existingReviews.map((review) => <Box
+                                rounded={'lg'}
+                                bg={'orange.100'}
+                                width="full"
+                                >
+                                <HStack width="full" spacing="auto">
+                                    <Text size="sm">{`${review.initials}-${review.tokenNumber}`}
+                                    </Text>
+                                    <Text fontWeight={"bold"}>{new Date(review.date).toDateString()}</Text>
+                                    {/* <Text onDoubleClick={onOpenReason}>{`${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })} (${review.type})`}</Text>
+                                     */}
+                                    <HStack spacing={1}> <Text>{`${new Date(`1970-01-01 ${review.timeInEst}`).toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: "numeric" })}`}</Text>
+                                        <Text>{`(${review.type})`}</Text>
+                                        <IconButton bg="transparent" onClick={onOpenReason} icon={<FaPen />}></IconButton>
+                                    </HStack>
+                                    <Text> <IconButton bg="transparent" onClick={() => deleteReview(review)} icon={<DeleteIcon />}></IconButton>
+                                    </Text>
+                                </HStack>   <ReasonEditModal item={review} isOpen={isOpenReason} onClose={onCloseReason} /></Box>
+                            )}
+                            <Button width="30%" onClick={newReview} colorScheme="blue">Book a review</Button>
+                        </>}
+                        {existingReviews.length == 0 || create ?
+                            <><Heading color="crimson" fontSize={'2xl'}>{"Book Future Review"}</Heading>
+                                <Box
+                                    rounded={'lg'}
+                                    bg={'white'}
+                                    boxShadow={'lg'}
+                                    width="full"
+                                    p={8}>
+                                    <Stack spacing={4}>
+                                        <FormControl id="date" isRequired >
+                                            <FormLabel >Select date</FormLabel>
+                                            <Input value={token.date} onChange={handleDateChange} min={tomorrow} max={maxdate} type="date"></Input>
+                                        </FormControl>
+                                        <FormControl id="slot" isRequired >
+                                            <FormLabel >Select slot</FormLabel>
+                                            <RadioGroup name="slot" >
+                                                <VStack align={"right"}>
+                                                    {slots.map((slot) => <Radio bg={token.slot == slot.slotID ? "green" : "white"} value={slot.slotID} onChange={handleSlotChange}>{`${new Date('1970-01-01T' + slot.start + 'Z')
+                                                        .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })} - ${new Date('1970-01-01T' + slot.end + 'Z')
+                                                            .toLocaleTimeString('en-US', { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}`}</Radio>)}
+                                                </VStack>
+                                            </RadioGroup>
+                                        </FormControl>
+                                        <FormControl id="token" isRequired >
+                                            <FormLabel >Select token number</FormLabel>
+                                            <RadioGroup name="token" >
+                                                <VStack align={"right"}>
+                                                    {tokens.length > 0 ?
+                                                        tokens.map((item) => <Radio bg={token.token == item.tokenID ? "green" : "white"} value={item.tokenID} onChange={() => handleTokenChange(item)}>{item.tokenNumber}</Radio>)
+                                                        : <Text color="red">No tokens available in this slot</Text>}
+                                                </VStack>
+                                            </RadioGroup>
+                                        </FormControl>
+                                        {user.userID != 3 ? <FormControl id="reason">
+                                            <FormLabel>Select reason</FormLabel>
+                                            <RadioGroup name="reason" >
+                                                <VStack align={"right"}>
+                                                    {location?.state.reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
+                                                    {/* {tokens.length==0 && token.slot!="" ? <Radio value={"W"} onChange={handleTokenChange}>Walk-in token</Radio> : ""} */}
+                                                </VStack>
+                                            </RadioGroup>
+                                        </FormControl> : null}
+                                        <HStack mt={2}>
+                                            <Text fontWeight={"bold"}>Block an extra token</Text>
+                                            <Switch onChange={(e) => setToken(prev => ({ ...prev, "flag": e.target.checked }))} isChecked={token.flag} colorScheme="green" textColor="green"></Switch>
                                         </HStack>
-                                        <Text mt="2%">Your estimated consultation time is at</Text>
-                                        <HStack alignItems={"baseline"}>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(time).toLocaleTimeString("en-us", { hour12: true, hour: "numeric", minute: "numeric" })}</Text>
-                                            <Text mt="2%">on </Text>
-                                            <Text mt="2%" fontWeight={"bold"}>{new Date(token.date).toDateString()}</Text>
-                                        </HStack>
-                                    </ModalBody>
-                                    <ModalFooter>
-                                        <Button colorScheme='blue' mr={3} onClick={() => navigate('/home')}>
-                                            Ok
-                                        </Button>
-                                    </ModalFooter>
-                                </ModalContent>
-                            </Modal>
-                            <Button
-                                onClick={handleSubmit}
-                                m={4}
-                                bg={'blue.400'}
-                                color={'white'}
-                                _hover={{
-                                    bg: 'blue.500',
-                                }}>
-                                Generate Review Token
-                            </Button>
-                        </Box>
+                                    </Stack>
+                                    <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
+                                        <ModalOverlay />
+                                        <ModalContent>
+                                            <ModalHeader>Booking successful</ModalHeader>
+                                            <ModalBody>
+                                                <HStack>
+                                                    <Text>Your token number is </Text> <Text fontWeight={"bold"}>{tokenNo}</Text>
+                                                </HStack>
+                                                <Text mt="2%">Your estimated consultation time is at</Text>
+                                                <HStack alignItems={"baseline"}>
+                                                    <Text mt="2%" fontWeight={"bold"}>{new Date(time).toLocaleTimeString("en-us", { hour12: true, hour: "numeric", minute: "numeric" })}</Text>
+                                                    <Text mt="2%">on </Text>
+                                                    <Text mt="2%" fontWeight={"bold"}>{new Date(token.date).toDateString()}</Text>
+                                                </HStack>
+                                            </ModalBody>
+                                            <ModalFooter>
+                                                <Button colorScheme='blue' mr={3} onClick={() => navigate('/home')}>
+                                                    Ok
+                                                </Button>
+                                            </ModalFooter>
+                                        </ModalContent>
+                                    </Modal>
+                                    <Button
+                                        onClick={handleSubmit}
+                                        m={4}
+                                        bg={'blue.400'}
+                                        color={'white'}
+                                        _hover={{
+                                            bg: 'blue.500',
+                                        }}>
+                                        Generate Review Token
+                                    </Button>
+                                </Box>
+                            </> : null}
                     </Stack>}
-            </Flex>
+            </Flex >
         </>
     )
 }

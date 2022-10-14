@@ -6,7 +6,9 @@ export default function reviewApi(fetch, baseUrl) {
         generateTokenReview(data) {
             return fetch.post(`${baseUrl}/generate`, { data })
         },
-
+        updateTokenReview(data) {
+            return fetch.post(`${baseUrl}/update`, { data })
+        },
         decideSlotsReview(data) {
             return fetch.post(`${baseUrl}/slot`, { data })
         },

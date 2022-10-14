@@ -22,6 +22,7 @@ import {
     TabPanels,
     TabPanel,
     useMediaQuery,
+    EditablePreview,
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaEllipsisV, FaHome } from 'react-icons/fa'
@@ -30,6 +31,9 @@ import api from '../api';
 import { AppContext } from '../App';
 import { filterDoctor, logout } from '../utils/tokenFunctions';
 import { FullPageSpinner } from './Spinner';
+import PhoneInput from 'react-phone-number-input';
+import 'react-phone-number-input/style.css'
+import { isValidPhoneNumber } from 'react-phone-number-input';
 
 export const PatientDetails = (props) => {
     let navigate = useNavigate()
@@ -43,7 +47,7 @@ export const PatientDetails = (props) => {
     const { setDoctor, doctors, user, doctor, index, setIndex } = useContext(AppContext)
     let obj = {
         id: location.state && location.state.item ? location.state.item.patientID : "",
-        phone: location.state && location.state.item ? location.state.item.phone.substring(2) : "",
+        phone: location.state && location.state.item ? `+${location.state.item.phone}` : "",
         new_name: "",
         name: location.state && location.state.item ? location.state.item.name : "",
         fileNumber: location.state && location.state.item ? location.state.item.fileNumber : "",
@@ -64,7 +68,10 @@ export const PatientDetails = (props) => {
 
         api.settings.fetchReasons().then((res) => {
             const response = JSON.parse(res.data).result
+            console.log(response)
             setReasons(response)
+        }).catch((err)=>{
+            console.log(err)
         })
 
         if (location.state && location.state.item) {
@@ -99,7 +106,8 @@ export const PatientDetails = (props) => {
     }
 
     function handlePhoneChange(e) {
-        setToken(prev => ({ ...prev, "phone": e.target.value }))
+
+        setToken(prev => ({ ...prev, "phone": e }))
 
     }
 
@@ -121,25 +129,19 @@ export const PatientDetails = (props) => {
 
     function fetchPatients() {
 
-        api.book.fetchPatients(`91${token.phone}`).then((res) => {
+        //  api.book.fetchPatients(`91${token.phone}`).then((res) => {
+        api.book.fetchPatients(token.phone).then((res) => {
             const response = JSON.parse(res.data).result
             response.push({ patientID: 0, name: "Add new" })
             setPatients(response)
         })
     }
 
-    // function filter(doctors){
-
-    //     if(user.userID==3){
-    //         return doctors.filter((doc)=>doc.department=="Orthopedics")
-    //     }
-    //     else return doctors
-    // }
 
     function handleSubmit() {
         console.log(token)
-        if (token.phone.length != 10) {
-            alert("Phone number must be 10 digits!!")
+        if (!isValidPhoneNumber(token.phone)) {
+            alert("Please check the phone number you have entered!")
         }
         else {
             if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != null && token.fileNumber != "")) {
@@ -161,21 +163,10 @@ export const PatientDetails = (props) => {
                     api.book.createPatient({ token }).then((res) => {
                         setIsLoading(false)
                         const response = JSON.parse(res.data).result
-                        // const message = JSON.parse(res.data).message
-                        // console.log(message)
-                        // if (responsemessage == "") {
                         setToken(prev => ({ ...prev, "id": response }))
                         console.log(response)
                         navigate(navigateTo, { state: { token, id: response, settings, reasons } })
-                        // }
-                        // else {
-                        //     let msg = `${message}\nThe following patients were found with this file number:\n`
-                        //     for (var i = 0; i < response.length; i++) {
-                        //         msg += `${i + 1}. ${response[i].name}\n}`
-                        //     }
-                        //     msg += "\n Do you want to merge the following patients?"
-                        //     const merge = window.confirm(msg)
-                        // }
+
                     })
                 }
             }
@@ -196,13 +187,6 @@ export const PatientDetails = (props) => {
 
                     <TabPanels>
                         {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
-
-
-
-                            {/* <Box align='center'>
-                        <Select size={"lg"} value={doctor} onChange={handleDoctorChange} bg="white">
-                        {filterDoctor(doctors, user.userID).map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
-                        </Select></Box> */}
                             {availability != "" ?
                                 <Heading size="md">{availability}</Heading>
                                 :
@@ -218,13 +202,24 @@ export const PatientDetails = (props) => {
                                         p={8}>
                                         <Stack spacing={4}>
                                             {location.state && location.state.tokenObj ? <Heading size="sm">{`Selected Token Number: ${token.tokenNumber}; ETA: ${token.timeInEst}`}</Heading> : null}
-                                            <FormControl id="phone" isRequired >
+                                            {/* <FormControl id="phone" isRequired >
                                                 <FormLabel>Phone number</FormLabel>
                                                 <InputGroup>
                                                     <InputLeftAddon children='91'></InputLeftAddon>
                                                     <Input value={token.phone} onBlur={fetchPatients} onChange={handlePhoneChange} type="number" />
                                                 </InputGroup>
-                                            </FormControl>
+                                            </FormControl> */}
+                                            {/* <FormControl id="phone" isRequired >
+                                                <FormLabel>Phone number</FormLabel> */}
+                                            <PhoneInput
+                                                border={"2px"}
+                                                international={true}
+                                                onBlur={fetchPatients}
+                                                countryCallingCodeEditable={false}
+                                                value={token.phone}
+                                                defaultCountry="IN"
+                                                onChange={handlePhoneChange} />
+                                            {/* </FormControl> */}
                                             <FormControl id="name" isRequired >
                                                 <FormLabel>Name</FormLabel>
                                                 <Select placeholder={"Select name"} value={token.name} onChange={handleNameChange}>

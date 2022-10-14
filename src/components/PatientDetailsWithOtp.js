@@ -19,6 +19,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome } from 'react-icons/fa'
 import { useEffect, useState } from 'react'
 import api from '../api';
+import 'react-phone-number-input/style.css'
 
 export const PatientDetailsWithOtp = () => {
     let navigate = useNavigate()
@@ -34,7 +35,8 @@ export const PatientDetailsWithOtp = () => {
 
     useEffect(() => {
 
-        api.book.fetchPatients(`91${location.state.token.phone}`).then((res) => {
+      //  api.book.fetchPatients(`91${location.state.token.phone}`).then((res) => {
+        api.book.fetchPatients(location.state.token.phone).then((res) => {
             const response = JSON.parse(res.data).result
             setPatients(response)
         })

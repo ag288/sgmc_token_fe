@@ -75,7 +75,6 @@ export const Holidays = ({ doctor }) => {
 
     function updateHolidays() {
         onClose()
-        console.log(holidayInfo)
         if (date != "" && holidayInfo.isGeneralHoliday !== "") {
             let confirm = true
             setIsLoading(true)
@@ -173,8 +172,8 @@ export const Holidays = ({ doctor }) => {
                             <HStack width="50%" spacing="auto" alignItems={"baseline"}>
                                 <ListItem mb="2%" fontWeight={"bold"}>{new Date(day.date).toDateString()}</ListItem>
 
-                                <IconButton isDisabled={isLoading} onClick={() => deleteHoliday(day)} bg="transparent" icon={<DeleteIcon />}></IconButton>
-
+                               { day.isGeneralHoliday!=2 && <IconButton isDisabled={isLoading} onClick={() => deleteHoliday(day)} bg="transparent" icon={<DeleteIcon />}></IconButton>
+}
                             </HStack>
                         )}
                     </UnorderedList>

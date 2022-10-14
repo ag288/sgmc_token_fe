@@ -118,7 +118,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
                     <PopoverBody>
                         <HStack>
                             {/* <Button mx="1%" colorScheme={"yellow"} onClick={arrived} >Arrived</Button> */}
-                            <Button width={"sm"} isDisabled={item.status != "arrived" || current} colorScheme={"green"} onClick={() => {
+                            <Button width={"sm"} isDisabled={item.status != "arrived" || current || !settings.doctor_in} colorScheme={"green"} onClick={() => {
                                 onCall(item, current, doctor, toast, setIsLoading)
                             }} >Call</Button>
                             <Button width={"sm"} isDisabled={item.status == "current" || item.status == "completed" || item.status == "cancelled"} colorScheme={"red"} onClick={onOpenCancel} >Cancel</Button>

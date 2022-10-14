@@ -60,7 +60,7 @@ export const DetailsPopover1 = ({ item, current, setCurrent, doctor }) => {
                         <Text fontWeight={"bold"}>File:</Text>
                         <Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                         <Text fontWeight={"bold"}>Phone:</Text>
-                        <Text>{item.phone.substring(2)}</Text>
+                        <Text>{item.phone?.substring(2)}</Text>
                     </HStack>
                     {/* <HStack mt={1} mr={5}>
                         {item.timeInEst ? <HStack>
