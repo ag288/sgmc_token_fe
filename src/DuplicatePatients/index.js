@@ -47,11 +47,11 @@ import { DuplicatesModal } from './DuplicatesModal';
 
 export const DuplicatePatients = () => {
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
-    const [reviewlist, setReviewList] = useState([])
+    const [duplicatelist, setDuplicateList] = useState([])
+    const [otherDuplicatesList, setOtherDuplicatesList] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [merge, setMerge] = useState({ index: -1, i: -1 })
     const navigate = useNavigate()
-    const toast = useToast()
     const { doctor, doctors, setDoctor } = useContext(AppContext)
     const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -60,7 +60,8 @@ export const DuplicatePatients = () => {
         api.token.fetchDuplicatePatients().then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
-            setReviewList(response)
+            setDuplicateList(response.filter(r => !(["R", "N", ""].includes(r.fileNumber))))
+            setOtherDuplicatesList(response.filter(r => ["R", "N", ""].includes(r.fileNumber)))
         })
     }, [doctor]);
 
@@ -111,15 +112,12 @@ export const DuplicatePatients = () => {
             minH={"100vh"}>
             {isLoading ? <FullPageSpinner /> :
                 <>
-                    {isLaptop && reviewlist.length != 0 && <>
+                    {isLaptop && duplicatelist.length != 0 && <>
 
                         {/* <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton> */}
 
                         <Stack py={12} px={2} mx="auto" width="auto">
-                            {/* <Box align='center'>
-                        <Select width={isLaptop ? "30%" : "full"} size={"lg"} value={doctor} onChange={handleChange} bg="white">
-                        {doctors.map((doctor)=> <option value={doctor.doctorID} >{doctor.name}</option>)}
-                        </Select></Box> */}
+
                             <Heading size="md">Duplicate Patients</Heading>
                             <Box>
                                 <Alert mb={2} status='info'>
@@ -138,7 +136,7 @@ export const DuplicatePatients = () => {
                                 p={3}
                                 width='full'>
 
-                                {reviewlist.map((review, index) => <>
+                                {duplicatelist.map((review, index) => <>
 
                                     <Divider mt={2} orientation='horizontal'></Divider>
                                     <Heading m={8} size="md" color="red">{`File Number: ${review.fileNumber}`}</Heading>
@@ -153,7 +151,7 @@ export const DuplicatePatients = () => {
                                             </Tr>
                                         </Thead>
                                         <Tbody>
-                                            {reviewlist[index].patients.map((item, i) =>
+                                            {duplicatelist[index].patients.map((item, i) =>
 
                                                 <Tr bg={merge["i"] == i && merge["index"] == index ? "gray.200" : "transparent"} key={i}>
                                                     <Td style={{ cursor: "pointer" }} onClick={() => setAsMerge(index, i)} >{item.name}</Td>
@@ -181,16 +179,70 @@ export const DuplicatePatients = () => {
                                             }
                                         </Tbody>
                                     </Table>
-                                    <DuplicatesModal isOpen={isOpen} isLoading={isLoading} setIsLoading={setIsLoading} onClose={onClose} item={merge["index"] != -1 ? reviewlist[merge["index"]].patients[merge["i"]] : {}} />
+                                    <DuplicatesModal isOpen={isOpen} isLoading={isLoading} setIsLoading={setIsLoading} onClose={onClose} item={merge["index"] != -1 ? duplicatelist[merge["index"]].patients[merge["i"]] : {}} />
 
                                     <Button mt={2} onClick={onOpen} colorScheme={"blue"} isDisabled={merge["index"] != index}>Merge</Button>
+
+                                </>
+                                )}
+
+                            </Box>
+
+                            <Box rounded={'lg'}
+                                bg={'white'}
+                                boxShadow={'lg'}
+                                p={3}
+                                width='full'>
+                                {otherDuplicatesList.map((review, index) => <>
+
+                                    <Divider mt={2} orientation='horizontal'></Divider>
+                                    <Heading m={8} size="md" color="red">{`File Number: ${review.fileNumber ? review.fileNumber : "Empty"}`}</Heading>
+
+                                    <Table variant='striped' colorScheme='grey'>
+                                        <Thead>
+                                            <Tr>
+                                                <Th>Name</Th>
+                                                <Th>Primary Phone</Th>
+                                                <Th>File Number</Th>
+
+                                            </Tr>
+                                        </Thead>
+                                        <Tbody>
+                                            {otherDuplicatesList[index].patients.map((item, i) =>
+
+                                                <Tr key={i}>
+                                                    <Td style={{ cursor: "pointer" }} onClick={() => setAsMerge(index, i)} >{item.name}</Td>
+                                                    <Td ><Text>{item.phone.substring(2)}</Text>
+                                                    </Td>
+                                                    <Td>
+                                                        <Editable
+                                                            textAlign='center'
+                                                            defaultValue={item.fileNumber}
+                                                            isPreviewFocusable={false}
+                                                            onSubmit={(fileNumber) => editFile(fileNumber, item)}
+                                                        >
+                                                            <HStack>
+                                                                <EditablePreview />
+                                                                {/* Here is the custom input */}
+
+                                                                <Input as={EditableInput} />
+                                                                <EditableControls />
+                                                            </HStack>
+                                                        </Editable></Td>
+
+                                                </Tr>
+
+                                            )
+                                            }
+                                        </Tbody>
+                                    </Table>
 
                                 </>
                                 )}
                             </Box>
                         </Stack>
                     </>}
-                    {isMobile && reviewlist.length != 0 &&
+                    {isMobile && duplicatelist.length != 0 &&
                         <Stack width="full" alignItems="baseline" py={2} mx="2">
                             <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton>
 
@@ -205,9 +257,9 @@ export const DuplicatePatients = () => {
                                     Click on the edit button next to the file number to update the file number of the patient
                                 </Alert>
                             </Box>
-                            {reviewlist.map((item, index) =>
+                            {duplicatelist.map((item, index) =>
                                 <><Heading size="md" color="red" pt={3}>{`File No: ${item.fileNumber}`}</Heading>
-                                    {reviewlist[index].patients.map((review, i) => <Box
+                                    {duplicatelist[index].patients.map((review, i) => <Box
                                         rounded={'lg'}
                                         boxShadow={'lg'}
                                         p={3}
@@ -239,14 +291,46 @@ export const DuplicatePatients = () => {
                                     </Box>)
                                     }
 
-                                    <DuplicatesModal isOpen={isOpen} isLoading={isLoading} setIsLoading={setIsLoading} onClose={onClose} item={merge["index"] != -1 ? reviewlist[merge["index"]].patients[merge["i"]] : {}} />
+                                    <DuplicatesModal isOpen={isOpen} isLoading={isLoading} setIsLoading={setIsLoading} onClose={onClose} item={merge["index"] != -1 ? duplicatelist[merge["index"]].patients[merge["i"]] : {}} />
 
                                     <Button mt={2} onClick={onOpen} colorScheme={"blue"} isDisabled={merge["index"] != index}>Merge</Button>
 
                                 </>)}
+                            {otherDuplicatesList.map((item, index) =>
+                                <><Heading size="md" color="red" pt={3}>{`File No: ${item.fileNumber ? item.fileNumber : "Empty"}`}</Heading>
+                                    {otherDuplicatesList[index].patients.map((review, i) => <Box
+                                        rounded={'lg'}
+                                        boxShadow={'lg'}
+                                        bg="white"
+                                        p={3}
+                                        m={5}
+                                        key={i}
+                                        style={{ cursor: "pointer" }}
+                                        width='full'>
+                                        <HStack spacing={"auto"}>
+                                            <Heading onClick={() => setAsMerge(index, i)} size={"md"}>{review.name}</Heading>
+                                            <HStack>
+                                                <Editable
+                                                    textAlign='center'
+                                                    defaultValue={review.fileNumber}
+                                                    isPreviewFocusable={false}
+                                                    onSubmit={(fileNumber) => editFile(fileNumber, review)}
+                                                >
+                                                    <HStack>
+                                                        <EditablePreview />
+                                                        <Input as={EditableInput} />
+                                                        <EditableControls />
+                                                    </HStack>
+                                                </Editable>
+
+                                            </HStack>
+                                        </HStack>
+                                    </Box>)
+                                    }
+                                </>)}
                         </Stack>
                     }
-                    {reviewlist.length == 0 && <Flex bg="white" width="full" align="center" justify="center"><Heading size="lg">No Duplicate Patients</Heading></Flex>}
+                    {duplicatelist.length == 0 && <Flex bg="white" width="full" align="center" justify="center"><Heading size="lg">No Duplicate Patients</Heading></Flex>}
                 </>}
         </Flex>
     )

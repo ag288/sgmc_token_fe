@@ -84,10 +84,10 @@ export const TokenList = ({ doctor, color, desktopView }) => {
             <Switch onChange={handleChange} isChecked={doctorIn.doctor_in}></Switch>
             <Text fontWeight={"bold"} >IN</Text>
           </HStack>
-          <HStack alignItems={"baseline"}>
+          {/* <HStack alignItems={"baseline"}>
             <Text fontWeight={"bold"} >Autocall</Text>
             <Switch onChange={handleAutocallChange} isChecked={doctorIn.autocall}></Switch>
-          </HStack>
+          </HStack> */}
         </HStack>}
         <CurrentPatient loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} current={current} setCurrent={setCurrent} />
 
