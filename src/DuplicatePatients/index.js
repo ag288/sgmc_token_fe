@@ -60,6 +60,7 @@ export const DuplicatePatients = () => {
         api.token.fetchDuplicatePatients().then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
+            console.log(response.filter(r => ["R", "N", ""].includes(r.fileNumber)))
             setDuplicateList(response.filter(r => !(["R", "N", ""].includes(r.fileNumber))))
             setOtherDuplicatesList(response.filter(r => ["R", "N", ""].includes(r.fileNumber)))
         })
@@ -112,7 +113,7 @@ export const DuplicatePatients = () => {
             minH={"100vh"}>
             {isLoading ? <FullPageSpinner /> :
                 <>
-                    {isLaptop && duplicatelist.length != 0 && <>
+                    {isLaptop && (duplicatelist.length != 0 || otherDuplicatesList.length != 0) && <>
 
                         {/* <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton> */}
 
@@ -242,7 +243,7 @@ export const DuplicatePatients = () => {
                             </Box>
                         </Stack>
                     </>}
-                    {isMobile && duplicatelist.length != 0 &&
+                    {isMobile && (duplicatelist.length != 0 || otherDuplicatesList.length != 0) &&
                         <Stack width="full" alignItems="baseline" py={2} mx="2">
                             <IconButton size="lg" onClick={() => navigate(-1)} icon={<ArrowBackIcon />}></IconButton>
 
@@ -330,7 +331,7 @@ export const DuplicatePatients = () => {
                                 </>)}
                         </Stack>
                     }
-                    {duplicatelist.length == 0 && <Flex bg="white" width="full" align="center" justify="center"><Heading size="lg">No Duplicate Patients</Heading></Flex>}
+                    {duplicatelist.length == 0 && otherDuplicatesList.length==0 && <Flex bg="white" width="full" align="center" justify="center"><Heading size="lg">No Duplicate Patients</Heading></Flex>}
                 </>}
         </Flex>
     )
