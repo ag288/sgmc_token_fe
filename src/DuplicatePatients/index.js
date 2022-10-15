@@ -60,7 +60,6 @@ export const DuplicatePatients = () => {
         api.token.fetchDuplicatePatients().then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
-            console.log(response.filter(r => ["R", "N", ""].includes(r.fileNumber)))
             setDuplicateList(response.filter(r => !(["R", "N", ""].includes(r.fileNumber))))
             setOtherDuplicatesList(response.filter(r => ["R", "N", ""].includes(r.fileNumber)))
         })
