@@ -80,7 +80,6 @@ export const TokenDetailsChooseToken = () => {
     }, [])
 
     let location = useLocation()
-    console.log(location.state.token)
     function handleSlotChange(e) {
         if (e.target.value != "W") {
             setIsLoading(true)
@@ -108,7 +107,6 @@ export const TokenDetailsChooseToken = () => {
     }
 
     function handleTokenChange(item) {
-        console.log(item.tokenNumber)
         setToken(prev => ({ ...prev, ...{ "token": item.tokenID, "tokenNumber": item.tokenNumber } }))
     }
 
@@ -121,6 +119,14 @@ export const TokenDetailsChooseToken = () => {
         onCloseArrival()
         handleSubmit(value)
 
+    }
+
+    function maxToken() {
+        let valuesA = tokens.filter(item => item.slot == "A").map(el => { return el.tokenID })
+        let valuesB = tokens.filter(item => item.slot == "B").map(el => { return el.tokenID })
+        if (token.token == Math.max(...valuesA) || token.token == Math.max(...valuesB))
+            return true
+        return false
     }
 
     function handleSubmit(value) {
@@ -137,11 +143,10 @@ export const TokenDetailsChooseToken = () => {
             location.state.token.flag = token.flag
             location.state.token.arrived = value
             location.state.token.id = location.state.id ? location.state.id : location.state.token.id
-            console.log(location.state.token)
+           
             setIsLoading(true)
             api.book.generateToken({ token: location.state.token, doctors, user }).then((res) => {
                 const response = JSON.parse(res.data)
-                console.log(response)
                 if (response.message != "") {
                     setIsLoading(false)
                     alert(response.message)
@@ -278,7 +283,7 @@ export const TokenDetailsChooseToken = () => {
                                   
                                 </HStack>
                                 </FormControl> */}
-                                {token.slot != "W" ? <HStack mt={2}>
+                                {token.slot != "W" && !maxToken() ? <HStack mt={2}>
                                     <Text fontWeight={"bold"}>Block an extra token</Text>
                                     <Switch onChange={(e) => setToken(prev => ({ ...prev, "flag": e.target.checked }))} value={token.flag} colorScheme="green" textColor="green"></Switch>
                                 </HStack>

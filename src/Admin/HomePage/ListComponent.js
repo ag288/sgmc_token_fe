@@ -122,19 +122,19 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
         else {
             if (item.status == "delayed")
                 str += "🔴"
-            // if (item.status == "arrived") {
-            //     let arrival = new Date()
-            //     arrival.setHours(item.time_of_arrival.split(":")[0], item.time_of_arrival.split(":")[1], 0)
-
-            //     if (item.timeInEst && compareFn(item.timeInEst, arrival)) {
-            //         str += "🔴"
-            //     }
-            //     else {
-            //         str += "🟢"
-            //     }
-            // }
         }
         return str
+    }
+
+    function tokenNumber(item) {
+        let tokenNumber = ""
+        if (item.slot.includes("W"))
+            tokenNumber += `${item.initials}W-${item.tokenNumber} `
+        else
+            tokenNumber += `${item.initials}-${item.tokenNumber} `
+        if (item.tokenCount)
+            tokenNumber += `(${item.tokenCount})`
+        return tokenNumber
     }
 
     return (
@@ -143,8 +143,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
             <Tr key={index} bg={findBg(item)} className={next == item.tokenID && !(settings?.autocall) ? "Blink" : ""}>
                 <Td><ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                <Td >{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}</Td>
-                <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.tokenCount ? `${item.name} (${item.tokenCount})` : item.name}</Td>
+                <Td >{tokenNumber(item)}</Td>
+                <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
 
                 <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
@@ -204,15 +204,13 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 {/* <Td> 
                     </Td> */}
 
-
-
             </Tr> : <Box className={next == item.tokenID && !(settings?.autocall) ? "Blink" : ""} bg={findBg(item)} rounded="lg" mb={2} >
                 <HStack spacing={"auto"}>
                     <ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} />
 
-                    <Text color="green" minW={"max-content"} fontWeight={"bold"}>{item.slot.includes("W") ? `${item.initials}W-${item.tokenNumber}` : `${item.initials}-${item.tokenNumber}`}
+                    <Text color="green" minW={"max-content"} fontWeight={"bold"}>{tokenNumber(item)}
                     </Text>
-                    <Text noOfLines={1} fontWeight={"bold"} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}
+                    <Text noOfLines={1} fontWeight={"bold"} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}
                     </Text>
                     <Text onDoubleClick={handleDoubleClickForReason}>{types[item.type]}
                     </Text>

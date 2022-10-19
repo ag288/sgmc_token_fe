@@ -3,10 +3,8 @@ import { useContext, useEffect, useState } from "react"
 import { FaLaptop } from "react-icons/fa"
 import api from "../../api"
 import { AppContext } from "../../App"
-import { AfternoonList1 } from "./Afternoon1"
 import { AfternoonList } from "./AfternoonList"
 import { CurrentPatient } from "./CurrentPatient"
-import { MorningList1 } from "./Morning1"
 import { MorningList } from "./MorningList"
 
 
@@ -91,9 +89,9 @@ export const TokenList = ({ doctor, color, desktopView }) => {
         </HStack>}
         <CurrentPatient loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} current={current} setCurrent={setCurrent} />
 
-        <MorningList1 desktopView={desktopView} next={next} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} mornlist={mornlist} current={current} setCurrent={setCurrent} />
+        <MorningList desktopView={desktopView} next={next} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} mornlist={mornlist} current={current} setCurrent={setCurrent} />
 
-        <AfternoonList1 desktopView={desktopView} next={next} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} aftlist={aftlist} current={current} setCurrent={setCurrent} />
+        <AfternoonList desktopView={desktopView} next={next} loading={isLoading} setIsLoading={setIsLoading} doctor={doctor.doctorID} aftlist={aftlist} current={current} setCurrent={setCurrent} />
       </Stack>
     </>
   )

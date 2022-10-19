@@ -27,8 +27,6 @@ import { filterDoctor, logout } from '../../utils/tokenFunctions';
 import { FullPageSpinner } from '../../components/Spinner';
 import { TokenList } from './TokenList';
 
-// List of staff profiles pending approval
-
 export const PatientList = (props) => {
 
   const { user, setUser, setDoctor, doctor, doctors,index, setIndex } = useContext(AppContext)
