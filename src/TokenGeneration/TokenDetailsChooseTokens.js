@@ -134,7 +134,7 @@ export const TokenDetailsChooseToken = () => {
         if (user.userID == 3)
             token.reason = 1
         console.log(token)
-        if ((token.slot != "" && token.reason != "" && token.token != "") || (token.slot == "W" && token.token == "")) {
+        if ((token.slot != "" && token.reason != "" && token.token != "")) {
             location.state.token.slot = token.slot
             location.state.token.reason = token.reason
             location.state.token.token = token.token
