@@ -129,7 +129,9 @@ export const TokenDetailsForReviewChooseToken = () => {
                 //  setIsLoading(false)
                 const response = JSON.parse(res.data)
                 if (!response.result) {
+                    setSlots([])
                     alert(response.message)
+                  
                 }
                 else {
                     setToken(prev => ({ ...prev, "date": dateValue }))
