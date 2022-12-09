@@ -132,7 +132,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
             tokenNumber += `${item.initials}W-${item.tokenNumber} `
         else
             tokenNumber += `${item.initials}-${item.tokenNumber} `
-        if (item.tokenCount)
+        if (item.oldTokenNumber)
             tokenNumber += `(${item.tokenCount})`
         return tokenNumber
     }
@@ -144,12 +144,14 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
             <Tr key={index} bg={findBg(item)} className={next == item.tokenID && !(settings?.autocall) ? "Blink" : ""}>
                 <Td><ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                 <Td >{tokenNumber(item)}</Td>
-                <Td style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}</Td>
+                <Td style={{ cursor: "pointer" }}
+                    onDoubleClick={() => handleDoubleClickForName(item.patientID)}>
+                    {item.name}</Td>
 
                 <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
                 <Td onDoubleClick={handleDoubleClickForReason}> {item.type}</Td>
-                <Td>{item.phone?.substring(2)}</Td>
+                <Td>{item.phone}</Td>
                 <Td>
                     <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                         .toLocaleTimeString('en-US',

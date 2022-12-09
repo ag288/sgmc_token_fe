@@ -177,7 +177,7 @@ export const ReviewList = () => {
                                                             {reviewlist[index].reviews.map((item) =>
                                                                 <Tr key={index}>
                                                                     <Td >{item.tokenCount ? `${item.name} (${item.tokenCount})` : item.name }</Td>
-                                                                    <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone.substring(2)}</Text>
+                                                                    <Td ><Text href={`tel:+${item.phone}`} as="a" bg="transparent" >{item.phone}</Text>
                                                                     </Td>
                                                                     <Td >{item.tokenNumber}</Td>
                                                                     <Td>{item.type}</Td>

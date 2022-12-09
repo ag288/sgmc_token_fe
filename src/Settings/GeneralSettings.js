@@ -100,6 +100,15 @@ export const GeneralSettings = ({ doctor }) => {
             case "18":
                 setSettings(prev => ({ ...prev, ["autocall"]: e.target.checked }));
                 break;
+            case "19":
+                setSettings(prev => ({ ...prev, ["future_booking_start"]: e.target.value }));
+                break;
+            case "20":
+                setSettings(prev => ({ ...prev, ["enableWhatsapp"]: e.target.checked }));
+                break;
+            case "21":
+                setSettings(prev => ({ ...prev, ["enableSms"]: e.target.checked }));
+                break;
         }
     }
 
@@ -173,6 +182,11 @@ export const GeneralSettings = ({ doctor }) => {
                     </VStack>
                     <Divider borderColor={"gray"} orientation='horizontal' />
                     <VStack p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Future token booking opens at</Text>
+                        <Input type="time" id={"19"} onChange={handleChange} value={settings?.future_booking_start}></Input>
+                    </VStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <VStack p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Morning tokens start from</Text>
                         <Input type="number" id={"12"} onChange={handleChange} value={settings?.morn_token_start}></Input>
                     </VStack>
@@ -207,15 +221,25 @@ export const GeneralSettings = ({ doctor }) => {
                         <Text fontWeight={"bold"} >Add review as days</Text>
                         <Switch id={"17"} onChange={handleChange} isChecked={settings?.enableReview}></Switch>
                     </HStack>
-                     {/*<Divider borderColor={"gray"} orientation='horizontal' />
+                    {/*<Divider borderColor={"gray"} orientation='horizontal' />
                     <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
                         <Text fontWeight={"bold"} >Automatically call next token</Text>
                         <Switch id={"18"} onChange={handleChange} isChecked={settings?.autocall}></Switch>
                     </HStack> */}
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Enable booking through whatsapp</Text>
+                        <Switch id={"20"} onChange={handleChange} isChecked={settings?.enableWhatsapp}></Switch>
+                    </HStack>
+                    <Divider borderColor={"gray"} orientation='horizontal' />
+                    <HStack spacing="auto" p={4} width="full" alignItems={"baseline"}>
+                        <Text fontWeight={"bold"} >Enable SMS service</Text>
+                        <Switch id={"21"} onChange={handleChange} isChecked={settings?.enableSms}></Switch>
+                    </HStack>
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>
-                {/* isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} */}
+                    {/* isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} */}
                     <Button isLoading={isLoading} colorScheme="blue" isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} onClick={updateSettings}>Update Settings</Button>
                 </Box>
             </Box>

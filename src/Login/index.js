@@ -47,6 +47,7 @@ export default function Login() {
             }
             else alert("Incorrect username or password")
         }).catch((err) => {
+            setIsLoading(false)
             alert("An error occured. Please try again")
         })
     }
@@ -75,8 +76,8 @@ export default function Login() {
                             <Input value={password} onChange={handlePassword} type="password" />
                         </FormControl>
                         <Button
-                        isLoading={isLoading}
-                        //isDisabled={isLoading}
+                            isLoading={isLoading}
+                            //isDisabled={isLoading}
                             type="submit"
                             onClick={handleSubmit}
                             bg={'blue.400'}
