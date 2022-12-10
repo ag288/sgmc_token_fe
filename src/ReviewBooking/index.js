@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import api from "../api"
 import userApi from "../api/user"
 import { AppContext } from "../App"
-import { PatientDetails } from "../components/PatientDetails"
+import { PatientDetails } from "../components/PatientDetails1"
 import { filterDoctor } from "../utils/tokenFunctions"
 
 
@@ -40,7 +40,7 @@ export const ReviewBooking = () => {
                 </TabPanels>
             </Tabs> */}
 
-<PatientDetails availability={""} navigateTo={"/review-details"}/>
+            <PatientDetails availability={""} navigateTo={"/review-details"} />
         </Flex>
     )
 }

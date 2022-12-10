@@ -213,6 +213,7 @@ export const Holidays = ({ doctor }) => {
                             <Button onClick={updateHolidays}>Ok</Button>
                         </ModalFooter>
                     </ModalContent>
+                    
                 </Modal>
             </Box>
         </>
