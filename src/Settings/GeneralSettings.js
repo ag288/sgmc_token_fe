@@ -109,6 +109,9 @@ export const GeneralSettings = ({ doctor }) => {
             case "21":
                 setSettings(prev => ({ ...prev, ["enableSms"]: e.target.checked }));
                 break;
+            case "21":
+                setSettings(prev => ({ ...prev, ["walkin_max"]: e.target.value }));
+                break;
         }
     }
 
@@ -236,6 +239,11 @@ export const GeneralSettings = ({ doctor }) => {
                         <Text fontWeight={"bold"} >Enable SMS service</Text>
                         <Switch id={"21"} onChange={handleChange} isChecked={settings?.enableSms}></Switch>
                     </HStack>
+                </VStack>
+                <Divider borderColor={"gray"} orientation='horizontal' />
+                <VStack p={4} width="full" alignItems={"baseline"}>
+                    <Text fontWeight={"bold"} >Maximum number of walk-in tokens</Text>
+                    <Input type="number" id={"22"} onChange={handleChange} value={settings?.walkin_max}></Input>
                 </VStack>
                 <Divider borderColor={"gray"} orientation='horizontal' />
                 <Box mt="2%" align={"right"}>

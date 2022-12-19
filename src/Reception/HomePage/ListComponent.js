@@ -24,15 +24,15 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     const walkinRef = useRef()
     let flag = 0
     const { isOpen, onOpen, onClose } = useDisclosure()
+
     const handlePrint = useReactToPrint({
         content: () => walkinRef.current,
         onAfterPrint: () => window.location.reload()
     })
     useEffect(() => {
-        //   if (printItem) {
-        //    handlePrint();
-        //window.location.reload()
-        //  }
+        // if (printItem) {
+        //     handlePrint()
+        // }
         api.settings.fetchSettings({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
@@ -69,11 +69,10 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
     function bookWalkIn() {
         api.token.bookWalkIn({ item }).then((res) => {
-            //   setPrintItem(JSON.parse(res.data).result)
+            //  setPrintItem(JSON.parse(res.data).result)
             //  console.log(item)
 
             window.location.reload()
-
         })
     }
 
@@ -81,6 +80,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     function setAsArrived() {
 
         api.token.setAsArrived({ item }).then((res) => {
+            //setPrintItem(JSON.parse(res.data).result)
             window.location.reload()
         })
 
@@ -128,12 +128,17 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
     function tokenNumber(item) {
         let tokenNumber = ""
-        if (item.slot.includes("W"))
-            tokenNumber += `${item.initials}W-${item.tokenNumber} `
+        if (item.slot.includes("W")) {
+            if (item.tokenNumber)
+                tokenNumber += `${item.initials}W-${item.tokenNumber}`
+            else
+                tokenNumber += `W`
+        }
+
         else
             tokenNumber += `${item.initials}-${item.tokenNumber} `
         if (item.oldTokenNumber)
-            tokenNumber += `(${item.tokenCount})`
+            tokenNumber += `/${item.oldTokenNumber}`
         return tokenNumber
     }
 
@@ -146,7 +151,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 <Td >{tokenNumber(item)}</Td>
                 <Td style={{ cursor: "pointer" }}
                     onDoubleClick={() => handleDoubleClickForName(item.patientID)}>
-                    {item.name}</Td>
+                    {item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}</Td>
 
                 <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
@@ -171,40 +176,44 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     .toLocaleTimeString('en-US',
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
-                {/* {user.userID == 2 &&
-                    <Td>
-                        {item.status == "delayed" ?
-                            <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
-                            : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
-                                <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
-                            )}</Td>
-                } */}
+
                 <ReasonEditModal item={item} isOpen={isOpen} setState={setState} flag={1} onClose={onClose} />
 
                 {user.userID == 2 &&
                     <Td>
+                        {/* {item.status == "delayed" ?
+                            // <>  <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
+                            //     <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef} item={printItem} />
+                            //     </div></>
+                            <> <ReactToPrint
+                                // onAfterPrint={setAsArrived}
+                                trigger={() => <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>}
+                                content={() => componentRef.current} />
+                                <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
+                                </div></>
+                            : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
+                                <> <ReactToPrint
+                                    onAfterPrint={setAsArrived}
+                                    trigger={() => <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />}
+                                    content={() => componentRef.current} />
+                                    <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
+                                    </div></>
+                                // <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
+                            )} */}
                         {item.status == "delayed" ?
                             <>  <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
-                                <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef} item={printItem} />
-                                </div></>
-                            // <> <ReactToPrint
-                            //      // onAfterPrint={setAsArrived}
-                            //       trigger={() => <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button> }
-                            //       content={() => componentRef.current}/>
-                            //       <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
-                            //       </div></>
-                            : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
-                                // <> <ReactToPrint
-                                //     onAfterPrint={setAsArrived}
-                                //     trigger={() => <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />}
-                                //     content={() => componentRef.current} />
-                                //     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
-                                //     </div></>
-                                <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
-                            )}</Td>
+                            </>
+                            : (item.status == "arrived" && item.time_of_arrival ?
+                                <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
+                                <>
+                                    <IconButton isDisabled={item.status != "new" && item.status != "delayed"}
+                                        colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
+                                </>
+                            )}
+                        <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef} item={printItem} />
+                        </div>
+                    </Td>
                 }
-                {/* <Td> 
-                    </Td> */}
 
             </Tr> : <Box className={next == item.tokenID && !(settings?.autocall) ? "Blink" : ""} bg={findBg(item)} rounded="lg" mb={2} >
                 <HStack spacing={"auto"}>
@@ -216,7 +225,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </Text>
                     <Text onDoubleClick={handleDoubleClickForReason}>{types[item.type]}
                     </Text>
-                    {item.status == "delayed" ?
+                    {/* {item.status == "delayed" ?
                         <>  <IconButton icon={<FaRegFileWord />} colorScheme={"blue"} onClick={bookWalkIn}></IconButton>
                             <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef} item={printItem} />
                             </div></>
@@ -228,8 +237,20 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                             //     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
                             //     </div></>
                             <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
-                        )}
+                        )} */}
+                    {item.status == "delayed" ?
+                        <>  <IconButton icon={<FaRegFileWord />} colorScheme={"blue"} onClick={bookWalkIn}>
+                        </IconButton>
+                        </>
+                        : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />}
+                            onClick={undoArrived} colorScheme={"blue"} /> :
 
+                            <IconButton isDisabled={item.status != "new" && item.status != "delayed"}
+                                colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
+                        )}
+                    <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef}
+                        item={printItem} />
+                    </div>
                     <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
 
                 </HStack>

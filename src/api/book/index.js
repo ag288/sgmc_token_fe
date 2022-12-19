@@ -16,7 +16,6 @@ export default function bookApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/generate`, { data })
         },
 
-
         decideSlots(data) {
             return fetch.post(`${baseUrl}/slot`, {data})
         },
@@ -25,6 +24,9 @@ export default function bookApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/fetch-token`, { data })
         },
 
+        checkWalkIns(data) {
+            return fetch.post(`${baseUrl}/check-walk-in`,{data})
+        },
     }
 }
 

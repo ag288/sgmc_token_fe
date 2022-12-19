@@ -22,9 +22,9 @@ import { BellWithBadge, DuplicatePatientsNotif } from './AlertIcons';
 import { AppContext } from '../App';
 import { useLocation, Link, NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { logout } from '../utils/tokenFunctions';
-import { ExportToExcel } from '../Admin/HomePage/ExportToExcel';
+import { ExportToExcel } from '../Reception/HomePage/ExportToExcel';
 import api from '../api';
-import { ListPrintIcon } from '../Admin/HomePage/ListPrintIcon';
+import { ListPrintIcon } from '../Reception/HomePage/ListPrintIcon';
 import { FaPrint } from 'react-icons/fa';
 
 
@@ -77,7 +77,6 @@ export default function Simple() {
         if (!pendingCount && !duplicateCount) {
             api.token.fetchAlerts().then((res) => {
                 const result = JSON.parse(res.data).result
-                console.log(result)
                 if (result[0].length > 0) {
                     toast({
                         title: 'Tokens not generated!!',
@@ -205,8 +204,8 @@ export default function Simple() {
                 {isOpen ? (
                     <Box pb={4} display={{ md: 'none' }}>
                         <Stack as={'nav'} spacing={4}>
-                            {Links.map((link) => (
-                                <NavLinks link={link}>{link.name}</NavLinks>
+                            {Links.map((link, index) => (
+                                <NavLinks key={index} link={link}>{link.name}</NavLinks>
                             ))}
                         </Stack>
                     </Box>

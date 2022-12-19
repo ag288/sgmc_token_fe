@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import {
     Popover,
     PopoverTrigger,
@@ -14,6 +14,7 @@ import {
 import { FaEllipsisH, FaEllipsisV, FaSortDown } from 'react-icons/fa'
 import api from '../../api';
 import { diffMinutes } from '../../utils/tokenFunctions';
+import { AppContext } from '../../App';
 
 // confirm deletion of staff profile
 
@@ -25,13 +26,15 @@ export const DetailsPopover1 = ({ item, current, setCurrent, doctor }) => {
     const open = () => setIsOpen(!isOpen)
     const close = () => setIsOpen(false)
     const toast = useToast()
-
+    const { user } = useContext(AppContext)
 
 
     function handleDoubleClick(id) {
-        let fileNo = window.prompt("Enter the file number")
-        if (fileNo != null)
-            editFileNumber(fileNo, id)
+       
+            let fileNo = window.prompt("Enter the file number")
+            if (fileNo != null)
+                editFileNumber(fileNo, id)
+        
     }
 
     function editFileNumber(file, id) {
@@ -58,7 +61,8 @@ export const DetailsPopover1 = ({ item, current, setCurrent, doctor }) => {
                             <EditableInput />
                         </Editable> */}
                         <Text fontWeight={"bold"}>File:</Text>
-                        <Text placeholder='Add file' onDoubleClick={() => handleDoubleClick(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+                        <Text placeholder='Add file' 
+                       >{item.fileNumber ? item.fileNumber : "----"}</Text>
                         <Text fontWeight={"bold"}>Phone:</Text>
                         <Text>{item.phone?.substring(2)}</Text>
                     </HStack>

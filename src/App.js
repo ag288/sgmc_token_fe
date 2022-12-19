@@ -1,4 +1,5 @@
 import { createContext, useEffect, useState } from 'react';
+import { AdminPatientList } from './Admin';
 import api from './api';
 import AuthenticatedUser from './AuthenticatedUser';
 import PhysioUser from './PhysioUser';
@@ -17,6 +18,8 @@ function App() {
   const userObject = { user, doctor, doctors, index, setUser, setDoctor, setIndex }
 
   useEffect(() => {
+
+    console.log("render")
 
     api.token.fetchDoctors().then((res) => {
       const response = JSON.parse(res.data).result
@@ -39,7 +42,7 @@ function App() {
           return <PhysioUser />
         case 4: return <QRScanning />
         case 5: return <TokenScreen />
-
+        case 6: return <AdminPatientList />
       }
     }
   }

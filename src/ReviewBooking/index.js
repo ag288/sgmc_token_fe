@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom"
 import api from "../api"
 import userApi from "../api/user"
 import { AppContext } from "../App"
-import { PatientDetails } from "../components/PatientDetails1"
+import { PatientDetails } from "../components/PatientDetails"
 import { filterDoctor } from "../utils/tokenFunctions"
 
 

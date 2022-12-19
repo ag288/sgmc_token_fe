@@ -99,6 +99,7 @@ export default function tokenApi(fetch, baseUrl) {
         },
         arrivedQR(data){
             return fetch.post(`${baseUrl}/arrived-qr`,{data})
-        }
+        },
+      
     }
 }

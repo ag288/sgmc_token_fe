@@ -17,10 +17,6 @@ export class ComponentToPrint extends React.Component {
 
 
     render() {
-
-
-
-console.log(this.props.item)
         const colors = ["red", "navy", "teal", "green", "purple", "darkmagenta", "darkorange", "salmon", "skyblue", "maroon"]
         return (
             <Flex
@@ -31,7 +27,6 @@ console.log(this.props.item)
                 bg={"white"}
             >
 
-
                 <Box
                     bg={"white"}
                     width="3in"
@@ -40,7 +35,7 @@ console.log(this.props.item)
                     p={2}>
                     <Heading color={colors[this.props.item?.doctorID % 10]} fontSize={"xxx-large"}>
                         {this.props.item?.slot.includes("W") ? `${this.props.item?.initials}W-${this.props.item?.tokenNumber}` :`${this.props.item?.initials}-${this.props.item?.tokenNumber}`}</Heading>
-                    <Text>{this.props.item ? `(${findPatientInitials(this.props.item)})` : ""}</Text>
+                    {/* <Text>{this.props.item ? `(${findPatientInitials(this.props.item)})` : ""}</Text> */}
                 </Box>
 
             </Flex >

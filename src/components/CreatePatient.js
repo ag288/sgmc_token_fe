@@ -13,6 +13,8 @@ import {
     FormLabel,
     Input,
     Button,
+    useMediaQuery,
+    VStack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
 import PhoneInput from 'react-phone-number-input'
@@ -21,40 +23,40 @@ import api from '../api'
 import "../utils/phone.css"
 import { FullPageSpinner } from './Spinner'
 
-export const CreatePatient = ({ isOpen, onClose, token, setToken, settings, reasons, navigateTo }) => {
+export const CreatePatient = ({ isOpen, onClose, info, setInfo, settings, reasons, navigateTo }) => {
 
     const [isLoading, setIsLoading] = useState(false)
     const navigate = useNavigate()
-
+    const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     function handleNewNameChange(e) {
 
-        setToken(prev => ({ ...prev, "new_name": e.target.value }))
+        setInfo(prev => ({ ...prev, "new_name": e.target.value }))
     }
 
 
     function handleFileChange(e) {
-        setToken(prev => ({ ...prev, "fileNumber": e.target.value }))
+        setInfo(prev => ({ ...prev, "fileNumber": e.target.value }))
 
     }
 
     function handlePhoneChange(e) {
 
-        setToken(prev => ({ ...prev, "phone": e }))
+        setInfo(prev => ({ ...prev, "phone": e }))
 
     }
 
     function handleSubmit() {
-        console.log(token)
+        console.log(info)
 
-        if (token.new_name != "" && token.phone != "") {
+        if (info.new_name != "" && info.phone != "") {
 
             setIsLoading(true)
-            api.book.createPatient({ token }).then((res) => {
+            api.book.createPatient({ info }).then((res) => {
                 setIsLoading(false)
                 const response = JSON.parse(res.data).result
-                setToken(prev => ({ ...prev, "id": response }))
+                setInfo(prev => ({ ...prev, "id": response }))
                 console.log(response)
-                navigate(navigateTo, { state: { token, id: response, settings, reasons } })
+                navigate(navigateTo, { state: { token: info, id: response, settings, reasons } })
 
             })
         }
@@ -74,31 +76,54 @@ export const CreatePatient = ({ isOpen, onClose, token, setToken, settings, reas
                 <ModalContent>
                     <ModalCloseButton />
                     {isLoading ? <FullPageSpinner /> : <ModalBody>
-                        <Box rounded="lg" p={2}>
+                        {isLaptop ? <Box rounded="lg" p={2}>
                             <HStack width={"full"} spacing="5" mt={5}>
-
-                                <FormControl>
-                                    <FormLabel>Patient Name</FormLabel>
-                                    <Input borderColor={"black"} type="text" onChange={handleNewNameChange}
-                                        value={token.new_name} />
-                                </FormControl>
                                 <FormControl>
                                     <FormLabel>Patient Phone No.</FormLabel>
                                     <PhoneInput
                                         border={"2px"}
                                         international={true}
                                         countryCallingCodeEditable={false}
-                                        value={token.phone}
+                                        value={info.phone}
                                         defaultCountry="IN"
                                         onChange={handlePhoneChange} />
                                 </FormControl>
                                 <FormControl>
+                                    <FormLabel>Patient Name</FormLabel>
+                                    <Input borderColor={"black"} type="text" onChange={handleNewNameChange}
+                                        value={info.new_name} />
+                                </FormControl>
+
+                                <FormControl>
                                     <FormLabel>File Number</FormLabel>
                                     <Input borderColor={"black"} type="text" onChange={handleFileChange}
-                                        value={token.fileNumber} />
+                                        value={info.fileNumber} />
                                 </FormControl>
                             </HStack>
-                        </Box>
+                        </Box> :
+                            <VStack width={"full"} mt={5}>
+                                <FormControl>
+                                    <FormLabel>Patient Phone No.</FormLabel>
+                                    <PhoneInput
+                                        border={"2px"}
+                                        international={true}
+                                        countryCallingCodeEditable={false}
+                                        value={info.phone}
+                                        defaultCountry="IN"
+                                        onChange={handlePhoneChange} />
+                                </FormControl>
+                                <FormControl>
+                                    <FormLabel>Patient Name</FormLabel>
+                                    <Input borderColor={"black"} type="text" onChange={handleNewNameChange}
+                                        value={info.new_name} />
+                                </FormControl>
+
+                                <FormControl>
+                                    <FormLabel>File Number</FormLabel>
+                                    <Input borderColor={"black"} type="text" onChange={handleFileChange}
+                                        value={info.fileNumber} />
+                                </FormControl>
+                            </VStack>}
                     </ModalBody>
                     }
                     <ModalFooter>

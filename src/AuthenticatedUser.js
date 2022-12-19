@@ -1,12 +1,12 @@
 
-import { PatientList } from './Admin/HomePage';
+import { PatientList } from './Reception/HomePage';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Settings } from './Settings';
 import { TokenGeneration } from './TokenGeneration';
-import { TokenDetailsChooseToken } from './TokenGeneration/TokenDetailsChooseTokens';
+import { TokenDetailsChooseToken } from './TokenGeneration/TokenDetailsChooseToken1';
 import { ReviewBooking } from './ReviewBooking';
 import { ReviewList } from './ReviewBooking/ReviewList';
-import { TokenDetailsForReviewChooseToken } from './ReviewBooking/TokenDetailsChooseToken';
+import { TokenDetailsForReviewChooseToken } from './ReviewBooking/TokenDetailsChooseToken1';
 import { useContext } from 'react';
 import { AppContext } from './App';
 import { PendingReviews } from './ReviewBooking/PendingReviews';

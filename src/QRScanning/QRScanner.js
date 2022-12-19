@@ -5,7 +5,7 @@ import api from '../api'
 import useSound from "use-sound"
 import beep from '../Audio/short_beep.wav'
 import ReactToPrint, { useReactToPrint } from 'react-to-print'
-import { ComponentToPrint } from '../Admin/HomePage/TokenPrint'
+import { ComponentToPrint } from '../Reception/HomePage/TokenPrint'
 import { QRTokenPrint } from './QRTokenPrint'
 import { useEffect } from 'react'
 
