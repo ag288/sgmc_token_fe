@@ -234,7 +234,7 @@ export const PatientDetails = (props) => {
             if (patient) {
                 setToken(prev => ({
                     ...prev, "name": patient.name ? patient.name : patient.new_name,
-                    phone: patient.phone, fileNumber: patient.fileNumber
+                    phone: patient.phone, fileNumber: patient.fileNumber, id: patient.patientID
                 }))
 
             }

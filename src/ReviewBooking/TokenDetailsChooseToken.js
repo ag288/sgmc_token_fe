@@ -74,7 +74,9 @@ export const TokenDetailsForReviewChooseToken = () => {
 
         //      if (!location.state.origin) {
         setIsLoading(true)
-        api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id, doctor }).then((res) => {
+        console.log(location.state.token)
+        api.review.reviewExists({ id: location.state.id ? location.state.id : location.state.token.id, 
+            doctor }).then((res) => {
             setIsLoading(false)
             const response = JSON.parse(res.data).result
             setExistingReviews(response)
