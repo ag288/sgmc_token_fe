@@ -40,7 +40,7 @@ export const CreatePatient = ({ isOpen, onClose, info, setInfo, settings, reason
     }
 
     function handlePhoneChange(e) {
-
+console.log(e)
         setInfo(prev => ({ ...prev, "phone": e }))
 
     }

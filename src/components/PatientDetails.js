@@ -239,7 +239,7 @@ export const PatientDetails = (props) => {
 
             }
         }
-        
+
     }
 
     function createPatient() {
@@ -263,122 +263,124 @@ export const PatientDetails = (props) => {
 
                 <TabPanels>
                     {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel>
-                        {isLaptop && <Box
-                            rounded={'lg'}
-                            bg={'white'}
-                            boxShadow={'lg'}
-                            p={8}
-                            key={index}
-                            width='full'>
-                            {token.name != "" ?
-                                <Box bg="orange.50" rounded="lg" p={2}>
-                                    <Text fontWeight={"semibold"}>You have selected : </Text>
-                                    <HStack spacing="5" mt={5}>
-                                        <FormControl>
-                                            <FormLabel>File Number</FormLabel>
-                                            <Input borderColor={"black"} type="text" onChange={handleFileChange}
-                                                value={token.fileNumber} />
-                                        </FormControl>
-                                        <FormControl>
-                                            <FormLabel>Patient Name</FormLabel>
-                                            <Input borderColor={"black"} type="text" value={token.name} />
-                                        </FormControl>
-                                        <FormControl>
-                                            <FormLabel>Patient Phone No.</FormLabel>
-                                            <Input borderColor={"black"} type="text" value={token.phone} />
-                                        </FormControl>
-                                    </HStack>
-                                    <Box align="right" >
-                                        <Button onClick={() => setToken(prev => ({ ...prev, "name": "" }))}
-                                            variant="outline" colorScheme={"red"}  >Clear Selection</Button>
-                                        <Button m={3} onClick={handleOldSubmit} colorScheme="blue">Next</Button>
+                        {isLaptop && <>{availability != "" ?
+                            <Heading size="md">{availability}</Heading>
+                            : <Box
+                                rounded={'lg'}
+                                bg={'white'}
+                                boxShadow={'lg'}
+                                p={8}
+                                key={index}
+                                width='full'>
+                                {token.name != "" ?
+                                    <Box bg="orange.50" rounded="lg" p={2}>
+                                        <Text fontWeight={"semibold"}>You have selected : </Text>
+                                        <HStack spacing="5" mt={5}>
+                                            <FormControl>
+                                                <FormLabel>File Number</FormLabel>
+                                                <Input borderColor={"black"} type="text" onChange={handleFileChange}
+                                                    value={token.fileNumber} />
+                                            </FormControl>
+                                            <FormControl>
+                                                <FormLabel>Patient Name</FormLabel>
+                                                <Input borderColor={"black"} type="text" value={token.name} />
+                                            </FormControl>
+                                            <FormControl>
+                                                <FormLabel>Patient Phone No.</FormLabel>
+                                                <Input borderColor={"black"} type="text" value={token.phone} />
+                                            </FormControl>
+                                        </HStack>
+                                        <Box align="right" >
+                                            <Button onClick={() => setToken(prev => ({ ...prev, "name": "" }))}
+                                                variant="outline" colorScheme={"red"}  >Clear Selection</Button>
+                                            <Button m={3} onClick={handleOldSubmit} colorScheme="blue">Next</Button>
+                                        </Box>
                                     </Box>
-                                </Box>
-                                : <HStack spacing="auto">
-                                    <Heading size={"md"} mt={5}>
-                                        Choose Patient
-                                    </Heading>
-                                    {patient && <Checkbox borderColor="gray" m={4}
-                                        onChange={bookForPrevPatient}>
-                                        Book token for previous patient
-                                    </Checkbox>}
-                                </HStack>}
-                            <Divider m={3} orientation="horizontal" />
-                            <TableContainer>
-                                <Table variant='striped' colorScheme='grey'>
-                                    <Thead>
-                                        <Tr>
-                                            <Th>
-                                                <VStack align={"baseline"}>
-                                                    <Text className='tableHeader' >File Number </Text>
-                                                    <Input placeholder='Search by file number'
+                                    : <HStack spacing="auto">
+                                        <Heading size={"md"} mt={5}>
+                                            Choose Patient
+                                        </Heading>
+                                        {patient && <Checkbox borderColor="gray" m={4}
+                                            onChange={bookForPrevPatient}>
+                                            Book token for previous patient
+                                        </Checkbox>}
+                                    </HStack>}
+                                <Divider m={3} orientation="horizontal" />
+                                <TableContainer>
+                                    <Table variant='striped' colorScheme='grey'>
+                                        <Thead>
+                                            <Tr>
+                                                <Th>
+                                                    <VStack align={"baseline"}>
+                                                        <Text className='tableHeader' >File Number </Text>
+                                                        <Input placeholder='Search by file number'
+                                                            onKeyPress={handleKeyPress}
+                                                            id="fileNumber" onChange={handleChange} value={searchFields.fileNumber}
+                                                            type="text"
+                                                            borderColor={"gray"}
+                                                        ></Input>
+                                                    </VStack>
+                                                </Th>
+                                                <Th> <VStack align={"baseline"}>
+                                                    <Text className='tableHeader' >Name</Text>
+                                                    <Input placeholder='Search by name'
                                                         onKeyPress={handleKeyPress}
-                                                        id="fileNumber" onChange={handleChange} value={searchFields.fileNumber}
-                                                        type="text"
-                                                        borderColor={"gray"}
+                                                        id="name" onChange={handleChange}
+                                                        value={searchFields.name} borderColor={"gray"}
+                                                        type="text"></Input>
+                                                </VStack>
+                                                </Th>
+                                                <Th> <VStack align={"baseline"}>
+                                                    <Text className='tableHeader' >Phone Number</Text>
+                                                    <Input placeholder='Search by phone'
+                                                        onKeyPress={handleKeyPress}
+                                                        id="phone" onChange={handleChange}
+                                                        value={searchFields.phone}
+                                                        borderColor={"gray"} type="text"
                                                     ></Input>
                                                 </VStack>
-                                            </Th>
-                                            <Th> <VStack align={"baseline"}>
-                                                <Text className='tableHeader' >Name</Text>
-                                                <Input placeholder='Search by name'
-                                                    onKeyPress={handleKeyPress}
-                                                    id="name" onChange={handleChange}
-                                                    value={searchFields.name} borderColor={"gray"}
-                                                    type="text"></Input>
-                                            </VStack>
-                                            </Th>
-                                            <Th> <VStack align={"baseline"}>
-                                                <Text className='tableHeader' >Phone Number</Text>
-                                                <Input placeholder='Search by phone'
-                                                    onKeyPress={handleKeyPress}
-                                                    id="phone" onChange={handleChange}
-                                                    value={searchFields.phone}
-                                                    borderColor={"gray"} type="text"
-                                                ></Input>
-                                            </VStack>
-                                            </Th>
+                                                </Th>
 
-                                            <Th width="5%"> <VStack align={"end"} >
-                                                <Text className='tableHeader'></Text>
-                                                <Button colorScheme={"blue"} id="search" onClick={searchPatientforAppt}>
-                                                    Search
-                                                </Button>
-                                            </VStack>
-                                            </Th>
-                                            <Th width="5%"> <VStack align={"end"} >
-                                                <Text className='tableHeader'></Text>
-                                                <Button onClick={createPatient} colorScheme={"blue"} id="create">
-                                                    Create
-                                                </Button>
-                                            </VStack>
-                                            </Th>
-                                        </Tr>
-                                    </Thead>
-                                    {isLoading ? <FullPageSpinner /> : <Tbody>
-                                        {filter.map((patient, index) => <Tr style={{ cursor: "pointer" }}
-                                            _hover={{ bg: "blue.50" }}
-                                            bg={token.id==patient.patientID &&
-                                                token.phone==patient.phone ? "blue.50" : "white"}
-                                            onClick={() => selectPatient(patient)}
-                                            value={patient.name} key={index}>
-                                            <Td width="17%">{patient.fileNumber}</Td>
-                                            <Td>{patient.name}</Td>
-                                            <Td>{patient.phone}</Td>
-                                            <Td></Td>
-                                            <Td></Td>
-                                        </Tr>)}
-                                    </Tbody>}
-                                </Table>
-                            </TableContainer>
-                            {filter.length == 0 && !isLoading ? <Box textAlign="center" py={10} px={6}>
-                                <CloseIcon boxSize={'20px'} color={'red'} />
-                                <Heading size="md" mt={6} mb={2}>
-                                    No results
-                                </Heading>
-                            </Box> : null}
+                                                <Th width="5%"> <VStack align={"end"} >
+                                                    <Text className='tableHeader'></Text>
+                                                    <Button colorScheme={"blue"} id="search" onClick={searchPatientforAppt}>
+                                                        Search
+                                                    </Button>
+                                                </VStack>
+                                                </Th>
+                                                <Th width="5%"> <VStack align={"end"} >
+                                                    <Text className='tableHeader'></Text>
+                                                    <Button onClick={createPatient} colorScheme={"blue"} id="create">
+                                                        Create
+                                                    </Button>
+                                                </VStack>
+                                                </Th>
+                                            </Tr>
+                                        </Thead>
+                                        {isLoading ? <FullPageSpinner /> : <Tbody>
+                                            {filter.map((patient, index) => <Tr style={{ cursor: "pointer" }}
+                                                _hover={{ bg: "blue.50" }}
+                                                bg={token.id == patient.patientID &&
+                                                    token.phone == patient.phone ? "blue.50" : "white"}
+                                                onClick={() => selectPatient(patient)}
+                                                value={patient.name} key={index}>
+                                                <Td width="17%">{patient.fileNumber}</Td>
+                                                <Td>{patient.name}</Td>
+                                                <Td>{patient.phone}</Td>
+                                                <Td></Td>
+                                                <Td></Td>
+                                            </Tr>)}
+                                        </Tbody>}
+                                    </Table>
+                                </TableContainer>
+                                {filter.length == 0 && !isLoading ? <Box textAlign="center" py={10} px={6}>
+                                    <CloseIcon boxSize={'20px'} color={'red'} />
+                                    <Heading size="md" mt={6} mb={2}>
+                                        No results
+                                    </Heading>
+                                </Box> : null}
 
-                        </Box>}
+                            </Box>}</>}
 
 
                         {isMobile && <Box
@@ -452,8 +454,8 @@ export const PatientDetails = (props) => {
                                         p={3}
                                         m={2}
                                         boxShadow={"lg"}
-                                        bg={token.id==patient.patientID &&
-                                            token.phone==patient.phone ? "blue.50" : "white"}
+                                        bg={token.id == patient.patientID &&
+                                            token.phone == patient.phone ? "blue.50" : "white"}
                                         style={{ cursor: "pointer" }}
                                         _hover={{ bg: "blue.50" }}
                                         onClick={() => selectPatient(patient)}

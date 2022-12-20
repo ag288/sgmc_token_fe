@@ -87,7 +87,7 @@ export const TokenDetailsChooseToken = () => {
                 setSlots(response.result)
             }
             else {
-
+                alert("No slots available for booking!")
             }
         })
 
