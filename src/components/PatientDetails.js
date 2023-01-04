@@ -60,11 +60,7 @@ export const PatientDetails = (props) => {
     const [settings, setSettings] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [reasons, setReasons] = useState([])
-    const [info, setInfo] = useState({
-        new_name: "",
-        phone: "",
-        fileNumber: ""
-    })
+    
     const { setDoctor, doctors, user, doctor, index, setIndex } = useContext(AppContext)
     let obj = {
         id: location.state && location.state.item ? location.state.item.patientID : "",
@@ -73,6 +69,12 @@ export const PatientDetails = (props) => {
         fileNumber: location.state && location.state.item ? location.state.item.fileNumber : "",
         doctor: doctor
     }
+    const [info, setInfo] = useState({
+        new_name: "",
+        phone: "",
+        fileNumber: "",
+        doctor : doctor
+    })
     const [token, setToken] = useState(location.state && location.state.tokenObj ? { ...obj, ...location.state.tokenObj }
         : obj)
 
@@ -142,6 +144,7 @@ export const PatientDetails = (props) => {
         setDoctor(docArray[index].doctorID)
         setIndex(index)
         setToken(prev => ({ ...prev, "doctor": docArray[index].doctorID }))
+        setInfo(prev => ({ ...prev, "doctor": docArray[index].doctorID }))
         localStorage.setItem("doctor", docArray[index].doctorID)
         localStorage.setItem("tabIndex", index)
     }

@@ -4,7 +4,7 @@ import api from '../api'
 
 export const types = {
     "Review": "R",
-    "First time": 'F',
+    "New consultation": 'F',
     "Other": "O",
     "Long slot": "L"
 }

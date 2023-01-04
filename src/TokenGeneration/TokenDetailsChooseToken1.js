@@ -178,7 +178,8 @@ export const TokenDetailsChooseToken = () => {
                 localStorage.setItem("patient", JSON.stringify({
                     name: location.state.token.name ? location.state.token.name : location.state.token.new_name,
                     fileNumber: location.state.token.fileNumber,
-                    phone: location.state.token.phone
+                    phone: location.state.token.phone,
+                    patientID : location.state.token.id
                 }))
                 const response = JSON.parse(res.data)
                 if (response.message != "") {

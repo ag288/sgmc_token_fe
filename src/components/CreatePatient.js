@@ -74,10 +74,15 @@ console.log(e)
             <Modal size={"2xl"} isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalCloseButton />
                     {isLoading ? <FullPageSpinner /> : <ModalBody>
                         {isLaptop ? <Box rounded="lg" p={2}>
                             <HStack width={"full"} spacing="5" mt={5}>
+                               
+                                <FormControl>
+                                    <FormLabel>Patient Name</FormLabel>
+                                    <Input borderColor={"black"} type="text" onChange={handleNewNameChange}
+                                        value={info.new_name} />
+                                </FormControl>
                                 <FormControl>
                                     <FormLabel>Patient Phone No.</FormLabel>
                                     <PhoneInput
@@ -88,12 +93,6 @@ console.log(e)
                                         defaultCountry="IN"
                                         onChange={handlePhoneChange} />
                                 </FormControl>
-                                <FormControl>
-                                    <FormLabel>Patient Name</FormLabel>
-                                    <Input borderColor={"black"} type="text" onChange={handleNewNameChange}
-                                        value={info.new_name} />
-                                </FormControl>
-
                                 <FormControl>
                                     <FormLabel>File Number</FormLabel>
                                     <Input borderColor={"black"} type="text" onChange={handleFileChange}
