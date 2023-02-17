@@ -20,7 +20,6 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     const [settings, setSettings] = useState([])
     const [printItem, setPrintItem] = useState()
     const [state, setState] = useState(0) // to force re-render when reason is edited
-    const componentRef = useRef()
     const walkinRef = useRef()
     let flag = 0
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -30,9 +29,10 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
         onAfterPrint: () => window.location.reload()
     })
     useEffect(() => {
-        // if (printItem) {
-        //     handlePrint()
-        // }
+        if (printItem) {
+            console.log(printItem)
+             handlePrint()
+         }
         api.settings.fetchSettings({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
@@ -69,10 +69,10 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
     function bookWalkIn() {
         api.token.bookWalkIn({ item }).then((res) => {
-            //  setPrintItem(JSON.parse(res.data).result)
+              setPrintItem(JSON.parse(res.data).result)
+              console.log(JSON.parse(res.data).result)
             //  console.log(item)
 
-            window.location.reload()
         })
     }
 
@@ -80,8 +80,9 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     function setAsArrived() {
 
         api.token.setAsArrived({ item }).then((res) => {
-            //setPrintItem(JSON.parse(res.data).result)
-            window.location.reload()
+            
+            setPrintItem(JSON.parse(res.data).result)
+            console.log(JSON.parse(res.data).result)
         })
 
     }
@@ -181,25 +182,6 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
                 {user.userID == 2 &&
                     <Td>
-                        {/* {item.status == "delayed" ?
-                            // <>  <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
-                            //     <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef} item={printItem} />
-                            //     </div></>
-                            <> <ReactToPrint
-                                // onAfterPrint={setAsArrived}
-                                trigger={() => <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>}
-                                content={() => componentRef.current} />
-                                <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
-                                </div></>
-                            : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
-                                <> <ReactToPrint
-                                    onAfterPrint={setAsArrived}
-                                    trigger={() => <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />}
-                                    content={() => componentRef.current} />
-                                    <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
-                                    </div></>
-                                // <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
-                            )} */}
                         {item.status == "delayed" ?
                             <>  <Button colorScheme={"blue"} onClick={bookWalkIn}>Book Walk-In</Button>
                             </>
@@ -225,29 +207,13 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </Text>
                     <Text onDoubleClick={handleDoubleClickForReason}>{types[item.type]}
                     </Text>
-                    {/* {item.status == "delayed" ?
-                        <>  <IconButton icon={<FaRegFileWord />} colorScheme={"blue"} onClick={bookWalkIn}></IconButton>
-                            <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef} item={printItem} />
-                            </div></>
-                        : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
-                            // <> <ReactToPrint
-                            //     onAfterPrint={setAsArrived}
-                            //     trigger={() => <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />}
-                            //     content={() => componentRef.current} />
-                            //     <div style={{ display: "none" }}>  <ComponentToPrint ref={componentRef} item={item} />
-                            //     </div></>
-                            <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
-                        )} */}
                     {item.status == "delayed" ?
-                        <>  <IconButton icon={<FaRegFileWord />} colorScheme={"blue"} onClick={bookWalkIn}>
-                        </IconButton>
-                        </>
-                        : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />}
-                            onClick={undoArrived} colorScheme={"blue"} /> :
-
-                            <IconButton isDisabled={item.status != "new" && item.status != "delayed"}
-                                colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
+                        <>  <IconButton icon={<FaRegFileWord />} colorScheme={"blue"} onClick={bookWalkIn}></IconButton>
+                       </>
+                        : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
+                            <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
                         )}
+    
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef}
                         item={printItem} />
                     </div>

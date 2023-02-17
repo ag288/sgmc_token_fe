@@ -100,6 +100,8 @@ export default function tokenApi(fetch, baseUrl) {
         arrivedQR(data){
             return fetch.post(`${baseUrl}/arrived-qr`,{data})
         },
-      
+        fetchApptCount(data){
+            return fetch.post(`${baseUrl}/appt-count`,{data})
+        }
     }
 }

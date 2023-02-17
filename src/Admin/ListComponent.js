@@ -52,8 +52,13 @@ export const ListComponent = ({ current, setCurrent, doctor, item, index, deskto
 
     function tokenNumber(item) {
         let tokenNumber = ""
-        if (item.slot.includes("W"))
-            tokenNumber += `${item.initials}W-${item.tokenNumber} `
+        if (item.slot.includes("W")) {
+            if (item.tokenNumber)
+                tokenNumber += `${item.initials}W-${item.tokenNumber}`
+            else
+                tokenNumber += `W`
+        }
+
         else
             tokenNumber += `${item.initials}-${item.tokenNumber} `
         if (item.oldTokenNumber)

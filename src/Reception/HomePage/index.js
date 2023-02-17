@@ -11,7 +11,7 @@ import {
   Stack,
   Select,
   useMediaQuery,
-  Text,Tabs, TabList, TabPanels, Tab, TabPanel 
+  Text, Tabs, TabList, TabPanels, Tab, TabPanel
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import api from '../../api';
@@ -29,11 +29,12 @@ import { TokenList } from './TokenList';
 
 export const PatientList = (props) => {
 
-  const { user, setUser, setDoctor, doctor, doctors,index, setIndex } = useContext(AppContext)
+  const { user, setUser, setDoctor, doctor, doctors, index, setIndex } = useContext(AppContext)
   //let params= useParams()
-   const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
+  const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
   const [isLoading, setIsLoading] = useState(false)
- const [desktopView, setDesktopView] = useState(false)
+  const [desktopView, setDesktopView] = useState(false)
+  const [count, setCount] = useState([])
 
   useEffect(() => {
 
@@ -42,8 +43,12 @@ export const PatientList = (props) => {
         window.location.reload()
     }, 300000)
 
+    api.token.fetchApptCount().then((res) => {
+      const response = JSON.parse(res.data).result
+      setCount(response)
 
-    
+    })
+
 
   }, [doctor]);
 
@@ -62,11 +67,11 @@ export const PatientList = (props) => {
 
 
   function handleNewChange(index) {
-    let docArray=filterDoctor(doctors,user.userID)
+    let docArray = filterDoctor(doctors, user.userID)
     setDoctor(docArray[index].doctorID)
     setIndex(index)
-    localStorage.setItem("doctor",docArray[index].doctorID)
-    localStorage.setItem("tabIndex",index)
+    localStorage.setItem("doctor", docArray[index].doctorID)
+    localStorage.setItem("tabIndex", index)
   }
 
   return (
@@ -77,28 +82,37 @@ export const PatientList = (props) => {
         //overflow={"scroll"}
         width="full"
         bg={"gray.100"}>
-         
+
         {isLoading ? <FullPageSpinner /> :
-        <>
-         
-          <Tabs display={"flex"} flexDirection={"column"} width="full" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
-          <HStack> <TabList m={1}>
-            {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
-         : <Tab >{doctor.longInitials}</Tab>)}
-          </TabList>
-          <IconButton size="lg" bg="transparent" onClick={()=>{setDesktopView(!desktopView)}} 
-          display={{ base: 'flex', md: 'none' }} icon={desktopView ? <FaMobileAlt/> :<FaLaptop/> }></IconButton>
-         </HStack>
-          <TabPanels>
-            {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel width="full">
-              <TokenList desktopView={desktopView} color={colors[index]} doctor={doctor} />
-            </TabPanel>)}
-          </TabPanels>
-        </Tabs>
-       
-        </>
+          <>
+
+            <Tabs display={"flex"} flexDirection={"column"} width="full" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+              <HStack> <TabList m={1}>
+                {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >
+                  {doctor.name}
+
+                  {count?.find(i => i.doctorID == doctor.doctorID)?.count > 0 &&
+                    < Circle size='20px' color={'white'} ml={2} fontSize={'0.8rem'}
+                      bgColor={'red'} zIndex={9999} p={'3px'}>
+                      {count?.find(i => i.doctorID == doctor.doctorID)?.count}
+                    </Circle>
+                  }
+                </Tab>
+                  : <Tab >{doctor.longInitials}</Tab>)}
+              </TabList>
+                <IconButton size="lg" bg="transparent" onClick={() => { setDesktopView(!desktopView) }}
+                  display={{ base: 'flex', md: 'none' }} icon={desktopView ? <FaMobileAlt /> : <FaLaptop />}></IconButton>
+              </HStack>
+              <TabPanels>
+                {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel width="full">
+                  <TokenList desktopView={desktopView} color={colors[index]} doctor={doctor} />
+                </TabPanel>)}
+              </TabPanels>
+            </Tabs>
+
+          </>
         }
-     </Flex>
+      </Flex>
     </>
   )
 }

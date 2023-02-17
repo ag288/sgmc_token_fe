@@ -1,16 +1,28 @@
 .Blink {
-    animation: blinker 0.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;  
-  }
-  @keyframes blinker {  
-    from { background-color: lightpink; }
-    to { background-color: white; }
+  animation: blinker 0.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+}
+
+@keyframes blinker {
+  from {
+    background-color: lightpink;
   }
 
+  to {
+    background-color: white;
+  }
+}
 
-  .shortBlink {
-    animation: screenblinker 0.5s cubic-bezier(.5, 0, 1, 1) 15 alternate;  
+
+.shortBlink {
+  animation: screenblinker 0.5s cubic-bezier(.5, 0, 1, 1) 20 alternate;
+}
+
+@keyframes screenblinker {
+  from {
+    background-color: lightgreen;
   }
-  @keyframes screenblinker {  
-    from { background-color: lightgreen; }
-    to { background-color: white; }
+
+  to {
+    background-color: white;
   }
+}

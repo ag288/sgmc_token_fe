@@ -33,11 +33,13 @@ import {
 } from '@chakra-ui/react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { FaHome, FaMinus, FaMinusCircle, FaPlus } from 'react-icons/fa'
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import api from '../api';
 import userApi from '../api/user';
 import { AppContext } from '../App';
 import { FullPageSpinner } from '../components/Spinner';
+import { useReactToPrint } from 'react-to-print';
+import { ComponentToPrint } from '../Reception/HomePage/TokenPrint';
 
 export const TokenDetailsChooseToken = () => {
     let navigate = useNavigate()
@@ -61,9 +63,21 @@ export const TokenDetailsChooseToken = () => {
     const { isOpen: isOpenGenerate, onOpen: onOpenGenerate, onClose: onCloseGenerate } = useDisclosure()
     const { isOpen: isOpenArrival, onOpen: onOpenArrival, onClose: onCloseArrival } = useDisclosure()
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
+    const walkinRef = useRef()
+    const [printItem, setPrintItem] = useState()
 
+    const handlePrint = useReactToPrint({
+        content: () => walkinRef.current,
+        onAfterPrint: () => printItem.slot.includes("W") ? navigate('/home') : onOpenGenerate()
+    })
 
     useEffect(() => {
+
+        console.log(printItem)
+        if (printItem && printItem.status == "arrived") {
+            console.log(printItem)
+            handlePrint()
+        }
 
         setIsLoading(true)
         api.settings.fetchReasons().then((res) => {
@@ -91,7 +105,7 @@ export const TokenDetailsChooseToken = () => {
             }
         })
 
-    }, [])
+    }, [printItem])
 
     let location = useLocation()
 
@@ -179,9 +193,10 @@ export const TokenDetailsChooseToken = () => {
                     name: location.state.token.name ? location.state.token.name : location.state.token.new_name,
                     fileNumber: location.state.token.fileNumber,
                     phone: location.state.token.phone,
-                    patientID : location.state.token.id
+                    patientID: location.state.token.id
                 }))
                 const response = JSON.parse(res.data)
+                console.log(response)
                 if (response.message != "") {
                     setIsLoading(false)
                     alert(response.message)
@@ -233,7 +248,9 @@ export const TokenDetailsChooseToken = () => {
                             end.setMinutes(rounded.getMinutes() + 15)
                         }
                         setTime({ start: start, end: end })
-                        onOpenGenerate()
+                        response.result.status == "arrived" ? setPrintItem(response.result)
+                            : onOpenGenerate()
+
                         if (response.noBlockedMsg != "")
                             toast({
                                 title: response.noBlockedMsg,
@@ -245,8 +262,6 @@ export const TokenDetailsChooseToken = () => {
                     }
 
                     else {
-                        // setTokenNo(`W${response.initials}-${response.tokenNo}`)
-                        console.log(response)
                         toast({
                             title: 'Token generated',
                             status: 'success',
@@ -254,7 +269,8 @@ export const TokenDetailsChooseToken = () => {
                             isClosable: false,
                             position: "top"
                         })
-                        navigate("/home")
+                        response.result.status == "arrived" ? setPrintItem(response.result)
+                            : navigate("/home")
                     }
                 }
             }).catch(err => {
@@ -427,6 +443,7 @@ export const TokenDetailsChooseToken = () => {
                                             Ok
                                         </Button>
                                     </ModalFooter>
+
                                 </ModalContent>
                             </Modal>
                             <Modal size={"sm"} isOpen={isOpenArrival} onClose={onCloseArrival}>
@@ -456,6 +473,9 @@ export const TokenDetailsChooseToken = () => {
                                 Generate Token
                             </Button>
                         </Box>
+                        <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef}
+                            item={printItem} />
+                        </div>
                     </Stack>}
             </Flex >
         </>
