@@ -149,7 +149,10 @@ export const TokenDetailsChooseToken = () => {
     }
 
     function handleReasonChange(e) {
-        setToken(prev => ({ ...prev, "reason": e.target.value }))
+        if (e.name == "New consultation")
+            setToken(prev => ({ ...prev, "reason": e.reasonID, flag: true }))
+        else
+            setToken(prev => ({ ...prev, "reason": e.reasonID, flag: false }))
     }
 
     function setArrived(value) {
@@ -248,8 +251,9 @@ export const TokenDetailsChooseToken = () => {
                             end.setMinutes(rounded.getMinutes() + 15)
                         }
                         setTime({ start: start, end: end })
-                        response.result.status == "arrived" ? setPrintItem(response.result)
-                            : onOpenGenerate()
+
+                        //response.result.status == "arrived" ? setPrintItem(response.result):
+                             onOpenGenerate()
 
                         if (response.noBlockedMsg != "")
                             toast({
@@ -403,7 +407,7 @@ export const TokenDetailsChooseToken = () => {
                                     <FormLabel>Select reason</FormLabel>
                                     <RadioGroup name="reason" >
                                         <VStack align={"right"}>
-                                            {reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={handleReasonChange}>{item.name}</Radio>)}
+                                            {reasons.map((item) => <Radio bg={token.reason == item.reasonID ? "green" : "white"} value={item.reasonID} onChange={() => handleReasonChange(item)}>{item.name}</Radio>)}
                                         </VStack>
                                     </RadioGroup>
                                 </FormControl>
@@ -418,7 +422,9 @@ export const TokenDetailsChooseToken = () => {
                                 </FormControl> */}
                                 {token.slot != "W" /*&& !maxToken()*/ ? <HStack mt={2}>
                                     <Text fontWeight={"bold"}>Block an extra token</Text>
-                                    <Switch onChange={(e) => setToken(prev => ({ ...prev, "flag": e.target.checked }))} value={token.flag} colorScheme="green" textColor="green"></Switch>
+                                    <Switch 
+                                    onChange={(e) => setToken(prev => ({ ...prev, "flag": e.target.checked }))} 
+                                    isChecked={token.flag} colorScheme="green" textColor="green"></Switch>
                                 </HStack>
                                     : null}
                             </Stack>

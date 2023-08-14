@@ -132,7 +132,7 @@ export const WorkingHourSettings = ({doctor}) => {
                 </VStack>
                 <Box mt="2%" align={"right"}>
                     <Button isLoading={isLoading} colorScheme="blue"  
-                    isDisabled={!(today.getTime() > tokensEnd.getTime() || today.getTime() < tokensStart.getTime())} onClick={onOpen}>Update</Button>
+                    onClick={onOpen}>Update</Button>
                 </Box>
                 <Modal isOpen={isOpen} onClose={onClose}>
                     <ModalOverlay />
