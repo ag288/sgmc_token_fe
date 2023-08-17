@@ -8,48 +8,25 @@ import {
     MenuButton,
     MenuItem,
     MenuList,
-    Stack,
+    VStack,
     Select,
     useMediaQuery,
-    Text, Tabs, TabList, TabPanels, Tab, TabPanel, Button
+    Text, Tabs, TabList, TabPanels, Tab, TabPanel, Button,
+    Input
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import { FaBell, FaEllipsisV, FaLaptop, FaMobile, FaMobileAlt, FaPhone, FaPhoneSquare } from 'react-icons/fa'
 import { logout } from '../utils/tokenFunctions';
 import { AppContext } from '../App';
-import { TokenList } from './TokenList';
+import { TokenList } from "./TokenList"
 
-export const AdminPatientList = (props) => {
+export const PastAppointments = (props) => {
 
-    const { setUser, setDoctor, doctor, doctors, index, setIndex } = useContext(AppContext)
     //let params= useParams()
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
     const [desktopView, setDesktopView] = useState(false)
-
-    useEffect(() => {
-
-        setInterval(() => {
-            if (window.location.pathname == "/" || window.location.pathname == "/home")
-                window.location.reload()
-        }, 300000)
-
-
-
-
-    }, [doctor]);
-
-
-
-
-
-
-    function handleNewChange(index) {
-
-        setDoctor(doctors[index].doctorID)
-        setIndex(index)
-        localStorage.setItem("doctor", doctors[index].doctorID)
-        localStorage.setItem("tabIndex", index)
-    }
+    const { doctors } = useContext(AppContext)
+    const [date, setDate] = useState()
 
     return (
         <>
@@ -59,9 +36,14 @@ export const AdminPatientList = (props) => {
                 //overflow={"scroll"}
                 width="full"
                 bg={"gray.100"}>
-                <Box width="full">
-                  
-                    <Tabs display={"flex"} flexDirection={"column"} width="full" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
+                <VStack width="full" m={3}>
+                    <HStack width={isLaptop ? "50%" : "full"}>
+                        <Text>Choose date</Text>
+                        <Input width="50%" align="center" bg="white" type="date" value={date}
+                            onChange={(e) => setDate(e.target.value)} />
+                    </HStack>
+                    <Tabs display={"flex"} flexDirection={"column"} width="full" variant="solid-rounded"
+                    isLazy>
                         <HStack> <TabList m={1}>
                             {doctors.map((doctor, index) => isLaptop ? <Tab >{doctor.name}</Tab>
                                 : <Tab >{doctor.longInitials}</Tab>)}
@@ -71,12 +53,12 @@ export const AdminPatientList = (props) => {
                         </HStack>
                         <TabPanels>
                             {doctors.map((doctor, index) => <TabPanel width="full">
-                                <TokenList desktopView={desktopView} doctor={doctor} />
+                                <TokenList desktopView={desktopView} doctor={doctor} date={date} />
                             </TabPanel>)}
                         </TabPanels>
                     </Tabs>
 
-                </Box>
+                </VStack>
             </Flex>
         </>
     )

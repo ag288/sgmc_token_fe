@@ -106,18 +106,34 @@ export default function Simple() {
         if (user.userID == 1) {
             links = [{ name: 'Home', path: "/home" },
             { name: 'Daily Token', path: "/book" },
-            { name: 'Settings', path: "/settings" }]
+            { name: 'Settings', path: "/settings" },
+            { name: 'Past Appointments', path: "/history" }]
         }
         else if (user.userID == 2) {
             links = [{ name: 'Home', path: "/home" },
             { name: 'Daily Token', path: "/book" },
             { name: 'Future Token', path: "/book-review" },
-            { name: 'Settings', path: "/settings" }]
+            { name: 'Settings', path: "/settings" },
+            { name: 'Past Appointments', path: "/history" }]
         }
         else if (user.userID == 3) {
             links = [{ name: 'Home', path: "/home" },
-            { name: 'Future Token', path: "/book-review" }]
+            { name: 'Future Token', path: "/book-review" },
+            { name: 'Past Appointments', path: "/history" }]
         }
+
+        else if (user.userID == 6) {
+            links = [{ name: 'Home', path: "/home" },
+            { name: 'Past Appointments', path: "/history" },
+            { name: 'Future Appointments', path: "/review-list" }]
+        }
+        else if (user.userID == 7) {
+            links = [{ name: 'Home', path: "/home" },
+            { name: 'Future Appointments', path: "/future" },
+            { name: 'Past Appointments', path: "/history" }]
+        }
+        else
+            links = [{ name: 'Home', path: "/home" }]
         return links
     }
     const Links = defineLinks()

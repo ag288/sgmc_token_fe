@@ -18,6 +18,7 @@ export const TokenList = ({ doctor, desktopView }) => {
   const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
   const { user } = useContext(AppContext)
 
+
   useEffect(() => {
 
     let flag = 0
@@ -54,7 +55,7 @@ export const TokenList = ({ doctor, desktopView }) => {
   return (
     <>
       <Stack width={'full'}>
-        {isLaptop && <Heading mb={3} align="center" size={"lg"}>{doctor?.name}</Heading>}
+        <Heading mb={3} align="center" size={"lg"}>{doctor?.name}</Heading>
       
         <CurrentPatient current={current} />
 

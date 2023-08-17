@@ -5,7 +5,7 @@ import { compareFn, DiffMinutes, findBg, types } from "../utils/tokenFunctions"
 import "../components/icon.css"
 import { DetailsPopover1 } from "../Reception/HomePage/DetailsPopover1"
 
-export const ListComponent = ({ current, setCurrent, doctor, item, index, desktopView }) => {
+export const ListComponent = ({  doctor, item, index, desktopView }) => {
 
 
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
@@ -79,7 +79,7 @@ export const ListComponent = ({ current, setCurrent, doctor, item, index, deskto
                     {item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
                 <Td > {item.type}</Td>
-                <Td>{item.phone}</Td>
+                {/* <Td>{item.phone}</Td> */}
                 <Td>
                     <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                         .toLocaleTimeString('en-US',
@@ -102,24 +102,25 @@ export const ListComponent = ({ current, setCurrent, doctor, item, index, deskto
 
 
 
-            </Tr> : <Box bg={findBg(item)} rounded="lg" mb={2} >
+            </Tr> : <Box bg={findBg(item)} rounded="lg" p={1} mb={2} >
                 <HStack spacing={"auto"}>
 
                     <Text color="green" minW={"max-content"} fontWeight={"bold"}>{tokenNumber(item)}
                     </Text>
                     <Text noOfLines={1} fontWeight={"bold"}>{item.name}
                     </Text>
+
+                    <Text >{item.fileNumber}
+                    </Text>
                     <Text >{types[item.type]}
                     </Text>
-
-                    <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} />
+                    {/* <DetailsPopover1 doctor={doctor} current={current} setCurrent={setCurrent} item={item} /> */}
 
                 </HStack>
 
-                <HStack spacing="auto" height={"50"}>
-                    <Text></Text>
+                <HStack alignItems="start" spacing="auto" height={"50"}>
                     <VStack spacing={0}>
-                        {item.timeInEst && <Text fontWeight={"bold"}>Time</Text>}
+                        <Text fontWeight={"bold"}>Time</Text>
                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
@@ -127,13 +128,13 @@ export const ListComponent = ({ current, setCurrent, doctor, item, index, deskto
                     </VStack>
 
                     <VStack spacing={0}>
-                        {item.time_of_arrival && <Text fontWeight={"bold"}>Arrival</Text>}
+                        <Text fontWeight={"bold"}>Arrival</Text>
 
                         <Text>{decideArrival()}
                         </Text>
                     </VStack>
                     <VStack spacing={0}>
-                        {item.timeIn && <Text fontWeight={"bold"}>In</Text>}
+                        <Text fontWeight={"bold"}>In</Text>
                         <Text>{item.timeIn ? new Date('1970-01-01T' + item.timeIn + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
@@ -141,7 +142,7 @@ export const ListComponent = ({ current, setCurrent, doctor, item, index, deskto
                     </VStack>
 
                     <VStack spacing={0}>
-                        {item.timeOut && <Text fontWeight={"bold"}>Out</Text>}
+                        <Text fontWeight={"bold"}>Out</Text>
                         <Text>{item.timeOut ? new Date('1970-01-01T' + item.timeOut + 'Z')
                             .toLocaleTimeString('en-US',
                                 { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}

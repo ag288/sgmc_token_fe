@@ -28,7 +28,7 @@ export const HeaderComponent = ({ requestSort, sortConfig }) => {
               
                 <Th style={decideStyle("fileNumber")} onClick={() => requestSort('fileNumber')}>File No.</Th>
                     <Th>Type</Th>
-                    <Th>Phone</Th>
+                    {/* <Th>Phone</Th> */}
                     <Th style={decideStyle("timeInEst")} onClick={() => requestSort('timeInEst')}>Token Time</Th>
                     <Th style={decideStyle("time_of_arrival")} onClick={() => requestSort('time_of_arrival')}>Arrival Time</Th>
                     <Th style={decideStyle("timeIn")} onClick={() => requestSort('timeIn')}>In</Th>

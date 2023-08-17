@@ -102,6 +102,9 @@ export default function tokenApi(fetch, baseUrl) {
         },
         fetchApptCount(data){
             return fetch.post(`${baseUrl}/appt-count`,{data})
+        },
+        fetchPastAppointments(data){
+            return fetch.post(`${baseUrl}/history`,{data})
         }
     }
 }

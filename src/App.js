@@ -6,6 +6,8 @@ import PhysioUser from './PhysioUser';
 import { QRScanning } from './QRScanning';
 import { TokenScreen } from './TokenScreen';
 import UnauthenticatedUser from './UnauthenticatedUser';
+import { Doctor } from "./Doctor"
+
 
 export const AppContext = createContext(null);
 
@@ -19,7 +21,6 @@ function App() {
 
   useEffect(() => {
 
-    console.log("render")
 
     api.token.fetchDoctors().then((res) => {
       const response = JSON.parse(res.data).result
@@ -42,7 +43,7 @@ function App() {
           return <PhysioUser />
         case 4: return <QRScanning />
         case 5: return <TokenScreen />
-        case 6: return <AdminPatientList />
+        default : return <AuthenticatedUser />
       }
     }
   }
