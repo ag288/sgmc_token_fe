@@ -127,7 +127,7 @@ export default function Simple() {
             { name: 'Past Appointments', path: "/history" },
             { name: 'Future Appointments', path: "/review-list" }]
         }
-        else if (user.userID == 7) {
+        else if (user.doctorID) {
             links = [{ name: 'Home', path: "/home" },
             { name: 'Future Appointments', path: "/future" },
             { name: 'Past Appointments', path: "/history" }]

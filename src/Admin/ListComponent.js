@@ -5,7 +5,7 @@ import { compareFn, DiffMinutes, findBg, types } from "../utils/tokenFunctions"
 import "../components/icon.css"
 import { DetailsPopover1 } from "../Reception/HomePage/DetailsPopover1"
 
-export const ListComponent = ({  doctor, item, index, desktopView }) => {
+export const ListComponent = ({ doctor, item, index, desktopView }) => {
 
 
     const [isLaptop, isMobile] = useMediaQuery(['(min-width: 1224px)', '(max-width: 1224px)'])
@@ -63,6 +63,8 @@ export const ListComponent = ({  doctor, item, index, desktopView }) => {
             tokenNumber += `${item.initials}-${item.tokenNumber} `
         if (item.oldTokenNumber)
             tokenNumber += `/${item.oldTokenNumber}`
+        if (item.blockedNum)
+            tokenNumber += `,${item.blockedNum}`
         return tokenNumber
     }
 
@@ -72,8 +74,9 @@ export const ListComponent = ({  doctor, item, index, desktopView }) => {
 
             <Tr key={index} bg={findBg(item)} >
                 <Td >{tokenNumber(item)}</Td>
-                <Td>
-                    {item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}</Td>
+                {/* <Td>
+                    {item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}</Td> */}
+                <Td>{item.name}</Td>
 
                 <Td><Text placeholder='Add file'>
                     {item.fileNumber ? item.fileNumber : "----"}</Text>

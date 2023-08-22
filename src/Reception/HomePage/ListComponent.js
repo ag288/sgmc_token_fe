@@ -31,8 +31,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     useEffect(() => {
         if (printItem) {
             console.log(printItem)
-             handlePrint()
-         }
+            handlePrint()
+        }
         api.settings.fetchSettings({ doctor }).then((res) => {
             const response = JSON.parse(res.data).result
             setSettings(response[0])
@@ -69,8 +69,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
     function bookWalkIn() {
         api.token.bookWalkIn({ item }).then((res) => {
-              setPrintItem(JSON.parse(res.data).result)
-              console.log(JSON.parse(res.data).result)
+            setPrintItem(JSON.parse(res.data).result)
+            console.log(JSON.parse(res.data).result)
             //  console.log(item)
 
         })
@@ -80,7 +80,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     function setAsArrived() {
 
         api.token.setAsArrived({ item }).then((res) => {
-            
+
             setPrintItem(JSON.parse(res.data).result)
             console.log(JSON.parse(res.data).result)
         })
@@ -140,6 +140,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
             tokenNumber += `${item.initials}-${item.tokenNumber} `
         if (item.oldTokenNumber)
             tokenNumber += `/${item.oldTokenNumber}`
+        if (item.blockedNum)
+            tokenNumber += `,${item.blockedNum}`
         return tokenNumber
     }
 
@@ -150,10 +152,13 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
             <Tr key={index} bg={findBg(item)} className={next == item.tokenID && !(settings?.autocall) ? "Blink" : ""}>
                 <Td><ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
                 <Td >{tokenNumber(item)}</Td>
+                {/* <Td style={{ cursor: "pointer" }}
+                    onDoubleClick={() => handleDoubleClickForName(item.patientID)}>
+                    {item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}</Td> */}
+
                 <Td style={{ cursor: "pointer" }}
                     onDoubleClick={() => handleDoubleClickForName(item.patientID)}>
-                    {item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}</Td>
-
+                    {item.name}</Td>
                 <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
                 <Td onDoubleClick={handleDoubleClickForReason}> {item.type}</Td>
@@ -209,11 +214,11 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </Text>
                     {item.status == "delayed" ?
                         <>  <IconButton icon={<FaRegFileWord />} colorScheme={"blue"} onClick={bookWalkIn}></IconButton>
-                       </>
+                        </>
                         : (item.status == "arrived" && item.time_of_arrival ? <IconButton icon={<FaUndo />} onClick={undoArrived} colorScheme={"blue"} /> :
                             <IconButton isDisabled={item.status != "new" && item.status != "delayed"} colorScheme={"blue"} onClick={setAsArrived} icon={<FaUserCheck />} />
                         )}
-    
+
                     <div style={{ display: "none" }}>  <ComponentToPrint ref={walkinRef}
                         item={printItem} />
                     </div>

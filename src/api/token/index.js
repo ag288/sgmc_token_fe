@@ -105,6 +105,9 @@ export default function tokenApi(fetch, baseUrl) {
         },
         fetchPastAppointments(data){
             return fetch.post(`${baseUrl}/history`,{data})
+        },
+        fetchDelayedReport(data){
+            return fetch.post(`${baseUrl}/report/delayed`,{data})
         }
     }
 }
