@@ -31,7 +31,7 @@ export const QRScanner = () => {
   useEffect(() => {
     if (resultForPrint) {
       console.log(resultForPrint)
-      handlePrint()
+    //  handlePrint()
     }
     setResultForPrint()
   }, [resultForPrint])
@@ -55,8 +55,8 @@ export const QRScanner = () => {
               description: "Please wait for your turn",
               position: "top",
               status: 'success',
-              duration: 3000,
-              isClosable: false,
+              duration: 10000,
+              isClosable: true,
             })
           }
           if (response.onlyOne.delayed) {

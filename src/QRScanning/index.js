@@ -1,4 +1,4 @@
-import { Flex, Heading, VStack, Stack, Box, Square, Center, Text } from "@chakra-ui/react"
+import { Flex, Heading, VStack, Stack, Box, Square, Center, Text, IconButton, Button } from "@chakra-ui/react"
 import { QRScanner } from "./QRScanner"
 
 export const QRScanning = () => {
@@ -8,7 +8,7 @@ export const QRScanning = () => {
             minH={"100vh"}
         >
             <VStack spacing={5} width="full">
-                <Heading size="lg">Spring Garden Family Clinic</Heading>
+                <Heading size="lg">Spring Garden Family Clinic </Heading>
                 <Text>Scan the Token QR Code from the link in your phone</Text>
                 <Center w='95%' h={"80%"} m={5} bg='white'>
 

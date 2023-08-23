@@ -273,8 +273,9 @@ export const TokenDetailsChooseToken = () => {
                             isClosable: false,
                             position: "top"
                         })
-                        response.result.status == "arrived" ? setPrintItem(response.result)
-                            : navigate("/home")
+                        // response.result.status == "arrived" ? setPrintItem(response.result)
+                        //     : navigate("/home")
+                            navigate("/home")
                     }
                 }
             }).catch(err => {
