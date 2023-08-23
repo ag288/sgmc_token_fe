@@ -69,9 +69,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
     function bookWalkIn() {
         api.token.bookWalkIn({ item }).then((res) => {
-            setPrintItem(JSON.parse(res.data).result)
-            console.log(JSON.parse(res.data).result)
-            //  console.log(item)
+            // setPrintItem(JSON.parse(res.data).result)
+            window.location.reload()
 
         })
     }
@@ -81,8 +80,8 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
         api.token.setAsArrived({ item }).then((res) => {
 
-            setPrintItem(JSON.parse(res.data).result)
-            console.log(JSON.parse(res.data).result)
+            // setPrintItem(JSON.parse(res.data).result)
+            window.location.reload()
         })
 
     }
