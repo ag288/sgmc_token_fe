@@ -12,8 +12,8 @@ export const QRScanning = () => {
             width="full"
             minH={"100vh"}
         >
-            <VStack spacing={5} width="full">
-                <Button onClick={() => logout(setUser)}>Logout</Button>
+            <VStack spacing={2} width="full">
+            <Button onClick={() => logout(setUser)}></Button>
                 <Heading size="lg">Spring Garden Family Clinic </Heading>
                 <Text>Scan the Token QR Code from the link in your phone</Text>
                 <Center w='95%' h={"80%"} m={5} bg='white'>
