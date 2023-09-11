@@ -1,6 +1,6 @@
 import React, { Component, useRef, useState } from 'react'
 import QrReader from 'react-qr-scanner'
-import { VStack, Button, CheckboxGroup, Checkbox, Text, useToast, Box, Heading } from '@chakra-ui/react'
+import { VStack, Button, CheckboxGroup, Checkbox, Text, useToast, Box, Heading, HStack } from '@chakra-ui/react'
 import api from '../api'
 import useSound from "use-sound"
 import beep from '../Audio/short_beep.wav'
@@ -12,10 +12,11 @@ import { useEffect } from 'react'
 export const QRScanner = () => {
 
   const [result, setResult] = useState([])
-  const [resultForPrint, setResultForPrint] = useState()
+  const [resultForPrint, setResultForPrint] = useState([])
   const [activate, setActivate] = useState(false)
   const [checked, setChecked] = useState([])
   const [message, setMessage] = useState("")
+  const [walkin, setWalkin] = useState([])
   let componentRef = useRef()
   const handlePrint = useReactToPrint({
     content: () => componentRef.current,
@@ -28,13 +29,16 @@ export const QRScanner = () => {
 
   let count = 0
 
+  // useEffect(() => {
+  //   if (resultForPrint) {
+  //       handlePrint()
+  //   }
+  //   setResultForPrint()
+  // }, [resultForPrint])
+
   useEffect(() => {
-    if (resultForPrint) {
-      console.log(resultForPrint)
-    //  handlePrint()
-    }
-    setResultForPrint()
-  }, [resultForPrint])
+
+  }, [])
 
   function handleScan(data) {
     //console.log(data)
@@ -46,41 +50,49 @@ export const QRScanner = () => {
       let info = data?.text.split("-")
       api.token.scanQr({ tokenID: info[0], phone: info[1] }).then((res) => {
         setActivate(false)
-        const response = JSON.parse(res.data)
+        let response = JSON.parse(res.data)
         if (response.onlyOne) {
           if (response.onlyOne.arrived) {
+
             setResultForPrint(response.onlyOne.arrived)
-            toast({
-              title: 'Thank You',
-              description: "Please wait for your turn",
-              position: "top",
-              status: 'success',
-              duration: 10000,
-              isClosable: true,
-            })
           }
           if (response.onlyOne.delayed) {
             setMessage(response.onlyOne.delayed)
+
           }
+          if (response.onlyOne.walkin) {
+            setWalkin(response.onlyOne.walkin)
+
+          }
+          setTimeout(() => {
+            window.location.reload()
+          }, 10000)
           setActivate(false)
         }
         else {
           if (response.result) {
             setResult(response.result[1])
+            setChecked([response.patient])
+
+            setTimeout(() => {
+              window.location.reload()
+            }, 60000)
           }
           if (response.message) {
             setMessage(response.message)
+            setTimeout(() => {
+              window.location.reload()
+              // setResult([])
+              // setMessage("")
+            }, 10000)
             setActivate(false)
           }
         }
-        setTimeout(() => {
-          console.log("in timeout")
-          setResult([])
-          setMessage("")
-        }, 120000)
+
       })
     }
   }
+
 
   function arrivedQR() {
     api.token.arrivedQR({ item: checked }).then((res) => {
@@ -89,22 +101,19 @@ export const QRScanner = () => {
       const response = JSON.parse(res.data)
       if (response.arrived) {
         setResultForPrint(response.arrived)
-        toast({
-          title: 'Thank You',
-          description: "Please wait for your turn",
-          position: "top",
-          status: 'success',
-          duration: 3000,
-          isClosable: false,
-        })
       }
       if (response.delayed) {
         setMessage(response.delayed)
+
+      }
+      if (response.walkin) {
+        setWalkin(response.walkin)
       }
       setActivate(false)
       setTimeout(() => {
-        setMessage("")
-      }, 120000)
+        window.location.reload()
+        // setMessage("")
+      }, 10000)
     })
   }
 
@@ -139,37 +148,91 @@ export const QRScanner = () => {
     console.log(checked)
   }
 
+
+  function tokenNumber(item) {
+    let tokenNumber = ""
+    if (item.slot.includes("W")) {
+      if (item.tokenNumber)
+        tokenNumber += `${item.initials}W-${item.tokenNumber}`
+      else
+        tokenNumber += `W`
+    }
+
+    else
+      tokenNumber += `${item.initials}-${item.tokenNumber} `
+
+    return tokenNumber
+  }
+
   return (
     <>
 
-      {activate ?
-        <>
-          {/* <Button onClick={ActivateQR} width={"fit-content"} mb={10} colorScheme={"blue"}>Tap to Scan QR Code</Button > */}
-          < QrReader
-            delay={100}
-            style={previewStyle}
-            onError={handleError}
-            onScan={handleScan} /></>
+      {/* {activate ? */}
+      <>
+        {/* <Button onClick={ActivateQR} width={"fit-content"} mb={10} colorScheme={"blue"}>Tap to Scan QR Code</Button > */}
+        < QrReader
+          delay={100}
+          style={previewStyle}
+          onError={handleError}
+          onScan={handleScan} /></>
 
-        : <Button onClick={ActivateQR} width={"fit-content"} mb={10} colorScheme={"blue"}>Tap to Scan QR Code</Button >}
-      {result.length == 0 ? (message ? <Box m={5} bg="white" rounded="lg" p={3}><Heading size="md">{message}</Heading></Box> : null) :
-        <>
+      {/* : <Button onClick={ActivateQR} width={"fit-content"} mb={10} colorScheme={"blue"}>Tap to Scan QR Code</Button >} */}
+      {result.length == 0 && <>
+        {resultForPrint.length > 0 && <VStack rounded="lg" boxShadow="outline" m={1} p={2} >
+
+
+          {resultForPrint.map(i => (
+            <VStack >
+              <Heading size="sm">{i.name}</Heading>
+              <HStack spacing="3">
+                <Text>Token: <b>{tokenNumber(i)}</b></Text>
+                {i.timeInEst && <Text>Est. Time: <b>{new Date('1970-01-01T' + i.timeInEst + 'Z')
+                  .toLocaleTimeString('en-US',
+                    { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' })}</b></Text>}
+                <Text>Doctor: <b>{i.docName}</b></Text>
+              </HStack>
+            </VStack>
+          ))}
+
+        </VStack >}
+        {message ?
+          <Box m={2} bg="white" rounded="lg" p={2}>
+            <Heading size="md" color="red">{message}</Heading>
+          </Box> :
+          null}
+        {walkin.length > 0 && <VStack m={2} bg="white" rounded="lg" p={2} >
+          {walkin.map(i => (
+            <VStack >
+              <Heading color="red" size="sm">
+                {i.name}, Please contact the reception for obtaining your walk-in token number for {i.docName}</Heading>
+            </VStack>
+          ))}
+
+        </VStack >}
+        {walkin.length == 0 && !message && resultForPrint.length > 0 ?
+          <Heading size="sm">Please wait for your turn</Heading> : null}
+      </>
+      }
+
+      {
+        result.length > 0 && <>
           <Heading size="md">Select the patient(s) that have arrived at the clinic</Heading>
           <VStack spacing={2} p={3} alignItems={"baseline"}>
-            {result.map((item) => <Checkbox value={item?.patientID} defaultChecked={result.length == 1}
+            {result.map((item) => <Checkbox value={item?.patientID}
+              // defaultChecked={result.length == 1}
+              isChecked={checked.includes(item.patientID)}
               onChange={handleChange} colorScheme="blue" borderColor={"gray"}>
               {item?.status == "delayed" ? `${item?.name} (${item?.status})` : item.name}
             </Checkbox>)}
           </VStack>
-          <Button onClick={arrivedQR} isDisabled={checked.length == 0} colorScheme="blue">Done</Button>
-          {/* <ReactToPrint
-              onAfterPrint={arrivedQR}
-              trigger={() => <Button isDisabled={checked.length == 0} colorScheme="blue">Done</Button>}
-              content={() => componentRef.current} /> */}
+          <Button onClick={() => window.location.reload()} isDisabled={checked.length == 0}
+            colorScheme="blue">Back</Button>
+          <Button onClick={arrivedQR} isDisabled={checked.length == 0} colorScheme="blue">Next</Button>
+        </>
+      }
 
-        </>}
-      <div style={{ display: "none" }}> <QRTokenPrint ref={componentRef} list={resultForPrint} />
-      </div>
+      {/* <div style={{ display: "none" }}> <QRTokenPrint ref={componentRef} list={resultForPrint} />
+      </div> */}
     </>
   )
 

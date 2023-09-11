@@ -17,7 +17,7 @@ export class QRTokenPrint extends React.Component {
 
 
     render() {
-        console.log(this.props.list)
+        
         const colors = ["red", "navy", "teal", "green", "purple", "darkmagenta", "darkorange", "salmon", "skyblue", "maroon"]
         return (
             <Flex
