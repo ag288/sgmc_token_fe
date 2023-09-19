@@ -11,7 +11,7 @@ import {
   Stack,
   Select,
   useMediaQuery,
-  Text, Tabs, TabList, TabPanels, Tab, TabPanel
+  Text, Tabs, TabList, TabPanels, Tab, TabPanel, useDisclosure
 } from '@chakra-ui/react'
 import { useState, useEffect, useContext } from 'react'
 import api from '../../api';
@@ -26,6 +26,7 @@ import { AppContext } from '../../App';
 import { filterDoctor, logout } from '../../utils/tokenFunctions';
 import { FullPageSpinner } from '../../components/Spinner';
 import { TokenList } from './TokenList';
+import { ArrivalModal } from './ArrivalModal'
 
 export const PatientList = (props) => {
 
@@ -35,6 +36,9 @@ export const PatientList = (props) => {
   const [isLoading, setIsLoading] = useState(false)
   const [desktopView, setDesktopView] = useState(false)
   const [count, setCount] = useState([])
+  const [arrivals, setArrivals] = useState([])
+  const [flag, setFlag] = useState(0)
+  const { onOpen, onClose, isOpen } = useDisclosure()
 
   useEffect(() => {
 
@@ -43,14 +47,17 @@ export const PatientList = (props) => {
         window.location.reload()
     }, 300000)
 
-    api.token.fetchApptCount().then((res) => {
-      const response = JSON.parse(res.data).result
-      setCount(response)
-
+    api.token.fetchApptCountAndArrival().then((res) => {
+      const response = JSON.parse(res.data)
+      setCount(response.count)
+      if (response.arrival.length > 0) {
+        setArrivals(response.arrival)
+        onOpen()
+      }
     })
 
 
-  }, [doctor]);
+  }, []);
 
 
 
@@ -93,7 +100,7 @@ export const PatientList = (props) => {
 
                   {count?.find(i => i.doctorID == doctor.doctorID)?.count > 0 &&
                     < Circle size='20px' color={'white'} ml={2} fontSize={'0.8rem'}
-                      bgColor={'red'} zIndex={9999} p={'3px'}>
+                      bgColor={'red'} zIndex={3} p={'3px'}>
                       {count?.find(i => i.doctorID == doctor.doctorID)?.count}
                     </Circle>
                   }
@@ -105,13 +112,15 @@ export const PatientList = (props) => {
               </HStack>
               <TabPanels>
                 {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel width="full">
-                  <TokenList desktopView={desktopView} color={colors[index]} doctor={doctor} />
+                  <TokenList desktopView={desktopView} color={colors[index]} doctor={doctor}
+                  flag={flag} />
                 </TabPanel>)}
               </TabPanels>
             </Tabs>
 
           </>
         }
+        <ArrivalModal list={arrivals} setList={setArrivals} onClose={onClose} isOpen={isOpen} setFlag={setFlag} />
       </Flex>
     </>
   )

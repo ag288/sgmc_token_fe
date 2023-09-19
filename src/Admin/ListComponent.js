@@ -51,8 +51,9 @@ export const ListComponent = ({ doctor, item, index, desktopView }) => {
     }
 
     function tokenNumber(item) {
+
         let tokenNumber = ""
-        if (item.slot.includes("W")) {
+        if (item.slot?.includes("W")) {
             if (item.tokenNumber)
                 tokenNumber += `${item.initials}W-${item.tokenNumber}`
             else

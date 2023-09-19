@@ -61,12 +61,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
         }
     }
 
-    function handleDoubleClickForReason() {
-        if (user.userID == 2) {
-            onOpen()
-        }
-    }
-
+   
     function bookWalkIn() {
         api.token.bookWalkIn({ item }).then((res) => {
             // setPrintItem(JSON.parse(res.data).result)
@@ -128,7 +123,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
     function tokenNumber(item) {
         let tokenNumber = ""
-        if (item.slot.includes("W")) {
+        if (item.slot?.includes("W")) {
             if (item.tokenNumber)
                 tokenNumber += `${item.initials}W-${item.tokenNumber}`
             else
@@ -160,7 +155,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     {item.name}</Td>
                 <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
-                <Td onDoubleClick={handleDoubleClickForReason}> {item.type}</Td>
+                <Td> {item.type}</Td>
                 <Td>{item.phone}</Td>
                 <Td>
                     <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')
@@ -182,8 +177,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
 
-                <ReasonEditModal item={item} isOpen={isOpen} setState={setState} flag={1} onClose={onClose} />
-
+              
                 {user.userID == 2 &&
                     <Td>
                         {item.status == "delayed" ?
@@ -209,7 +203,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                     </Text>
                     <Text noOfLines={1} fontWeight={"bold"} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}
                     </Text>
-                    <Text onDoubleClick={handleDoubleClickForReason}>{types[item.type]}
+                    <Text>{types[item.type]}
                     </Text>
                     {item.status == "delayed" ?
                         <>  <IconButton icon={<FaRegFileWord />} colorScheme={"blue"} onClick={bookWalkIn}></IconButton>
@@ -259,9 +253,9 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
                 </HStack>
 
-                <ReasonEditModal item={item} isOpen={isOpen} onClose={onClose} />
 
             </Box>
+        
 
 
 

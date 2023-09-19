@@ -18,7 +18,7 @@ import {
     useToast
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
-import { BellWithBadge, DuplicatePatientsNotif } from './AlertIcons';
+import { BellWithBadge, DuplicatePatientsNotif , ArrivalNotif} from './AlertIcons';
 import { AppContext } from '../App';
 import { useLocation, Link, NavLink, Navigate, useNavigate } from 'react-router-dom';
 import { logout } from '../utils/tokenFunctions';
@@ -26,6 +26,7 @@ import { ExportToExcel } from '../Reception/HomePage/ExportToExcel';
 import api from '../api';
 import { ListPrintIcon } from '../Reception/HomePage/ListPrintIcon';
 import { FaPrint } from 'react-icons/fa';
+import {ArrivalModal} from '../Reception/HomePage/ArrivalModal'
 
 
 
@@ -194,7 +195,7 @@ export default function Simple() {
                                 <ListPrintIcon timeOfDay={"Afternoon"} />
                             </MenuList>
                         </Menu>}
-                        {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={pendingCount} />}
+                       {user.userID == 2 && <BellWithBadge onClick={viewPendingReviews} count={pendingCount} />}
                         {user.userID == 2 && <DuplicatePatientsNotif onClick={viewDuplicatePatients} count={duplicateCount} />}
 
                         <Menu>
@@ -227,6 +228,7 @@ export default function Simple() {
                     </Box>
                 ) : null}
             </Box>
+          
             {/* <DoctorTabs/> */}
         </>
     );

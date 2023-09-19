@@ -100,11 +100,14 @@ export default function tokenApi(fetch, baseUrl) {
         arrivedQR(data){
             return fetch.post(`${baseUrl}/arrived-qr`,{data})
         },
-        fetchApptCount(data){
+        fetchApptCountAndArrival(data){
             return fetch.post(`${baseUrl}/appt-count`,{data})
         },
         fetchPastAppointments(data){
             return fetch.post(`${baseUrl}/history`,{data})
+        },
+        setAllAsArrived(data){
+            return fetch.post(`${baseUrl}/all-arrived`,{data})
         },
         fetchDelayedReport(data){
             return fetch.post(`${baseUrl}/report/delayed`,{data})

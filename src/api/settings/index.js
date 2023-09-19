@@ -7,7 +7,7 @@ export default function settingsApi(fetch, baseUrl) {
             return fetch.post(`${baseUrl}/fetch`,{data})
         },
         fetchReasons() {
-            return fetch.get(`${baseUrl}/reasons`)
+            return fetch(`${baseUrl}/reasons`)
         },
         updateSettings(data) {
             return fetch.post(`${baseUrl}/update`, { data })

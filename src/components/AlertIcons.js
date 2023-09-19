@@ -1,6 +1,6 @@
 import { Box, Circle, IconButton } from "@chakra-ui/react"
 import { css } from "@emotion/react"
-import { FaBell, FaFile } from "react-icons/fa"
+import { FaBell, FaFile, FaUserCheck } from "react-icons/fa"
 import "./icon.css"
 
 export const BellWithBadge = ({ onClick, count }) => {
@@ -19,7 +19,7 @@ export const BellWithBadge = ({ onClick, count }) => {
                 icon={<>
                     <FaBell color={'white'} />
                     {count > 0 ? <Circle className="Blink" size='20px' color={'white'} position={'absolute'} top={'3px'} right={'9px'} fontSize={'0.8rem'}
-                        bgColor={'red'} zIndex={9999} p={'3px'}>
+                        bgColor={'red'} zIndex={3} p={'3px'}>
                         {count}
                     </Circle> : null}
                 </>}
@@ -27,6 +27,7 @@ export const BellWithBadge = ({ onClick, count }) => {
         </Box>
     )
 }
+
 
 
 export const DuplicatePatientsNotif = ({ onClick, count }) => {
@@ -45,7 +46,7 @@ export const DuplicatePatientsNotif = ({ onClick, count }) => {
                 icon={<>
                     <FaFile color={'white'} />
                     {count > 0 ? <Circle size='14px' color={'white'} position={'absolute'} top={'8px'} right={'9px'} fontSize={'0.8rem'}
-                        bgColor={'blue'} zIndex={9999} p={'3px'}>
+                        bgColor={'blue'} zIndex={3} p={'3px'}>
                         {count}
                     </Circle> : null}
                 </>}
