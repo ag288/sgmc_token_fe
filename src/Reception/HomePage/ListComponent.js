@@ -1,6 +1,6 @@
-import { Box, Button, Divider, HStack, IconButton, Td, Text, Tr, useDisclosure, useMediaQuery, VStack } from "@chakra-ui/react"
+import { Box, Button, Divider, HStack, IconButton, Td, Text, Tr, useDisclosure, useMediaQuery, VStack, Checkbox } from "@chakra-ui/react"
 import { useContext, useEffect, useRef, useState } from "react"
-import { FaCheck, FaPrint, FaRegFileWord, FaUndo, FaUserCheck, FaWalking } from "react-icons/fa"
+import { FaCheck, FaMeetup, FaPrint, FaRegFileWord, FaUndo, FaUserCheck, FaVideo, FaWalking } from "react-icons/fa"
 import ReactToPrint, { useReactToPrint } from "react-to-print"
 import api from "../../api"
 import { AppContext } from "../../App"
@@ -40,28 +40,23 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     }, [printItem])
 
 
-    function handleDoubleClickForFile(id) {
-        let fileNumber = window.prompt("Enter the file number")
-        if (fileNumber != null) {
-            //  editFileNumber(fileNo, id)
-            api.token.editFileNumber({ fileNumber, id }).then((res) => {
+
+
+    function handleDoubleClick(key, id) {
+        let value
+        if (key == "name")
+            value = window.prompt("Enter the patient's name")
+        else if (key == "fileNumber")
+            value = window.prompt("Enter the patient's file number")
+        if (value != null) {
+            api.token.updateInfo({ key, value, id }).then((res) => {
                 const response = JSON.parse(res.data).result
                 window.location.reload()
-            })
+            }).catch(err => window.alert(err))
         }
     }
 
-    function handleDoubleClickForName(id) {
-        let name = window.prompt("Enter the patient's name")
-        if (name != null) {
-            api.token.editName({ name, id }).then((res) => {
-                const response = JSON.parse(res.data).result
-                window.location.reload()
-            })
-        }
-    }
 
-   
     function bookWalkIn() {
         api.token.bookWalkIn({ item }).then((res) => {
             // setPrintItem(JSON.parse(res.data).result)
@@ -122,6 +117,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
     }
 
     function tokenNumber(item) {
+
         let tokenNumber = ""
         if (item.slot?.includes("W")) {
             if (item.tokenNumber)
@@ -145,15 +141,19 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
             <Tr key={index} bg={findBg(item)} className={next == item.tokenID && !(settings?.autocall) ? "Blink" : ""}>
                 <Td><ButtonPopover settings={settings} doctor={doctor} loading={isLoading} setIsLoading={setIsLoading} current={current} setCurrent={setCurrent} item={item} /></Td>
-                <Td >{tokenNumber(item)}</Td>
+                <Td ><HStack spacing="auto">
+                    <Text> {tokenNumber(item)}</Text>
+                    {item.online && <FaVideo color="blue" />}
+                </HStack>
+                </Td>
                 {/* <Td style={{ cursor: "pointer" }}
                     onDoubleClick={() => handleDoubleClickForName(item.patientID)}>
                     {item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}</Td> */}
 
                 <Td style={{ cursor: "pointer" }}
-                    onDoubleClick={() => handleDoubleClickForName(item.patientID)}>
+                    onDoubleClick={() => handleDoubleClick("name", item.patientID)}>
                     {item.name}</Td>
-                <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClickForFile(item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
+                <Td><Text placeholder='Add file' style={{ cursor: "pointer" }} onDoubleClick={() => handleDoubleClick("fileNumber", item.patientID)}>{item.fileNumber ? item.fileNumber : "----"}</Text>
                 </Td>
                 <Td> {item.type}</Td>
                 <Td>{item.phone}</Td>
@@ -177,7 +177,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                         { timeZone: 'UTC', hour12: true, hour: 'numeric', minute: 'numeric' }) : ""}
                 </Td>
 
-              
+
                 {user.userID == 2 &&
                     <Td>
                         {item.status == "delayed" ?
@@ -201,7 +201,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
                     <Text color="green" minW={"max-content"} fontWeight={"bold"}>{tokenNumber(item)}
                     </Text>
-                    <Text noOfLines={1} fontWeight={"bold"} onDoubleClick={() => handleDoubleClickForName(item.patientID)}>{item.name}
+                    <Text noOfLines={1} fontWeight={"bold"} onDoubleClick={() => handleDoubleClick("name", item.patientID)}>{item.name}
                     </Text>
                     <Text>{types[item.type]}
                     </Text>
@@ -255,7 +255,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
 
 
             </Box>
-        
+
 
 
 

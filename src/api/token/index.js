@@ -72,12 +72,8 @@ export default function tokenApi(fetch, baseUrl) {
         callNextToken(data) {
             return fetch.post(`${baseUrl}/next`,{data})
         },
-        editFileNumber(data) {
-            return fetch.post(`${baseUrl}/edit-file`,{data})
-        },
-
-        editName(data) {
-            return fetch.post(`${baseUrl}/edit-name`,{data})
+        updateInfo(data) {
+            return fetch.post(`${baseUrl}/update`,{data})
         },
 
         invitePatient(data) {

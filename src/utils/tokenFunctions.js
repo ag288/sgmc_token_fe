@@ -70,20 +70,7 @@ export function filterList(list, showCompleted) {
 
 export function filterDoctor(list, user) {
     //console.log(list)
-    return list.filter(item => {
-        if (user == 1) {
-            if (item.doctorID == 1)
-                return true
-        }
-        else {
-            if (user == 3) {
-                return item.department == "Orthopedics"
-            }
-
-            else return true
-        }
-
-    })
+    return list
 
 }
 

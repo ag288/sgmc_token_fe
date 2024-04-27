@@ -28,6 +28,8 @@ function App() {
       setDoctors(response)
     })
 
+ 
+
   }, []);
 
   function selectView() {

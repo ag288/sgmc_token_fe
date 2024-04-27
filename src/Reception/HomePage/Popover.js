@@ -11,6 +11,7 @@ import {
     useDisclosure,
     Text,
     Box,
+    Checkbox,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../../api';
@@ -37,7 +38,7 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
 
     const { isOpen: isOpenReview, onOpen: onOpenReview, onClose: onCloseReview } = useDisclosure()
     const { isOpen: isOpenCancel, onOpen: onOpenCancel, onClose: onCloseCancel } = useDisclosure()
-  
+
 
     // function onCall() {
     //     // if (current) {
@@ -103,7 +104,15 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
     // }
 
 
-
+    function handleChange(e, id) {
+        let value = e.target.checked
+        if (value != null) {
+            api.token.updateInfo({ key: "online", value, id }).then((res) => {
+                const response = JSON.parse(res.data).result
+                window.location.reload()
+            }).catch(err => window.alert(err))
+        }
+    }
 
     return (
         <>
@@ -136,7 +145,11 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
                             <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={onPrevious} >Add review</Text>
                         </Box> */}
                         {user.userID == 2 && <Box align='center' mt={"2%"}>
-                            <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => navigate("/book-review", { state: { item } })} >Add review</Text>
+                            <HStack spacing="auto">
+                                <Checkbox isChecked={item.online} onChange={(e) => handleChange(e, item.patientID)}>
+                                    Online consultation</Checkbox>
+                                <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => navigate("/book-review", { state: { item } })} >Add review</Text>
+                            </HStack>
                         </Box>}
                     </PopoverBody>
                 </PopoverContent>

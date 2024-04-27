@@ -49,11 +49,9 @@ export const PatientList = (props) => {
 
     api.token.fetchApptCountAndArrival().then((res) => {
       const response = JSON.parse(res.data)
-      setCount(response.count)
-      if (response.arrival.length > 0) {
-        setArrivals(response.arrival)
-        onOpen()
-      }
+      console.log(response)
+      setCount(response.result)
+
     })
 
 
@@ -97,7 +95,6 @@ export const PatientList = (props) => {
               <HStack> <TabList m={1}>
                 {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >
                   {doctor.name}
-
                   {count?.find(i => i.doctorID == doctor.doctorID)?.count > 0 &&
                     < Circle size='20px' color={'white'} ml={2} fontSize={'0.8rem'}
                       bgColor={'red'} zIndex={3} p={'3px'}>
@@ -113,7 +110,7 @@ export const PatientList = (props) => {
               <TabPanels>
                 {filterDoctor(doctors, user.userID).map((doctor, index) => <TabPanel width="full">
                   <TokenList desktopView={desktopView} color={colors[index]} doctor={doctor}
-                  flag={flag} />
+                    flag={flag} />
                 </TabPanel>)}
               </TabPanels>
             </Tabs>
