@@ -1,5 +1,6 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from './Login';
+import { PatientBooking } from "./PatientBooking";
 
 function UnauthenticatedUser() {
 
@@ -8,6 +9,7 @@ function UnauthenticatedUser() {
             <Routes>
                 <Route path="/" element={<Login />} />
                 <Route path="*" element={<Login />} />
+                <Route path="/login" element={<Login />} />
             </Routes>
         </BrowserRouter>
 

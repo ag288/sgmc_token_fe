@@ -110,8 +110,8 @@ export const TokenDetailsForReviewChooseToken = () => {
             setToken(prev => ({ ...prev, "slot": slotNumber }))
             setToken(prev => ({
                 ...prev, ...{
-                    "token": tokens[0].tokenID,
-                    "tokenNumber": tokens[0].tokenNumber
+                    "token": item.tokenID,
+                    "tokenNumber": item.tokenNumber
                 }
             }))
         }
@@ -329,17 +329,12 @@ export const TokenDetailsForReviewChooseToken = () => {
                                             <Input value={token.date} onChange={handleDateChange} min={tomorrow} max={maxdate} type="date"></Input>
                                         </FormControl>
 
-                                        <RadioGroup name="token" value={token.slot}
-                                            onChange={(e) => handleTokenChange(e)} >
-                                            {slots.map((slot, index) => slot?.tokens?.length > 0 &&
+                                        {slots.map((slot, index) => slot?.tokens?.length > 0 &&
                                                 <Box align={"left"} key={index}>
 
-                                                    {/* <Box my={index == 0 ? 0 : 4} fontWeight={"bold"}> */}
-
-                                                    <Radio value={slot.slotNumber}
-                                                        bg={token.slot == slot.slotNumber ? "green" : "white"}
-                                                    >
-                                                        {slot.start && slot.end ?
+                                                        
+                                                    
+                                                        <Text fontWeight="bold"> {slot.start && slot.end ?
                                                             `${new Date('1970-01-01T' + slot.start + 'Z').
                                                                 toLocaleTimeString('en-US', {
                                                                     timeZone: 'UTC', hour12: true,
@@ -348,43 +343,51 @@ export const TokenDetailsForReviewChooseToken = () => {
                                                                     toLocaleTimeString('en-US', {
                                                                         timeZone: 'UTC', hour12: true,
                                                                         hour: 'numeric', minute: 'numeric'
-                                                                    })}` : "Walk-In Tokens"}</Radio>
-                                                    {/* </Box> */}
+                                                                    })}` : "Walk-In Tokens"}</Text>
 
-                                                    {/* {isMobile &&
-                                                <RadioGroup>
-                                                    <Grid alignItems={"left"} templateRows={'repeat(2, 1fr)'} gap={6} width={"fit-content"}
-                                                        templateColumns={'repeat(3, 1fr)'}>
 
-                                                        {slots[index].tokens.length > 0 ?
-                                                            slots[index].tokens.map((item) => <GridItem>
-                                                                <Radio bg={token.token == item.tokenID ? "green" : "white"}
-                                                                    value={item.tokenID}
-                                                                    onChange={() => handleTokenChange(slots[index].slotNumber, item)}>
-                                                                    {item.tokenNumber}
-                                                                </Radio>
-                                                            </GridItem>)
-                                                            : <Text color="red">No tokens available in this slot</Text>}
+                                                    {isMobile &&
+                                                        <RadioGroup>
+                                                            <Grid alignItems={"left"} templateRows={'repeat(2, 1fr)'} gap={6} width={"fit-content"}
+                                                                templateColumns={'repeat(3, 1fr)'}>
 
-                                                    </Grid></RadioGroup>} */}
-                                                    {/* 
-                                            {isLaptop && <VStack>
-                                                <RadioGroup>
-                                                    <HStack spacing={5} alignItems="center">
-                                                        {slots[index].tokens.length > 0 ? slots[index].tokens.map((item) =>
-                                                            <Radio bg={token.token == item.tokenID ? "green" : "white"}
-                                                                value={item.tokenID}
-                                                                onChange={() => handleTokenChange(slots[index].slotNumber, item)}>
-                                                                {item.tokenNumber}
-                                                            </Radio>) :
-                                                            <Text color="red">No tokens available in this slot</Text>}
-                                                    </HStack>
-                                                </RadioGroup >
-                                            </VStack>
-                                            } */}
+                                                                {slot?.tokens?.length > 0 ?
+                                                                    slot.tokens.map((item) => <GridItem>
+                                                                        <Radio bg={token.token == item.tokenID ? "green" : "white"}
+                                                                            value={item.tokenID}
+                                                                            onChange={() => handleTokenChange(slot.slotNumber, item)}>
+                                                                     {new Date(`1970-01-01 ${item.timeInEst}`).
+                                                                toLocaleTimeString('en-US', {
+                                                                    timeZone: 'Asia/Kolkata', hour12: true,
+                                                                    hour: 'numeric', minute: 'numeric'
+                                                                })}
+                                                                        </Radio>
+                                                                    </GridItem>)
+                                                                    : <Text color="red">No tokens available in this slot</Text>}
+
+                                                            </Grid></RadioGroup>}
+
+                                                    {isLaptop && <VStack>
+                                                        <RadioGroup>
+                                                            <HStack spacing={5} alignItems="center">
+                                                                {slot?.tokens?.length > 0 ? slot.tokens.map((item) =>
+                                                                    <Radio bg={token.token == item.tokenID ? "green" : "white"}
+                                                                        value={item.tokenID}
+                                                                        onChange={() => handleTokenChange(slot.slotNumber, item)}>
+                                                                       {new Date(`1970-01-01 ${item.timeInEst}`).
+                                                                toLocaleTimeString('en-US', {
+                                                                    timeZone: 'Asia/Kolkata', hour12: true,
+                                                                    hour: 'numeric', minute: 'numeric'
+                                                                })}
+                                                                    </Radio>) :
+                                                                    <Text color="red">No tokens available in this slot</Text>}
+                                                            </HStack>
+                                                        </RadioGroup >
+                                                    </VStack>
+                                                    }
                                                 </Box>
                                             )}
-                                        </RadioGroup>
+                                 
 
                                         {user.userID != 3 ? <FormControl id="reason">
                                             <FormLabel>Select reason</FormLabel>

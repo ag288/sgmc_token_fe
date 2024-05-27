@@ -104,11 +104,6 @@ export function DiffMinutes({ time1, time2, item }) {
 }
 
 
-export function logout(setUser) {
-    setUser(null)
-    localStorage.removeItem("currentUser")
-}
-
 
 
 export function onCall(item, current, doctor, toast, setIsLoading) {

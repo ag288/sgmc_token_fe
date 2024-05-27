@@ -1,6 +1,6 @@
 import { Box, Button, Divider, HStack, IconButton, Td, Text, Tr, useDisclosure, useMediaQuery, VStack, Checkbox } from "@chakra-ui/react"
 import { useContext, useEffect, useRef, useState } from "react"
-import { FaCheck, FaMeetup, FaPrint, FaRegFileWord, FaUndo, FaUserCheck, FaVideo, FaWalking } from "react-icons/fa"
+import { FaSyringe, FaRegFileWord, FaUndo, FaUserCheck, FaVideo, FaWalking } from "react-icons/fa"
 import ReactToPrint, { useReactToPrint } from "react-to-print"
 import api from "../../api"
 import { AppContext } from "../../App"
@@ -144,6 +144,7 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 <Td ><HStack spacing="auto">
                     <Text> {tokenNumber(item)}</Text>
                     {item.online && <FaVideo color="blue" />}
+                    {item.injection && <FaSyringe color="green" />}
                 </HStack>
                 </Td>
                 {/* <Td style={{ cursor: "pointer" }}
@@ -220,7 +221,10 @@ export const ListComponent = ({ isLoading, setIsLoading, current, setCurrent, do
                 </HStack>
 
                 <HStack spacing="auto" height={"50"}>
-                    <Text></Text>
+                    <HStack>
+                        {item.online && <FaVideo color="blue" />}
+                        {item.injection && <FaSyringe color="green" />}
+                    </HStack>
                     <VStack spacing={0}>
                         {item.timeInEst && <Text fontWeight={"bold"}>Time</Text>}
                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')

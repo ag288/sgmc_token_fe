@@ -8,10 +8,11 @@ import axios from "axios";
 import '../components/icon.css'
 import buzzer from '../Audio/buzzer.wav'
 import api from "../api";
-import { findPatientInitials, logout } from "../utils/tokenFunctions";
+import { findPatientInitials } from "../utils/tokenFunctions";
 import Simple from "../components/Navbar";
 import { FaUser } from "react-icons/fa";
 import { AppContext } from "../App";
+import { useLocation, useNavigate } from 'react-router-dom'
 
 export const TokenScreen = () => {
 
@@ -22,6 +23,7 @@ export const TokenScreen = () => {
     // var myWebSocket = new WebSocket("ws://localhost:6447/");
     const { user, setUser } = useContext(AppContext)
     const msg = new SpeechSynthesisUtterance()
+    const navigate = useNavigate()
 
     myWebSocket.onclose = (event) => {
         setConnected(false)
@@ -100,13 +102,20 @@ export const TokenScreen = () => {
     }, [called])
 
 
+    function logout() {
+
+     //   navigate("/login")
+        setUser(null)
+        localStorage.removeItem("currentUser")
+    }
+
     return (
         <>
 
             <Flex width="full" minH={"100vh"} bg="gray.100" >
                 <Stack width='full' bg="white" p={3} m={2}>
                     <Box align="right">
-                        <IconButton onClick={() => logout(setUser)} icon={<FaUser />}></IconButton>
+                        <IconButton onClick={logout} icon={<FaUser />}></IconButton>
                     </Box>
 
                     {current.length > 0 ?

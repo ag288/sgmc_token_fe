@@ -4,6 +4,7 @@ import api from "../api"
 import { compareFn, DiffMinutes, findBg, types } from "../utils/tokenFunctions"
 import "../components/icon.css"
 import { DetailsPopover1 } from "../Reception/HomePage/DetailsPopover1"
+import { FaSyringe, FaVideo } from "react-icons/fa"
 
 export const ListComponent = ({ doctor, item, index, desktopView }) => {
 
@@ -74,7 +75,11 @@ export const ListComponent = ({ doctor, item, index, desktopView }) => {
 
 
             <Tr key={index} bg={findBg(item)} >
-                <Td >{tokenNumber(item)}</Td>
+                <Td ><HStack spacing="auto">
+                    <Text> {tokenNumber(item)}</Text>
+                    {item.online && <FaVideo color="blue" />}
+                    {item.injection && <FaSyringe color="green" />}
+                </HStack></Td>
                 {/* <Td>
                     {item.tokenCount ? `${item.name}(${item.tokenCount})` : item.name}</Td> */}
                 <Td>{item.name}</Td>
@@ -123,6 +128,11 @@ export const ListComponent = ({ doctor, item, index, desktopView }) => {
                 </HStack>
 
                 <HStack alignItems="start" spacing="auto" height={"50"}>
+                <HStack>
+                    {item.online &&<FaVideo color="blue" />}
+                    {item.injection &&<FaSyringe color="green" />}
+                    </HStack>
+                   
                     <VStack spacing={0}>
                         <Text fontWeight={"bold"}>Time</Text>
                         <Text>{item.timeInEst ? new Date('1970-01-01T' + item.timeInEst + 'Z')

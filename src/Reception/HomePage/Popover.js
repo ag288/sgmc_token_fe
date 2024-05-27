@@ -12,6 +12,7 @@ import {
     Text,
     Box,
     Checkbox,
+    VStack
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import api from '../../api';
@@ -104,10 +105,10 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
     // }
 
 
-    function handleChange(e, id) {
+    function handleChange(e, key, id) {
         let value = e.target.checked
         if (value != null) {
-            api.token.updateInfo({ key: "online", value, id }).then((res) => {
+            api.token.updateInfo({ key, value, id }).then((res) => {
                 const response = JSON.parse(res.data).result
                 window.location.reload()
             }).catch(err => window.alert(err))
@@ -146,8 +147,12 @@ export const ButtonPopover = ({ isLoading, setIsLoading, settings, item, current
                         </Box> */}
                         {user.userID == 2 && <Box align='center' mt={"2%"}>
                             <HStack spacing="auto">
-                                <Checkbox isChecked={item.online} onChange={(e) => handleChange(e, item.patientID)}>
-                                    Online consultation</Checkbox>
+                                <VStack alignItems="start">
+                                    <Checkbox isChecked={item.online} onChange={(e) => handleChange(e, "online", item.patientID)}>
+                                        Online consultation</Checkbox>
+                                    <Checkbox isChecked={item.injection} onChange={(e) => handleChange(e, "injection", item.patientID)}>
+                                        Procedure</Checkbox>
+                                </VStack>
                                 <Text style={{ cursor: "pointer", textDecoration: "underline" }} onClick={() => navigate("/book-review", { state: { item } })} >Add review</Text>
                             </HStack>
                         </Box>}

@@ -91,8 +91,8 @@ export const PatientList = (props) => {
         {isLoading ? <FullPageSpinner /> :
           <>
 
-            <Tabs display={"flex"} flexDirection={"column"} width="full" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded">
-              <HStack> <TabList m={1}>
+            <Tabs width="full" overflow="scroll" defaultIndex={index} onChange={handleNewChange} variant="solid-rounded" isFitted>
+              <HStack width="full"> <TabList m={1}>
                 {filterDoctor(doctors, user.userID).map((doctor, index) => isLaptop ? <Tab >
                   {doctor.name}
                   {count?.find(i => i.doctorID == doctor.doctorID)?.count > 0 &&

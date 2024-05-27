@@ -21,7 +21,6 @@ import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { BellWithBadge, DuplicatePatientsNotif , ArrivalNotif} from './AlertIcons';
 import { AppContext } from '../App';
 import { useLocation, Link, NavLink, Navigate, useNavigate } from 'react-router-dom';
-import { logout } from '../utils/tokenFunctions';
 import { ExportToExcel } from '../Reception/HomePage/ExportToExcel';
 import api from '../api';
 import { ListPrintIcon } from '../Reception/HomePage/ListPrintIcon';
@@ -78,18 +77,18 @@ export default function Simple() {
         if (!pendingCount && !duplicateCount) {
             api.token.fetchAlerts().then((res) => {
                 const result = JSON.parse(res.data).result
-                if (result[0].length > 0) {
-                    toast({
-                        title: 'Tokens not generated!!',
-                        description: "Some reviews have not been generated. Click on the bell icon for details",
-                        status: 'error',
-                        duration: 5000,
-                        position: "top",
-                        isClosable: true
+                // if (result[0].length > 0) {
+                //     toast({
+                //         title: 'Tokens not generated!!',
+                //         description: "Some reviews have not been generated. Click on the bell icon for details",
+                //         status: 'error',
+                //         duration: 5000,
+                //         position: "top",
+                //         isClosable: true
 
 
-                    })
-                }
+                //     })
+                // }
                 setPendingCount(result[0].length)
                 setDuplicateCount(result[1].length)
 
@@ -98,6 +97,14 @@ export default function Simple() {
     }, [])
 
 
+    function logout() {
+   
+      //  navigate("/login")
+        setUser(null)
+        localStorage.removeItem("currentUser")
+    }
+
+    
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { user, setUser, doctor } = useContext(AppContext)
     let navigate = useNavigate()
@@ -211,7 +218,7 @@ export default function Simple() {
                                 />
                             </MenuButton>
                             <MenuList>
-                                <MenuItem onClick={() => logout(setUser)} >Logout</MenuItem>
+                                <MenuItem onClick={logout} >Logout</MenuItem>
                                 {user.userID == 2 && <ExportToExcel doctor={doctor} />}
                             </MenuList>
                         </Menu>
