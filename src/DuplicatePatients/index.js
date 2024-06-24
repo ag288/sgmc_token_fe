@@ -100,7 +100,7 @@ export const DuplicatePatients = () => {
 
     function editFile(fileNumber, item) {
         if (fileNumber != item.fileNumber) {
-            api.token.editFileNumber({ fileNumber, id: item.patientID }).then((res) => {
+            api.token.updateInfo({ key:"fileNumber",value:fileNumber, id: item.patientID }).then((res) => {
                 const response = JSON.parse(res.data).result
                 window.location.reload()
             })

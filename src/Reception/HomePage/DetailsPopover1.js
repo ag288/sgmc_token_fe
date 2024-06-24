@@ -38,7 +38,7 @@ export const DetailsPopover1 = ({ item, current, setCurrent, doctor }) => {
     }
 
     function editFileNumber(file, id) {
-        api.token.editFileNumber({ value: file, id }).then((res) => {
+        api.token.updateInfo({ key:"fileNumber",value: file, id }).then((res) => {
             const response = JSON.parse(res.data).result
             window.location.reload()
         })

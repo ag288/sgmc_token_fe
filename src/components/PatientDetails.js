@@ -216,19 +216,19 @@ export const PatientDetails = (props) => {
 
     function handleOldSubmit() {
         // to check if file number has been edited
-        let file = filter.find((patient) => patient.patientID == token.id)?.fileNumber
-        if (!file)
-            file = patient.fileNumber
-        if (token.fileNumber != file) {
-            setIsLoading(true)
-            api.token.editFileNumber({ token }).then((res) => {
-                setIsLoading(false)
-                navigate(navigateTo, { state: { token, settings, reasons } })
-            })
-        }
-        else {
+        // let file = filter.find((patient) => patient.patientID == token.id)?.fileNumber
+        // if (!file)
+        //     file = patient.fileNumber
+        // if (token.fileNumber != file) {
+        //     setIsLoading(true)
+        //     api.token.updateInfo({ key:"fileNumber", value :  }).then((res) => {
+        //         setIsLoading(false)
+        //         navigate(navigateTo, { state: { token, settings, reasons } })
+        //     })
+        // }
+        // else {
             navigate(navigateTo, { state: { token, settings, reasons } })
-        }
+      //  }
 
     }
 

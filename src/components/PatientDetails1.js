@@ -146,17 +146,17 @@ export const PatientDetails = (props) => {
         else {
             if ((token.name == "Add new" && token.new_name != "") || (token.name != "Add new" && token.name != "" && token.fileNumber != null && token.fileNumber != "")) {
                 if (token.new_name == "") {
-                    let file = patients.find((patient) => patient.patientID == token.id).fileNumber
-                    if (token.fileNumber != file) {
-                        setIsLoading(true)
-                        api.token.editFileNumber({ token }).then((res) => {
-                            setIsLoading(false)
-                            navigate(navigateTo, { state: { token, settings, reasons } })
-                        })
-                    }
-                    else {
+                    // let file = patients.find((patient) => patient.patientID == token.id).fileNumber
+                    // if (token.fileNumber != file) {
+                    //     setIsLoading(true)
+                    //     api.token.editFileNumber({ key:fileNumber}).then((res) => {
+                    //         setIsLoading(false)
+                    //         navigate(navigateTo, { state: { token, settings, reasons } })
+                    //     })
+                    // }
+                    // else {
                         navigate(navigateTo, { state: { token, settings, reasons } })
-                    }
+                   // }
                 }
                 else {
                     setIsLoading(true)
