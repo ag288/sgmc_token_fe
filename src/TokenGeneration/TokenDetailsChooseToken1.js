@@ -150,7 +150,7 @@ export const TokenDetailsChooseToken = () => {
     }
 
     function handleReasonChange(e) {
-        if (e.name == "New consultation" && location.state.token.doctor != 1)
+        if (e.name == "New consultation")// && location.state.token.doctor != 1)
             setToken(prev => ({ ...prev, "reason": e.reasonID, flag: true }))
         else
             setToken(prev => ({ ...prev, "reason": e.reasonID, flag: false }))
@@ -292,26 +292,30 @@ export const TokenDetailsChooseToken = () => {
     function checkWalkIn() {
         if (token.slot == "W") {
             setIsLoading(true)
-            api.book.checkWalkIns(location.state.token).then((res) => {
+            api.book.checkWalkIns({doctor, timeOfDay:token.token}).then((res) => {
                 setIsLoading(false)
-                const response = JSON.parse(res.data).message
-                if (response == "")
+                const response = JSON.parse(res.data).result
+                // if (response == "")
+                //     onOpenArrival()
+                // else {
+                //     let confirm = window.confirm(response)
+                //     if (confirm)
+                //         onOpenArrival()
+                //     else {
+                //         toast({
+                //             title: 'Token generation cancelled',
+                //             status: 'info',
+                //             duration: 3000,
+                //             isClosable: false,
+                //             position: "top"
+                //         })
+                //         navigate("/home")
+                //     }
+                // }
+                if (response)
+                    window.alert("You have reached your maximum limit for walk-in tokens!!")
+                else
                     onOpenArrival()
-                else {
-                    let confirm = window.confirm(response)
-                    if (confirm)
-                        onOpenArrival()
-                    else {
-                        toast({
-                            title: 'Token generation cancelled',
-                            status: 'info',
-                            duration: 3000,
-                            isClosable: false,
-                            position: "top"
-                        })
-                        navigate("/home")
-                    }
-                }
             }).catch(err => {
                 setIsLoading(false)
                 alert(err)
@@ -322,10 +326,10 @@ export const TokenDetailsChooseToken = () => {
     }
 
     function handleProcedureChange(e) {
-        if (location.state.token.doctor != 1)
-            setToken(prev => ({ ...prev, "procedure": e.target.checked, flag: e.target.checked }))
-        else
-            setToken(prev => ({ ...prev, "procedure": e.target.checked }))
+        //if (location.state.token.doctor != 1)
+        setToken(prev => ({ ...prev, "procedure": e.target.checked, flag: e.target.checked }))
+        // else
+        //     setToken(prev => ({ ...prev, "procedure": e.target.checked }))
     }
 
     return (
@@ -443,7 +447,8 @@ export const TokenDetailsChooseToken = () => {
                                 </FormControl> */}
                                 {token.slot != "W" /*&& !maxToken()*/ ? <HStack mt={2}>
                                     <Text fontWeight={"bold"}>Block an extra token</Text>
-                                    <Switch isDisabled={location.state.token.doctor == 1}
+                                    <Switch
+                                        //isDisabled={location.state.token.doctor == 1}
                                         onChange={(e) => setToken(prev => ({ ...prev, "flag": e.target.checked }))}
                                         isChecked={token.flag} colorScheme="green" textColor="green"></Switch>
                                 </HStack>

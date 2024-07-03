@@ -119,7 +119,7 @@ export const TokenDetailsForReviewChooseToken = () => {
     }
 
     function handleReasonChange(e) {
-        if (e.name == "New consultation" && location.state.token.doctor != 1)
+        if (e.name == "New consultation")// && location.state.token.doctor != 1)
             setToken(prev => ({ ...prev, "reason": e.reasonID, flag: true }))
         else
             setToken(prev => ({ ...prev, "reason": e.reasonID, flag: false }))
@@ -254,10 +254,10 @@ export const TokenDetailsForReviewChooseToken = () => {
     }
 
     function handleProcedureChange(e) {
-        if (location.state.token.doctor != 1)
+      //  if (location.state.token.doctor != 1)
             setToken(prev => ({ ...prev, "procedure": e.target.checked, flag: e.target.checked }))
-        else
-            setToken(prev => ({ ...prev, "procedure": e.target.checked }))
+    //    else
+     //       setToken(prev => ({ ...prev, "procedure": e.target.checked }))
     }
     
     return (
@@ -416,7 +416,7 @@ export const TokenDetailsForReviewChooseToken = () => {
                                         <HStack mt={2}>
                                             <Text fontWeight={"bold"}>Block an extra token</Text>
                                             <Switch onChange={(e) => setToken(prev => ({ ...prev, "flag": e.target.checked }))} 
-                                            isDisabled={location.state.token.doctor==1}
+                                          //  isDisabled={location.state.token.doctor==1}
                                             isChecked={token.flag} colorScheme="green" textColor="green"></Switch>
                                         </HStack>
                                     </Stack>

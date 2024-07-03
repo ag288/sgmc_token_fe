@@ -112,14 +112,14 @@ export function onCall(item, current, doctor, toast, setIsLoading) {
     //     onOpenReview()
     // }
     // else {
-       // setTimeout(() => {
-         // playActive()
-        //  }, 2000)
-    const confirm = window.confirm(`You are going to call ${item.name}`)
-    if (confirm) {
-        //  playActive()
-        call(item, current, doctor, toast, setIsLoading)
-    }
+    // setTimeout(() => {
+    // playActive()
+    //  }, 2000)
+    // const confirm = window.confirm(`You are going to call ${item.name}`)
+    // if (confirm) {
+    //     //  playActive()
+    call(item, current, doctor, toast, setIsLoading)
+    //  }
     // }
 }
 
@@ -150,19 +150,19 @@ export function call(item, current, doctor, toast, setIsLoading) {
 }
 
 export function onCompleted(item, settings, onOpenReview, doctor, setIsLoading, user) {
- 
+
     if (settings.enableReview && user == 1) {
- 
+
         onOpenReview()
 
     }
     else {
-        const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
-        if (confirm) {
-            completed(doctor, setIsLoading)
-        }
+        // const confirm = window.confirm(`You are going to mark ${item.name} as completed`)
+        // if (confirm) {
+        completed(doctor, setIsLoading)
+        //  }
     }
-    
+
 }
 
 function completed(doctor, setIsLoading) {
@@ -176,11 +176,11 @@ function completed(doctor, setIsLoading) {
 
 }
 
-export function findPatientInitials(item){
-    const name=item.name.split(" ")
-    let patientInitials=""
-     for(var i=0;i<name.length;i++){
- patientInitials+=`${name[i].substring(0,1)}`
-     }
-     return patientInitials
+export function findPatientInitials(item) {
+    const name = item.name.split(" ")
+    let patientInitials = ""
+    for (var i = 0; i < name.length; i++) {
+        patientInitials += `${name[i].substring(0, 1)}`
+    }
+    return patientInitials
 }
